@@ -1,7 +1,8 @@
 import { Column, Entity, Index, Unique } from "typeorm";
 import { BaseEntity } from "./base.entity";
-import { Components, Formation, PackageStatus } from "./enums.entity";
+import { OS, Formation, PackageStatus } from "./enums.entity";
 import { IsValidStringFor } from './../../validators';
+import { IsUrl } from "class-validator";
 
 @Entity("version_packages")
 // @Unique(["OS", "formation", "fromVersion", "toVersion"])
@@ -10,7 +11,7 @@ import { IsValidStringFor } from './../../validators';
 export class VersionPackagesEntity extends BaseEntity {
   @Column({
     type: "enum",
-    enum: Components,
+    enum: OS
   })
   OS: string
 
@@ -31,8 +32,12 @@ export class VersionPackagesEntity extends BaseEntity {
   @Column({
     type: "enum",
     enum: PackageStatus,
-    default: PackageStatus.IN_RPOGRESS
+    default: PackageStatus.IN_PROGRESS
   })
   status:string
+
+  // @Column()
+  // @IsUrl()
+  // utl:string
   
-}
+} 
