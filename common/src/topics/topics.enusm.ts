@@ -9,5 +9,5 @@ export enum DeliveryTopics {
 }
 
 export enum OfferingTopics {
-    CHACK_UPDATES = "offering.chack-updates",
+    CHECK_UPDATES = "offering.check-updates",
 }

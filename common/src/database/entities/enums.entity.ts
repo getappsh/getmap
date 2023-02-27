@@ -1,4 +1,4 @@
-export enum Components {
+export enum OS {
     ANDROID ='android',
     WINDOWS = 'windows',
     LINUX = 'linux',
@@ -11,6 +11,6 @@ export enum Formation {
 }
 
 export enum PackageStatus{
-    IN_RPOGRESS = "inProgress",
+    IN_PROGRESS = "inProgress",
     READY = "ready"
 }
