@@ -1,5 +1,6 @@
 export enum UploadTopics {
-    NEW_VERSION = 'upload.new-version'
+    NEW_VERSION = 'upload.new-version',
+    LAST_VERSION = 'upload.last-version',
 }
 
 export enum DeliveryTopics {
