@@ -4,6 +4,12 @@ export enum OS {
     LINUX = 'linux',
 }
 
+export enum Components {
+    ANDROID ='android',
+    WINDOWS = 'windows',
+    LINUX = 'linux',
+}
+
 export enum Formation {
     YAAT = 'yaat',
     TATUSH = 'yatush',
