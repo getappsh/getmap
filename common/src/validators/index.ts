@@ -1,5 +1,5 @@
 import { ValidationOptions, registerDecorator } from "class-validator";
-import { RegexVoldation } from "./regex.validator";
+import { RegexValidation as RegexValidation } from "./regex.validator";
 
 export function IsValidStringFor(property: string, validationOptions?: ValidationOptions) {
   return function (object: Object, propertyName: string) {
@@ -8,7 +8,7 @@ export function IsValidStringFor(property: string, validationOptions?: Validatio
       propertyName: propertyName,
       constraints: [property],
       options: validationOptions,
-      validator: RegexVoldation
+      validator: RegexValidation
     });
   };
 }
