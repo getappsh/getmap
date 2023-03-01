@@ -3,6 +3,10 @@ export enum UploadTopics {
     LAST_VERSION = 'upload.last-version',
 }
 
+export enum DiscoveryTopics {
+    DISCOVERY_MESSAGE = "discovery.discovery-message"
+}
+
 export enum DeliveryTopics {
     PREPARE_PACKAGE = "delivery.prepare-package",
     GET_PREPARED_PACKAGE = "delivery.get-prepared-package"
