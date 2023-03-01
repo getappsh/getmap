@@ -1,3 +1,4 @@
+import { Component } from "apps/api/src/modules/discovery/dto/discoveryMessage.dto";
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { Formation, OS } from "./enums.entity";
@@ -18,6 +19,6 @@ export class DiscoveryMessageEntity extends BaseEntity{
     @Column({type: "enum", enum: Formation})
     formation: string
     @Column('jsonb', {name: "versions", nullable: true})
-    versions: string
+    versions: Component[]
 
 }
