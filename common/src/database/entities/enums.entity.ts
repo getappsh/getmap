@@ -12,7 +12,7 @@ export enum Components {
 
 export enum Formation {
     YAAT = 'yaat',
-    TATUSH = 'yatush',
+    YATUSH = 'yatush',
     HQTACTIC = 'hqtactic'
 }
 
