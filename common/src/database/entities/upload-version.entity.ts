@@ -1,3 +1,4 @@
+import { IsUrl } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique } from "typeorm";
 import { Components, Formation } from "./enums.entity";
 
@@ -28,6 +29,7 @@ export class UploadVersionEntity{
     previousVersion: string
 
     @Column()
+    @IsUrl()
     url: string 
 
     @CreateDateColumn()

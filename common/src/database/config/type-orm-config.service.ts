@@ -12,7 +12,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory{
             password: process.env.POSTGRES_PASSWORD, 
             database: process.env.POSTGRES_DB,
             autoLoadEntities: true, 
-            synchronize: true,
+            synchronize: true, ///////// not for production
         };
     }
 }  

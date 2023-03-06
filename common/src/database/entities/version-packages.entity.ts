@@ -36,8 +36,8 @@ export class VersionPackagesEntity extends BaseEntity {
   })
   status:string
 
-  // @Column()
-  // @IsUrl()
-  // utl:string
+  @Column({nullable: true, default: null})
+  @IsUrl()
+  utl:string
   
 } 
