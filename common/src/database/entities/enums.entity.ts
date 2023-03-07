@@ -16,7 +16,12 @@ export enum Formation {
     HQTACTIC = 'hqtactic'
 }
 
-export enum PackageStatus{
+export enum PackageStatus {
     IN_PROGRESS = "inProgress",
     READY = "ready"
+}
+
+export enum RoleInProject {
+    PROJECT_ADMIN = 'project-admin',
+    PROJECT_MEMBER = 'project-member'
 }

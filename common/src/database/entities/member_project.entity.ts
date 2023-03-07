@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne, Unique } from "typeorm
 import { BaseEntity } from "./base.entity";
 import { ProjectEntity } from "./project.entity";
 import { MemberEntity } from "./member.entity";
+import { RoleInProject } from "./enums.entity";
 
 
 
@@ -18,7 +19,7 @@ export class MemberProjectEntity extends BaseEntity{
     @JoinColumn()
     member: MemberEntity
 
-    @Column({name: "role", default: null})
+    @Column({name: "role", type: "enum", enum: RoleInProject, default: RoleInProject.PROJECT_MEMBER})
     role: string
 
 
