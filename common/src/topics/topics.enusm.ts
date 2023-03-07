@@ -15,3 +15,13 @@ export enum DeliveryTopics {
 export enum OfferingTopics {
     CHECK_UPDATES = "offering.check-updates",
 }
+
+export enum DashboardTopics{
+    GET_USER_PROJECTS = 'dashboard.get-user-projects',
+    ADD_PROJECT = 'dashboard.add-project',
+    // CREATE_TOKEN = 'dashboard.create-token',
+    ADD_NEW_MEMBER = 'dashboard.add-new-member',
+    // DELETE_MEMBER = 'dashboard.delete-member',
+    // EDIT_MEMBER = 'dashboard.edit-member'
+
+}
