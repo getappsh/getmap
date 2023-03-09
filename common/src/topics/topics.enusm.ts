@@ -21,7 +21,7 @@ export enum ProjectManagementTopics{
     ADD_PROJECT = 'project-management.add-project',
     CREATE_TOKEN = 'project-management.create-token',
     ADD_NEW_MEMBER = 'project-management.add-new-member',
-    // DELETE_MEMBER = 'project-management.delete-member',
-    // EDIT_MEMBER = 'project-management.edit-member'
+    EDIT_MEMBER = 'project-management.edit-member',
+    REMOVE_MEMBER = 'project-management.remove-member',
 
 }
