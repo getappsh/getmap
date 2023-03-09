@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique, ManyToOne } from "typeorm";
 import { Components, Formation } from "./enums.entity";
+import { ProjectEntity } from "./project.entity";
 
 @Entity('upload_version')
 @Unique('component_formation_version_unique_constraint', ['component', 'formation', 'baseVersion'])
@@ -26,6 +27,9 @@ export class UploadVersionEntity{
 
     @Column({name:'previous_version'})
     previousVersion: string
+
+    @ManyToOne(() => ProjectEntity)
+    project: ProjectEntity
 
     @Column()
     url: string 
