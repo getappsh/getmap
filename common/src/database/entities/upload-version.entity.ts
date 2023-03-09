@@ -1,3 +1,4 @@
+import { IsUrl } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique, ManyToOne } from "typeorm";
 import { Components, Formation } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
@@ -32,6 +33,7 @@ export class UploadVersionEntity{
     project: ProjectEntity
 
     @Column()
+    @IsUrl()
     url: string 
 
     @CreateDateColumn()

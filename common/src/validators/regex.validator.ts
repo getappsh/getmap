@@ -35,9 +35,7 @@ export class RegexValidation implements ValidatorConstraintInterface {
     }
   }
   
-  validate(text: string, args: ValidationArguments) {
-    console.log(args);
-    
+  validate(text: string, args: ValidationArguments) {    
     if(typeof args.value !== "string"){
       return false
     }
