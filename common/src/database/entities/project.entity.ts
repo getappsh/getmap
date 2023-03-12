@@ -13,7 +13,7 @@ export class ProjectEntity extends BaseEntity{
     @Column({name: "description"})
     description: string
 
-    @Column('simple-array', {name: "tokes", nullable: true})
+    @Column('simple-array', {name: "tokens", nullable: true, array: true})
     tokens: string[]
 
     @OneToMany(() => MemberProjectEntity, memberProject => memberProject)
