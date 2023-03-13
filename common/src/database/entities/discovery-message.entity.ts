@@ -1,24 +1,37 @@
-import { Component } from "apps/api/src/modules/discovery/dto/discoveryMessage.dto";
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
-import { Formation, OS } from "./enums.entity";
+import { DiscoveryType, Formation, OS } from "./enums.entity";
 
 
 
 @Entity("discovery_message")
 export class DiscoveryMessageEntity extends BaseEntity{
-    
-    @Column({name: "mac"})
-    mac: string
-    @Column({name: "agent_id"})
-    agentId: string
-    @Column({name: "ip"})
-    ip: string
-    @Column({type: "enum", enum: OS})
-    OS: string
-    @Column({type: "enum", enum: Formation})
-    formation: string
-    @Column('jsonb', {name: "versions", nullable: true})
-    versions: Component[]
 
+    @Column('jsonb', {name: "personal_device", nullable: true})
+    personalDevice: any;
+
+    @Column('jsonb', {name: "situational_device", nullable: true})
+    situationalDevice: any;
+
+    @Column('jsonb', {name: "physical_device", nullable: true})
+    physicalDevice: any;
+
+    @Column({type: "enum", enum: DiscoveryType})
+    discoveryType: DiscoveryType;
+
+    @Column({type: "enum", enum: Formation})
+    formation: string;
+
+    @Column('jsonb', {name: "base_version", nullable: true})
+    baseVersion: any;
+
+    @Column('jsonb', {name: "previous_version", nullable: true})
+    previousVersion: any;
+
+    
+
+    @Column('jsonb', {name: "map", nullable: true})
+    map: any;
+
+    
 }

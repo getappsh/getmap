@@ -25,3 +25,8 @@ export enum RoleInProject {
     PROJECT_ADMIN = 'project-admin',
     PROJECT_MEMBER = 'project-member'
 }
+
+export enum DiscoveryType {
+    GET_APP = 'get-app',
+    GET_MAP = 'get-map'
+}
