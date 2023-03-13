@@ -1,14 +1,15 @@
 import { IsUrl } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, Unique, ManyToOne } from "typeorm";
+import { BaseEntity } from "./base.entity";
 import { Components, Formation } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 
 @Entity('upload_version')
-@Unique('component_formation_version_unique_constraint', ['component', 'formation', 'baseVersion'])
-export class UploadVersionEntity{
+@Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'baseVersion'])
+export class UploadVersionEntity extends BaseEntity{
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @Column({name: "platform", default: "test"})
+    platform: string;
 
     // component represents operation system
     @Column({
@@ -29,15 +30,21 @@ export class UploadVersionEntity{
     @Column({name:'previous_version'})
     previousVersion: string
 
+    @Column({name: "deployment_status", default: null})
+    deploymentStatus: string
+
+    @Column({name: "security_status", default: null})
+    securityStatus: string
+
+    @Column({name: "policy_status", default: null})
+    policyStatus: string
+
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
 
     @Column()
     @IsUrl()
     url: string 
-
-    @CreateDateColumn()
-    createDate: Date
 
     toString(){
         return JSON.stringify(this)
