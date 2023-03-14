@@ -23,5 +23,6 @@ export enum ProjectManagementTopics{
     ADD_NEW_MEMBER = 'project-management.add-new-member',
     EDIT_MEMBER = 'project-management.edit-member',
     REMOVE_MEMBER = 'project-management.remove-member',
+    GET_PROJECT_RELEASES = 'project-management.get-project-releases'
 
 }
