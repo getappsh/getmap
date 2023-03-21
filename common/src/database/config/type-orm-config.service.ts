@@ -1,5 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import { Inject, Injectable } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
+import path from "path";
+import { DataSource } from "typeorm";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory{
@@ -13,6 +16,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory{
             database: process.env.POSTGRES_DB,
             autoLoadEntities: true, 
             synchronize: true, ///////// not for production
+            logging: false,
+            entities: [path.resolve(`${__dirname}/../entities/**.entity.ts`)],
+            migrations: [
+                path.resolve(`${__dirname}/../migration/*{.ts,.js}`),
+            ],
+            
         };
     }
-}  
+}
