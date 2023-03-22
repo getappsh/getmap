@@ -1,6 +1,7 @@
 export enum UploadTopics {
     NEW_VERSION = 'upload.new-version',
     LAST_VERSION = 'upload.last-version',
+    UPLOAD_MANIFEST = 'upload.manifest'
 }
 
 export enum DiscoveryTopics {
