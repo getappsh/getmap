@@ -1,13 +1,12 @@
 import { IsUrl } from "class-validator";
 import { Entity, Column, Unique, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
-import { Components, Formation } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
-
+// TODO change db columns to be only the shard columns of artifact and manifest and the rest will bee save as a json
     @Column({name: "platform"})
     platform: string;
 
@@ -41,6 +40,9 @@ export class UploadVersionEntity extends BaseEntity{
     @Column({name:'install_type', nullable: true})
     installType: string
 
+    @Column({name:'artifact_type', nullable: true})
+    artifactType: string
+
     @Column({name: 'url'})
     @IsUrl()
     url: string 
@@ -57,6 +59,21 @@ export class UploadVersionEntity extends BaseEntity{
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
 
+    fromArtifact(artifactDto: any){
+        this.platform = artifactDto.platform;
+        this.component = artifactDto.component;
+        this.formation = artifactDto.formation;
+        this.OS = artifactDto.OS
+        this.version = artifactDto.version;
+        this.releaseNotes = artifactDto.releaseNotes;
+        this.size = artifactDto.size;
+        this.url = artifactDto.url;
+        this.artifactType = artifactDto.artifactType;
+        this.project = artifactDto.project
+
+        return this
+    }
+
     fromManifest(manifest: any){
         this.platform = manifest.product;
         this.component = manifest.name;
@@ -67,10 +84,11 @@ export class UploadVersionEntity extends BaseEntity{
         this.baseVersion = manifest.baseVersion;
         this.installType = manifest.installType;
         this.size = manifest.size;
+        this.url = manifest.url;
+        this.project = manifest.project;
 
         // "properties"{
         //     "items":[{"key":"","value":""}]} 
-
         return this;
 
     }
