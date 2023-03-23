@@ -14,7 +14,7 @@ export class UploadVersionEntity extends BaseEntity{
     @Column({name: "formation"})
     formation: string
 
-    @Column({name: 'OS', default: "any"})
+    @Column({name: 'OS', default: null})
     OS: string;
 
     @Column ({name: 'version'})
