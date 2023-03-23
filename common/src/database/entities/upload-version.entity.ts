@@ -47,6 +47,9 @@ export class UploadVersionEntity extends BaseEntity{
     @IsUrl()
     url: string 
 
+    @Column({name: 's3_url', nullable: true})
+    s3Url: string
+
     @Column({name: "deployment_status", nullable: true})
     deploymentStatus: string
 
@@ -59,37 +62,40 @@ export class UploadVersionEntity extends BaseEntity{
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
 
-    fromArtifact(artifactDto: any){
-        this.platform = artifactDto.platform;
-        this.component = artifactDto.component;
-        this.formation = artifactDto.formation;
-        this.OS = artifactDto.OS
-        this.version = artifactDto.version;
-        this.releaseNotes = artifactDto.releaseNotes;
-        this.size = artifactDto.size;
-        this.url = artifactDto.url;
-        this.artifactType = artifactDto.artifactType;
-        this.project = artifactDto.project
+    static fromArtifact(artifactDto: any){
+        const newVersion = new UploadVersionEntity()
+        newVersion.platform = artifactDto.platform;
+        newVersion.component = artifactDto.component;
+        newVersion.formation = artifactDto.formation;
+        newVersion.OS = artifactDto.OS
+        newVersion.version = artifactDto.version;
+        newVersion.releaseNotes = artifactDto.releaseNotes;
+        newVersion.size = artifactDto.size;
+        newVersion.url = artifactDto.url;
+        newVersion.artifactType = artifactDto.artifactType;
+        newVersion.project = artifactDto.project
 
-        return this
+        return newVersion
     }
 
-    fromManifest(manifest: any){
-        this.platform = manifest.product;
-        this.component = manifest.name;
-        this.formation = manifest.formation;
-        this.agent_tags = manifest.agentTags;
-        this.version = manifest.version;
-        this.previousVersion = manifest.preVersion;
-        this.baseVersion = manifest.baseVersion;
-        this.installType = manifest.installType;
-        this.size = manifest.size;
-        this.url = manifest.url;
-        this.project = manifest.project;
+    static fromManifest(manifest: any){
+        const newVersion = new UploadVersionEntity()
+
+        newVersion.platform = manifest.product;
+        newVersion.component = manifest.name;
+        newVersion.formation = manifest.formation;
+        newVersion.agent_tags = manifest.agentTags;
+        newVersion.version = manifest.version;
+        newVersion.previousVersion = manifest.preVersion;
+        newVersion.baseVersion = manifest.baseVersion;
+        newVersion.installType = manifest.installType;
+        newVersion.size = manifest.size;
+        newVersion.s3Url = manifest.url;
+        newVersion.project = manifest.project;
 
         // "properties"{
         //     "items":[{"key":"","value":""}]} 
-        return this;
+        return newVersion;
 
     }
     
