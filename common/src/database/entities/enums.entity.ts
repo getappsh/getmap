@@ -30,3 +30,11 @@ export enum DiscoveryType {
     GET_APP = 'get-app',
     GET_MAP = 'get-map'
 }
+
+export enum UploadStatus {
+    STARTED = 'started',
+    IN_PROGRESS = 'in-progress',
+    READY = 'ready',
+    ERROR = 'error'
+
+}

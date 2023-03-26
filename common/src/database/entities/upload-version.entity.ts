@@ -1,5 +1,6 @@
 import { Entity, Column, Unique, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 
 @Entity('upload_version')
@@ -25,6 +26,14 @@ export class UploadVersionEntity extends BaseEntity{
 
     @Column({name: 's3_url', nullable: true})
     s3Url: string
+
+    @Column({
+        name: 'upload_status',
+        type: "enum",
+        enum: UploadStatus,
+        default: UploadStatus.STARTED
+      })
+    uploadStatus: string
 
     @Column({name: "deployment_status", nullable: true})
     deploymentStatus: string
