@@ -46,7 +46,7 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.OS = OS;
         newVersion.version = version;
         newVersion.project = project;
-        
+                
         newVersion.metadata = metadata;      
 
         return newVersion
