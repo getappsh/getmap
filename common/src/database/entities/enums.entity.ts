@@ -33,6 +33,10 @@ export enum DiscoveryType {
 
 export enum UploadStatus {
     STARTED = 'started',
+    DOWNLOADING_FROM_URL = 'downloading-from-url',
+    FAIL_TO_DOWNLOAD = 'fail-to-download',
+    UPLOADING_TO_S3 ='uploading-to-s3',
+    FAIL_TO_UPLOAD = 'fail-to-upload',
     IN_PROGRESS = 'in-progress',
     READY = 'ready',
     ERROR = 'error'

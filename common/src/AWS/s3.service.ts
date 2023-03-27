@@ -48,10 +48,7 @@ export class S3Service {
     return signedUrl;
   }
 
-  uploadFile(filePath: string, objectKey: string){
-    if (!existsSync(filePath)) {
-      throw Error("File not found")
-    }    
+  uploadFile(filePath: string, objectKey: string){  
     const params = {
       Bucket: this.bucketName,
       Key: objectKey,
