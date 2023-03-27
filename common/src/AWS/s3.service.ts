@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { ConfigService } from '@nestjs/config';
+import { createReadStream, existsSync } from 'fs';
 
 @Injectable()
 export class S3Service {
 
-  private s3Client: S3Client;
+  private s3: S3;
   private bucketName: string;
 
   constructor(private configService: ConfigService) {
-    this.s3Client = new S3Client({
+    this.s3 = new S3({
       region: this.configService.get('REGION'),
       credentials: {
         accessKeyId: this.configService.get('ACCESS_KEY_ID'),
@@ -25,7 +26,7 @@ export class S3Service {
       Bucket: this.bucketName,
       Key: filename,
     });
-    const signedUrl = await getSignedUrl(this.s3Client, command, {
+    const signedUrl = await getSignedUrl(this.s3, command, {
       expiresIn: this.configService.get('UPLOAD_URL_EXPIRE'),
     });
     return signedUrl;
@@ -40,11 +41,24 @@ export class S3Service {
       Key: fileUrl
     })
 
-    const signedUrl = await getSignedUrl(this.s3Client, command, {
+    const signedUrl = await getSignedUrl(this.s3, command, {
       expiresIn: this.configService.get('DOWNLOAD_URL_EXPIRE'),
     }) 
 
     return signedUrl;
   }
 
+  uploadFile(filePath: string, objectKey: string){
+    if (!existsSync(filePath)) {
+      throw Error("File not found")
+    }    
+    const params = {
+      Bucket: this.bucketName,
+      Key: objectKey,
+      Body: createReadStream(filePath)
+    };
+    
+
+    return this.s3.putObject(params);
+  }
 }
