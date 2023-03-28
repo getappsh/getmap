@@ -54,7 +54,6 @@ export class S3Service {
       Key: objectKey,
       Body: createReadStream(filePath)
     };
-    
 
     return this.s3.putObject(params);
   }
