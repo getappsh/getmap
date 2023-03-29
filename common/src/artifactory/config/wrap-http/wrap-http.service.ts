@@ -11,7 +11,6 @@ export class WrapHttpService {
   artifactoryWrapper(method: string, relativeUrl?: string, data?: any, config?: AxiosRequestConfig): Observable<any> {
     // const url = this.configService.get<string>("JFROG_BASE_URL") + this.configService.get<string>("JFROG_REPO") + relativeUrl
     const url = relativeUrl
-    console.log(url);
     
     const auth = {
       auth: {
@@ -30,7 +29,6 @@ export class WrapHttpService {
 
   errorHandler() {
     return catchError((err: AxiosError) => {      
-      console.log({message: err.message, stack: err.stack });
       return of(null);
     })
   }
