@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { Column, Entity, Index, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { MemberProjectEntity } from "./member_project.entity";
