@@ -32,7 +32,3 @@ export class MemberEntity extends BaseEntity{
     }
 
 }
-
-function cryptoRandomString(arg0: { length: number; type: string; }): string {
-    throw new Error("Function not implemented.");
-}
