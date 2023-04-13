@@ -10,7 +10,8 @@ export enum DiscoveryTopics {
 
 export enum DeliveryTopics {
     PREPARE_PACKAGE = "delivery.prepare-package",
-    GET_PREPARED_PACKAGE = "delivery.get-prepared-package"
+    GET_PREPARED_PACKAGE = "delivery.get-prepared-package",
+    UPDATE_DOWNLOAD_STATUS = "delivery.update-download-status",
 }
 
 export enum OfferingTopics {
