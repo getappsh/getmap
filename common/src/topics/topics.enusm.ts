@@ -1,6 +1,7 @@
 export enum UploadTopics {
     UPLOAD_ARTIFACT = 'upload.artifact',
     UPLOAD_MANIFEST = 'upload.manifest',
+    UPDATE_UPLOAD_STATUS = 'upload.update-upload-status',
     LAST_VERSION = 'upload.last-version'
 }
 
