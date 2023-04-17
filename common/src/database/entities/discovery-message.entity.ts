@@ -19,7 +19,7 @@ export class DiscoveryMessageEntity extends BaseEntity{
     @Column({type: "enum", enum: DiscoveryType})
     discoveryType: DiscoveryType;
 
-    @Column({type: "enum", enum: Formation})
+    // @Column({type: "enum", enum: Formation})
     formation: string;
 
     @Column('jsonb', {name: "base_version", nullable: true})
