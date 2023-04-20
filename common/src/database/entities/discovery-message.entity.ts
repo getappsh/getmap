@@ -16,22 +16,18 @@ export class DiscoveryMessageEntity extends BaseEntity{
     @Column('jsonb', {name: "physical_device", nullable: true})
     physicalDevice: any;
 
+    @Column('jsonb', {name: "discovery_data", nullable: true})
+    discoveryData: any;
+
     @Column({type: "enum", enum: DiscoveryType})
     discoveryType: DiscoveryType;
-
-    // @Column({type: "enum", enum: Formation})
-    formation: string;
-
-    @Column('jsonb', {name: "base_version", nullable: true})
-    baseVersion: any;
-
-    @Column('jsonb', {name: "previous_version", nullable: true})
-    previousVersion: any;
-
-    
 
     @Column('jsonb', {name: "map", nullable: true})
     map: any;
 
+
+    toString(){
+        return JSON.stringify(this)
+    }
     
 }
