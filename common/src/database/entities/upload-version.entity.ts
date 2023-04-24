@@ -1,4 +1,4 @@
-import { Entity, Column, Unique, ManyToOne } from "typeorm";
+import { Entity, Column, Unique, ManyToOne, Generated } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
@@ -6,6 +6,11 @@ import { ProjectEntity } from "./project.entity";
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
+
+    @Column({name: "catalogId"})
+    @Generated("uuid")
+    catalog_id: string;
+
     @Column({name: "platform"})
     platform: string;
 
@@ -20,6 +25,12 @@ export class UploadVersionEntity extends BaseEntity{
 
     @Column ({name: 'version'})
     version: string
+
+    @Column ({name: 'base_version', default: null})
+    baseVersion: string
+
+    @Column ({name: 'prev_version', default: null})
+    prevVersion: string
 
     @Column('jsonb',{name: 'metadata', default: {}})
     metadata: any
@@ -54,6 +65,8 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.formation = formation;
         newVersion.OS = OS;
         newVersion.version = version;
+        newVersion.baseVersion = metadata['baseVersion'] || null
+        newVersion.prevVersion = metadata['prevVersion'] || null
         newVersion.project = project;
                 
         newVersion.metadata = metadata;      
@@ -67,14 +80,15 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.component = name;
         newVersion.formation = formation;
         newVersion.version = version;
+        newVersion.baseVersion = metadata['baseVersion'] || null
+        newVersion.prevVersion = metadata['prevVersion'] || null
         newVersion.project = project;
         newVersion.s3Url = url;
 
         newVersion.metadata = metadata;
 
         return newVersion;
-    }
-    
+    }    
     toString(){
         return JSON.stringify(this)
     }
