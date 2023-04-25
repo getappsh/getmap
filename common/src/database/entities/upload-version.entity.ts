@@ -23,6 +23,9 @@ export class UploadVersionEntity extends BaseEntity{
     @Column({name: 'OS', default: null})
     OS: string;
 
+    @Column ({name: 'virtual_size', default: 0})
+    virtualSize: number
+
     @Column ({name: 'version'})
     version: string
 
@@ -58,7 +61,7 @@ export class UploadVersionEntity extends BaseEntity{
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
 
-    static fromArtifact({platform, component, formation, OS, version, project, ...metadata}){
+    static fromArtifact({platform, component, formation, OS, version, project, size=0, ...metadata}){
         const newVersion = new UploadVersionEntity()
         newVersion.platform = platform;
         newVersion.component = component;
@@ -68,13 +71,14 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.baseVersion = metadata['baseVersion'] || null
         newVersion.prevVersion = metadata['prevVersion'] || null
         newVersion.project = project;
+        newVersion.virtualSize = size;
                 
         newVersion.metadata = metadata;      
 
         return newVersion
     }
 
-    static fromManifest({product, name, formation, version, project, url, ...metadata}){
+    static fromManifest({product, name, formation, version, project, url, size=0, ...metadata}){
         const newVersion = new UploadVersionEntity()
         newVersion.platform = product;
         newVersion.component = name;
@@ -84,6 +88,7 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.prevVersion = metadata['prevVersion'] || null
         newVersion.project = project;
         newVersion.s3Url = url;
+        newVersion.virtualSize = size;
 
         newVersion.metadata = metadata;
 
