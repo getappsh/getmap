@@ -3,7 +3,7 @@ import * as path from 'path';
 import { DataSource } from 'typeorm';
 import {UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity } from '../entities';
 import { Init1680597327216 } from '../migration/1680597327216-Init';
-import { DeliverStatusEntity } from '../entities/delivery-status.entity';
+import { DeliveryStatusEntity } from '../entities/delivery-status.entity';
 
 
 const ormConfig = new DataSource({
@@ -14,7 +14,7 @@ const ormConfig = new DataSource({
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
 
-  entities: [UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, DiscoveryMessageEntity, VersionPackagesEntity, DeliverStatusEntity],
+  entities: [UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, DiscoveryMessageEntity, VersionPackagesEntity, DeliveryStatusEntity],
   migrations: [
     // path.resolve(`${__dirname}/../migration/*.ts`),
     Init1680597327216

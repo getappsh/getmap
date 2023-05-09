@@ -9,7 +9,7 @@ export class UploadVersionEntity extends BaseEntity{
 
     @Column({name: "catalogId"})
     @Generated("uuid")
-    catalog_id: string;
+    catalogId: string;
 
     @Column({name: "platform"})
     platform: string;
