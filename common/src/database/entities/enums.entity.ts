@@ -40,5 +40,15 @@ export enum UploadStatus {
     IN_PROGRESS = 'in-progress',
     READY = 'ready',
     ERROR = 'error'
+}
+
+export enum DeliveryStatusEnum{
+    START = 'Start',
+    DONE = 'Done',
+    ERROR = 'Error',
+    CANCELLED = "Cancelled",
+    PAUSE = "Pause",
+    CONTINUE = "Continue",
+    DOWNLOAD = "Download",
 
 }
