@@ -7,9 +7,9 @@ import { ProjectEntity } from "./project.entity";
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
 
-    @Column({name: "catalogId"})
-    @Generated("uuid")
-    catalogId: string;
+    @Column({name: "catalog_id"})
+    @Generated("increment")
+    catalogId: number;
 
     @Column({name: "platform"})
     platform: string;
