@@ -52,3 +52,13 @@ export enum DeliveryStatusEnum{
     DOWNLOAD = "Download",
 
 }
+
+export enum DeployStatusEnum{
+    START = 'Start',
+    DONE = 'Done',
+    INSTALLING = "installing",
+    CONTINUE = "Continue",
+    PAUSE = "Pause",
+    CANCELLED = "Cancelled",
+    ERROR = 'Error',
+}
