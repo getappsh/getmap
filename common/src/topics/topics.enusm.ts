@@ -18,6 +18,7 @@ export enum DeliveryTopics {
 
 export enum OfferingTopics {
     CHECK_UPDATES = "offering.check-updates",
+    GET_OFFER_OF_COMP = "offering.get-offering-of-comp",
 }
 
 export enum ProjectManagementTopics{
