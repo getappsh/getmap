@@ -23,6 +23,7 @@ export enum OfferingTopics {
 
 export enum ProjectManagementTopics{
     GET_USER_PROJECTS = 'project-management.get-user-projects',
+    GET_PROJECT_CONFIG_OPTION = 'project-management.get-project-config-option',
     CREATE_PROJECT = 'project-management.create-project',
     CREATE_TOKEN = 'project-management.create-token',
     ADD_NEW_MEMBER = 'project-management.add-new-member',
