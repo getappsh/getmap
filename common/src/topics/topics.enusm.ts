@@ -33,5 +33,5 @@ export enum ProjectManagementTopics{
 }
 
 export enum GetMapTopics {
-    GET_DEVICE_ID = 'get-map.get-device-id'
+    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.getDeviceContent'
 }
