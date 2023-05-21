@@ -31,9 +31,6 @@ export class ProjectEntity extends BaseEntity{
     
     @Column('simple-array', {name: "tokens", nullable: true})
     tokens: string[]
-
-    @ManyToOne(() => MemberEntity)
-    memberOwner: MemberEntity;
    
     @OneToMany(() => MemberProjectEntity, memberProject => memberProject)
     memberProject: MemberProjectEntity[];
