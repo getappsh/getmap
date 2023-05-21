@@ -31,3 +31,7 @@ export enum ProjectManagementTopics{
     GET_PROJECT_RELEASES = 'project-management.get-project-releases'
 
 }
+
+export enum GetMapTopics {
+    GET_DEVICE_ID = 'get-map.get-device-id'
+}
