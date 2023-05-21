@@ -22,6 +22,7 @@ export enum PackageStatus {
 }
 
 export enum RoleInProject {
+    PROJECT_OWNER = 'project-owner',
     PROJECT_ADMIN = 'project-admin',
     PROJECT_MEMBER = 'project-member'
 }
