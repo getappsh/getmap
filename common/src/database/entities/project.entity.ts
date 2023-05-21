@@ -1,7 +1,7 @@
-import { Column, Entity, Index, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { MemberProjectEntity } from "./member_project.entity";
-import { MemberEntity } from "./member.entity";
+import { CategoryEntity, FormationEntity, OperationSystemEntity, PlatformEntity } from "./project-types";
 
 
 @Entity("project")
@@ -11,20 +11,24 @@ export class ProjectEntity extends BaseEntity{
     @Column({name: "component_name"})
     componentName: string;
 
-    @Column({name: "OS", default: null})
-    OS: string;
+    @ManyToOne(() => OperationSystemEntity, OS => OS.name)
+    @JoinColumn({name: "OS"})
+    OS: OperationSystemEntity;
 
-    @Column({name: "platform_type", default: null})
-    platformType: string;
+    @ManyToOne(() => PlatformEntity, platformType => platformType.name)
+    @JoinColumn({name: "platform_type"})
+    platformType: PlatformEntity;
 
-    @Column({name: "formation", default: null})
-    formation: string;
+    @ManyToOne(() => FormationEntity, formation => formation.name)
+    @JoinColumn({name: "formation"})
+    formation: FormationEntity;
 
     @Column({name: "artifact_type", default: null})
     artifactType: string;
 
-    @Column({name: "category", default: null})
-    category: string;
+    @ManyToOne(() => CategoryEntity, category => category.name)
+    @JoinColumn({name: "category"})
+    category: CategoryEntity;
 
     @Column({name: "description"})
     description: string
