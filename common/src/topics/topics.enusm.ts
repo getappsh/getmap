@@ -11,7 +11,6 @@ export enum DiscoveryTopics {
 
 export enum DeliveryTopics {
     UPDATE_DOWNLOAD_STATUS = "delivery.update-download-status",
-    UPDATE_DEPLOY_STATUS = "delivery.update-deploy-status",
 }
 
 export enum OfferingTopics {
