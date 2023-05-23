@@ -19,6 +19,10 @@ export enum OfferingTopics {
     GET_OFFER_OF_COMP = "offering.get-offering-of-comp",
 }
 
+export enum DeployTopics {
+    UPDATE_DEPLOY_STATUS = "deploy.update-deploy-status",
+}
+
 export enum ProjectManagementTopics{
     GET_USER_PROJECTS = 'project-management.get-user-projects',
     ADD_PROJECT = 'project-management.add-project',
