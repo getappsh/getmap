@@ -10,8 +10,6 @@ export enum DiscoveryTopics {
 }
 
 export enum DeliveryTopics {
-    PREPARE_PACKAGE = "delivery.prepare-package",
-    GET_PREPARED_PACKAGE = "delivery.get-prepared-package",
     UPDATE_DOWNLOAD_STATUS = "delivery.update-download-status",
     UPDATE_DEPLOY_STATUS = "delivery.update-deploy-status",
 }
@@ -30,5 +28,12 @@ export enum ProjectManagementTopics{
     EDIT_MEMBER = 'project-management.edit-member',
     REMOVE_MEMBER = 'project-management.remove-member',
     GET_PROJECT_RELEASES = 'project-management.get-project-releases'
+
+}
+
+export enum GetMapTopics {
+    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
+    GET_RECORDS = 'getapp.getmap.discovery.catalog',
+    GET_STATUS = 'getapp.getmap.delivery.get-status',
 
 }
