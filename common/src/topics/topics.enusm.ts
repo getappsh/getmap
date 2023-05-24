@@ -34,6 +34,7 @@ export enum ProjectManagementTopics{
 }
 
 export enum GetMapTopics {
+    REGISTER = 'getapp.getmap.register',
     GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
     GET_RECORDS = 'getapp.getmap.discovery.catalog',
     GET_STATUS = 'getapp.getmap.delivery.get-status',
