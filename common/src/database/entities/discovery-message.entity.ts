@@ -13,8 +13,6 @@ export class DiscoveryMessageEntity extends BaseEntity{
     @Column('jsonb', {name: "situational_device", nullable: true})
     situationalDevice: any;
 
-    @Column('jsonb', {name: "physical_device", nullable: true})
-    physicalDevice: any;
 
     @Column('jsonb', {name: "discovery_data", nullable: true})
     discoveryData: any;
