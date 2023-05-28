@@ -11,12 +11,15 @@ export enum DiscoveryTopics {
 
 export enum DeliveryTopics {
     UPDATE_DOWNLOAD_STATUS = "delivery.update-download-status",
-    UPDATE_DEPLOY_STATUS = "delivery.update-deploy-status",
 }
 
 export enum OfferingTopics {
     CHECK_UPDATES = "offering.check-updates",
     GET_OFFER_OF_COMP = "offering.get-offering-of-comp",
+}
+
+export enum DeployTopics {
+    UPDATE_DEPLOY_STATUS = "deploy.update-deploy-status",
 }
 
 export enum ProjectManagementTopics{
@@ -32,8 +35,12 @@ export enum ProjectManagementTopics{
 }
 
 export enum GetMapTopics {
-    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
+    REGISTER = 'getapp.getmap.register',
+    // Discovery
     GET_RECORDS = 'getapp.getmap.discovery.catalog',
+    GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-for-device',
+    // Delivery
     GET_STATUS = 'getapp.getmap.delivery.get-status',
-
+    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
+    IS_DOWNLOAD_URL_READY = 'getmap.delivery.is-download-url-ready'
 }
