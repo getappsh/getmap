@@ -2,6 +2,7 @@ import { Entity, Column, Unique, ManyToOne, Generated } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
+import { ComponentDto } from "apps/api/src/modules/discovery/dto/get-app-discovery.dto";
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
@@ -93,7 +94,24 @@ export class UploadVersionEntity extends BaseEntity{
         newVersion.metadata = metadata;
 
         return newVersion;
-    }    
+    }
+
+    toComponentRes(): ComponentDto{
+        const compRes = new ComponentDto()
+        compRes.name = this.component;
+        compRes.versionNumber = this.version;
+        compRes.baseVersion = this.baseVersion || "";
+        compRes.prevVersion = this.prevVersion || "";
+        compRes.catalogId = this.catalogId;
+        
+        compRes.virtualSize = this.virtualSize;
+        
+        compRes.category = this.metadata?.category;
+        compRes.releaseNotes = this.metadata?.releaseNote;
+    
+        return compRes
+      }
+
     toString(){
         return JSON.stringify(this)
     }
