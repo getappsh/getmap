@@ -1,14 +1,15 @@
-import { Entity, Column, Unique, ManyToOne, Generated } from "typeorm";
+import { Entity, Column, Unique, ManyToOne, Generated, ManyToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 import { ComponentDto } from "apps/api/src/modules/discovery/dto/get-app-discovery.dto";
+import { DeviceEntity } from "./device.entity";
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
 
-    @Column({name: "catalog_id"})
+    @Column({name: "catalog_id", unique: true})
     @Generated("increment")
     catalogId: number;
 
@@ -61,6 +62,9 @@ export class UploadVersionEntity extends BaseEntity{
 
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
+
+    @ManyToMany(() => DeviceEntity, deviceEntity => deviceEntity.components)
+    devices: DeviceEntity[]
 
     static fromArtifact({platform, component, formation, OS, version, project, size=0, ...metadata}){
         const newVersion = new UploadVersionEntity()

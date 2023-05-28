@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { UploadVersionEntity } from "./upload-version.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -29,5 +30,22 @@ export class DeviceEntity {
 
     @Column({name: 'available_storage', nullable: true})
     availableStorage: string
+
+    @ManyToMany(() => UploadVersionEntity, uploadVersionEntity => uploadVersionEntity.devices, {
+        cascade: true
+    })
+    @JoinTable({
+        name: "device_component",
+        joinColumn: {
+            name: 'device_ID',
+            referencedColumnName: 'ID'
+        },
+        inverseJoinColumn: {
+            name: "component_catalog_id",
+            referencedColumnName: "catalogId"
+        },
+        
+    })
+    components: UploadVersionEntity[];
 
 }
