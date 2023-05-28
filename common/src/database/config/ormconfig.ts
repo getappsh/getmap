@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import * as path from 'path';
 import { DataSource } from 'typeorm';
-import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity } from '../entities';
+import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity } from '../entities';
 import { Init1680597327216 } from '../migration/1680597327216-Init';
 import { DeliveryStatusEntity } from '../entities/delivery-status.entity';
 
@@ -27,6 +27,7 @@ const ormConfig = new DataSource({
     FormationEntity,
     CategoryEntity,
     OperationSystemEntity,
+    DeviceEntity,
   ],
   migrations: [
     // path.resolve(`${__dirname}/../migration/*.ts`),
