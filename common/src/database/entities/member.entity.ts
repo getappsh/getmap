@@ -1,6 +1,7 @@
-import { Column, Entity, Index, OneToMany } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { MemberProjectEntity } from "./member_project.entity";
+import { ProjectEntity } from "./project.entity";
 
 
 @Entity("member")
@@ -19,6 +20,9 @@ export class MemberEntity extends BaseEntity{
     @OneToMany(() => MemberProjectEntity, memberProject => memberProject)
     memberProjects: MemberProjectEntity[];
 
+    @ManyToOne(() => ProjectEntity)
+    @JoinColumn({name: "default_project"})
+    defaultProject: ProjectEntity
 
     toString(){
         return JSON.stringify(this)
