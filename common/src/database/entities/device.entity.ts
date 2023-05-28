@@ -3,49 +3,49 @@ import { UploadVersionEntity } from "./upload-version.entity";
 
 @Entity("device")
 export class DeviceEntity {
-    
-    @PrimaryColumn({name: 'ID'})
-    ID: string;
 
-    @CreateDateColumn()
-    createdDate: Date;
+  @PrimaryColumn({ name: 'ID' })
+  ID: string;
 
-    @UpdateDateColumn()
-    lastUpdatedDate: Date;
+  @CreateDateColumn()
+  createdDate: Date;
 
-    @Column({name: 'MAC', nullable: true})
-    MAC: string;
+  @UpdateDateColumn()
+  lastUpdatedDate: Date;
 
-    @Column({name: 'IP', nullable: true})
-    IP: string;
+  @Column({ name: 'MAC', nullable: true })
+  MAC: string;
 
-    @Column({name: 'OS', nullable: true})
-    OS: string;
+  @Column({ name: 'IP', nullable: true })
+  IP: string;
 
-    @Column({name: 'serial_number', nullable: true})
-    serialNumber: string;
+  @Column({ name: 'OS', nullable: true })
+  OS: string;
 
-    @Column({name: 'possible_bandwidth', nullable: true})
-    possibleBandwidth: string;
+  @Column({ name: 'serial_number', nullable: true })
+  serialNumber: string;
 
-    @Column({name: 'available_storage', nullable: true})
-    availableStorage: string
+  @Column({ name: 'possible_bandwidth', nullable: true })
+  possibleBandwidth: string;
 
-    @ManyToMany(() => UploadVersionEntity, uploadVersionEntity => uploadVersionEntity.devices, {
-        cascade: true
-    })
-    @JoinTable({
-        name: "device_component",
-        joinColumn: {
-            name: 'device_ID',
-            referencedColumnName: 'ID'
-        },
-        inverseJoinColumn: {
-            name: "component_catalog_id",
-            referencedColumnName: "catalogId"
-        },
-        
-    })
-    components: UploadVersionEntity[];
+  @Column({ name: 'available_storage', nullable: true })
+  availableStorage: string
+
+  @ManyToMany(() => UploadVersionEntity, uploadVersionEntity => uploadVersionEntity.devices, {
+    cascade: true
+  })
+  @JoinTable({
+    name: "device_component",
+    joinColumn: {
+      name: 'device_ID',
+      referencedColumnName: 'ID'
+    },
+    inverseJoinColumn: {
+      name: "component_catalog_id",
+      referencedColumnName: "catalogId"
+    },
+
+  })
+  components: UploadVersionEntity[];
 
 }
