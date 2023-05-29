@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, Unique } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { DeliveryStatusEnum, DeployStatusEnum, DiscoveryType, Formation, OS } from "./enums.entity";
 import { UploadVersionEntity } from "./upload-version.entity";
+import { DeviceEntity } from "./device.entity";
 
 
 
@@ -9,9 +10,10 @@ import { UploadVersionEntity } from "./upload-version.entity";
 // @Unique('device_id_component_unique_constraint', ['deviceId', 'component'])  
 export class DeployStatusEntity extends BaseEntity{
 
-    @Column({name: "device_id"})
-    deviceId: string;
-    
+    @ManyToOne(() => DeviceEntity)
+    @JoinColumn()
+    device: DeviceEntity
+
     @ManyToOne(() => UploadVersionEntity)
     @JoinColumn()
     component: UploadVersionEntity;
