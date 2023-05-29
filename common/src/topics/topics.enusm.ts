@@ -38,7 +38,7 @@ export enum GetMapTopics {
     // Discovery
     GET_RECORDS = 'getapp.getmap.discovery.catalog',
     GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-for-device',
+    GET_DEVICE_CONTENT = 'getapp.getmap.discovery.get-device-content',
     // Delivery
     GET_STATUS = 'getapp.getmap.delivery.get-status',
-    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
 }
