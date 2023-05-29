@@ -41,5 +41,4 @@ export enum GetMapTopics {
     // Delivery
     GET_STATUS = 'getapp.getmap.delivery.get-status',
     GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
-    IS_DOWNLOAD_URL_READY = 'getmap.delivery.is-download-url-ready'
 }
