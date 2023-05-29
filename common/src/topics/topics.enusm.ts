@@ -33,6 +33,7 @@ export enum ProjectManagementTopics{
     GET_PROJECT_RELEASES = 'project-management.get-project-releases',
 
     GET_DEVICES_BY_CATALOG_ID = 'project-management.get-devices-by-catalog-id',
+    GET_DEVICES_BY_PROJECT = 'project-management.get-devices-by-project',
 
 }
 
