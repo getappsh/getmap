@@ -34,6 +34,7 @@ export enum ProjectManagementTopics{
 
     GET_DEVICES_BY_CATALOG_ID = 'project-management.get-devices-by-catalog-id',
     GET_DEVICES_BY_PROJECT = 'project-management.get-devices-by-project',
+    GET_DEVICES_BY_PLATFORM = 'project-management.get-devices-by-platform',
 
 }
 
