@@ -14,7 +14,7 @@ export class DeliveryStatusEntity extends BaseEntity{
     @JoinColumn()
     device: DeviceEntity
     
-    @ManyToOne(() => UploadVersionEntity, comp => comp.catalogId)
+    @ManyToOne(() => UploadVersionEntity)
     @JoinColumn()
     component: UploadVersionEntity;
 
