@@ -40,6 +40,6 @@ export enum GetMapTopics {
     GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-of-device',
     GET_DEVICE_CONTENT = 'getapp.getmap.discovery.get-device-content',
     // Delivery
-    GET_STATUS = 'getapp.getmap.delivery.get-status',
+    GET_STATUS = 'getapp.getmap.delivery.status',
     CREATE_DELIVERY = 'getapp.getmap.delivery.create'
 }
