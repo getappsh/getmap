@@ -41,5 +41,5 @@ export enum GetMapTopics {
     GET_DEVICE_CONTENT = 'getapp.getmap.discovery.get-device-content',
     // Delivery
     GET_STATUS = 'getapp.getmap.delivery.get-status',
-    GET_PACKAGE_URL = 'getapp.getmap.delivery.get-package-url'
+    CREATE_DELIVERY = 'getapp.getmap.delivery.create'
 }
