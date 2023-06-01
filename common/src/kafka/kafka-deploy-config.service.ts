@@ -3,6 +3,9 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
+export const KAFKA_DEPLOY_CLIENT_ID="deploy"
+export const KAFKA_DEPLOY_GROUP_ID="deploy-consumer"
+
 @Injectable()
 export class KafkaDeployConfigService implements ClientsModuleOptionsFactory{
     constructor(private configService: ConfigService) {}
@@ -12,11 +15,11 @@ export class KafkaDeployConfigService implements ClientsModuleOptionsFactory{
             transport: Transport.KAFKA,
             options: {
                 client: {
-                    clientId: this.configService.get<string>('KAFKA_DEPLOY_CLIENT_ID'),
+                    clientId: KAFKA_DEPLOY_CLIENT_ID,
                     brokers : [this.configService.get<string>('KAFKA_BROKER_URL')]
                 },
                 consumer: {
-                    groupId: this.configService.get<string>('KAFKA_DEPLOY_GROUP_ID')
+                    groupId: KAFKA_DEPLOY_GROUP_ID
                 }
             }
         }
