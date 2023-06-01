@@ -41,10 +41,10 @@ export enum ProjectManagementTopics{
 export enum GetMapTopics {
     REGISTER = 'getapp.getmap.register',
     // Discovery
-    GET_RECORDS = 'getapp.getmap.discovery.catalog',
-    GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-for-device',
+    GET_RECORDS = 'getapp.getmap.discovery.get-records',
+    GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-of-device',
+    GET_DEVICE_CONTENT = 'getapp.getmap.discovery.get-device-content',
     // Delivery
-    GET_STATUS = 'getapp.getmap.delivery.get-status',
-    GET_DEVICE_CONTENT = 'getapp.getmap.delivery.get-device-content',
-    IS_DOWNLOAD_URL_READY = 'getmap.delivery.is-download-url-ready'
+    GET_STATUS = 'getapp.getmap.delivery.status',
+    CREATE_DELIVERY = 'getapp.getmap.delivery.create'
 }
