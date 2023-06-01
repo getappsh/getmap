@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
+export const KAFKA_DISCOVERY_CLIENT_ID="discovery"
+export const KAFKA_DISCOVERY_GROUP_ID="discovery-consumer"
+
 @Injectable()
 export class KafkaDiscoveryConfigService implements ClientsModuleOptionsFactory{
 
@@ -13,11 +16,11 @@ export class KafkaDiscoveryConfigService implements ClientsModuleOptionsFactory{
             transport: Transport.KAFKA,
             options: {
                 client: {
-                    clientId: this.configService.get<string>('KAFKA_DISCOVERY_CLIENT_ID'),
+                    clientId: KAFKA_DISCOVERY_CLIENT_ID,
                     brokers : [this.configService.get<string>('KAFKA_BROKER_URL')]
                 },
                 consumer: {
-                    groupId: this.configService.get<string>('KAFKA_DISCOVERY_GROUP_ID')
+                    groupId: KAFKA_DISCOVERY_GROUP_ID
                 }
             }
         }

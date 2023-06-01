@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
+export const KAFKA_PROJECT_MANAGEMENT_CLIENT_ID="project-management"
+export const KAFKA_PROJECT_MANAGEMENT_GROUP_ID="project-management-consumer"
+
 @Injectable()
 export class KafkaProjectManagementConfigService implements ClientsModuleOptionsFactory{
 
@@ -12,11 +15,11 @@ export class KafkaProjectManagementConfigService implements ClientsModuleOptions
             transport: Transport.KAFKA,
             options: {
                 client: {
-                    clientId: this.configService.get<string>('KAFKA_PROJECT_MANAGEMENT_CLIENT_ID'),
+                    clientId: KAFKA_PROJECT_MANAGEMENT_CLIENT_ID,
                     brokers : [this.configService.get<string>('KAFKA_BROKER_URL')]
                 },
                 consumer: {
-                    groupId: this.configService.get<string>('KAFKA_PROJECT_MANAGEMENT_GROUP_ID')
+                    groupId: KAFKA_PROJECT_MANAGEMENT_GROUP_ID
                 }
             }
         }
