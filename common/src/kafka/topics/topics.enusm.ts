@@ -34,7 +34,6 @@ export enum ProjectManagementTopics{
 }
 
 export enum GetMapTopics {
-    REGISTER = 'map.register',
     // Discovery
     DISCOVERY_CATALOG = 'map.discovery.catalog',
     GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
@@ -42,4 +41,8 @@ export enum GetMapTopics {
     // Import
     GET_IMPORT_STATUS = 'map.import.status',
     CREATE_IMPORT = 'map.import.create'
+}
+
+export enum DeviceTopics {
+    REGISTER = 'device.register'
 }
