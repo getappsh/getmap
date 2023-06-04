@@ -34,12 +34,12 @@ export enum ProjectManagementTopics{
 }
 
 export enum GetMapTopics {
-    REGISTER = 'getapp.getmap.register',
+    REGISTER = 'getapp.map.register',
     // Discovery
-    GET_RECORDS = 'getapp.getmap.discovery.get-records',
-    GET_RECORDS_COUNT = 'getmap.discovery.get-records-count-of-device',
-    GET_DEVICE_CONTENT = 'getapp.getmap.discovery.get-device-content',
-    // Delivery
-    GET_STATUS = 'getapp.getmap.delivery.status',
-    CREATE_DELIVERY = 'getapp.getmap.delivery.create'
+    GET_RECORDS = 'getapp.map.discovery.get-records',
+    GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
+    GET_DEVICE_CONTENT = 'getapp.map.discovery.get-device-content',
+    // Import
+    GET_STATUS = 'getapp.map.delivery.status',
+    CREATE_IMPORT = 'getapp.map.import.create'
 }
