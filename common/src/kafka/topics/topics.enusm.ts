@@ -36,7 +36,7 @@ export enum ProjectManagementTopics{
 export enum GetMapTopics {
     REGISTER = 'map.register',
     // Discovery
-    GET_RECORDS = 'map.discovery.get-records',
+    DISCOVERY_CATALOG = 'map.discovery.catalog',
     GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
     GET_DEVICE_CONTENT = 'map.discovery.get-device-content',
     // Import
