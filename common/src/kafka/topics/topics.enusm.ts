@@ -37,12 +37,12 @@ export enum GetMapTopics {
     // Discovery
     DISCOVERY_CATALOG = 'map.discovery.catalog',
     GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
-    GET_DEVICE_CONTENT = 'map.discovery.get-device-content',
     // Import
     GET_IMPORT_STATUS = 'map.import.status',
     CREATE_IMPORT = 'map.import.create'
 }
 
 export enum DeviceTopics {
-    REGISTER = 'device.register'
+    REGISTER = 'device.register',
+    DEVICE_MAP_CONTENT = 'device.map.content.installed',
 }
