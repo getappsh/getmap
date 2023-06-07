@@ -44,5 +44,5 @@ export enum GetMapTopics {
 
 export enum DeviceTopics {
     REGISTER = 'device.map.register',
-    DEVICE_MAP_CONTENT = 'device.map.content.installed',
+    DEVICE_MAP_CONTENT = 'device.content.map.installed',
 }
