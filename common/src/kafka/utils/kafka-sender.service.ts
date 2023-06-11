@@ -14,7 +14,7 @@ export class KafkaSenderService {
     }
 
 
-    send(topic: string, data: any, waitTime?: number ): Observable<{}>{
+    send(topic: string, data: any, waitTime?: number ): Observable<any>{
         waitTime = (waitTime) ? waitTime : parseInt(this.configService.get("MICROSERVICE_RESPONSE_WAIT_TIME"))
         return this.client.send(
             topic,
