@@ -1,16 +1,21 @@
-import { Entity, Column, Unique, ManyToOne, Generated } from "typeorm";
+import { Entity, Column, Unique, ManyToOne, Generated, ManyToMany, BeforeInsert } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 import { ComponentDto } from "apps/api/src/modules/discovery/dto/get-app-discovery.dto";
+import {v4 as uuidv4} from 'uuid'
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
 
-    @Column({name: "catalog_id"})
-    @Generated("increment")
-    catalogId: number;
+    @Column({name: 'catalog_id', unique: true, nullable: true})
+    catalogId: string;
+  
+    @BeforeInsert()
+    generateUUID() {
+      this.catalogId = uuidv4();
+    }
 
     @Column({name: "platform"})
     platform: string;
