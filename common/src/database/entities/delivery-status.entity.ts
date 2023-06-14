@@ -13,7 +13,10 @@ export class DeliveryStatusEntity extends BaseEntity{
     deviceId: string;
     
     @ManyToOne(() => UploadVersionEntity)
-    @JoinColumn()
+    @JoinColumn({
+        name: "component_catalog_id",
+        referencedColumnName: "catalogId"
+    })
     component: UploadVersionEntity;
 
     
