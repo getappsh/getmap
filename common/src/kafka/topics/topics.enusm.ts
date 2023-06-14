@@ -37,7 +37,8 @@ export enum GetMapTopics {
     // Discovery
     GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
     // Import
-    GET_IMPORT_STATUS = 'map.import.status',
+    GET_IMPORT_STATUS = 'map.get.import.status',
+    POST_IMPORT_STATUS = 'map.post.import.status',
     CREATE_IMPORT = 'map.import.create',
     CANCEL_IMPORT_CREATE='map.import.create.cancel',
 }
