@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
-export const KAFKA_DEVICE_CLIENT_ID="device"
-export const KAFKA_DEVICE_GROUP_ID="device-consumer"          
+export const KAFKA_DEVICE_CLIENT_ID="getapp-device"
+export const KAFKA_DEVICE_GROUP_ID="getapp-device-consumer"          
 
 
 @Injectable()

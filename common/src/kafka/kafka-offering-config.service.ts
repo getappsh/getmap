@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
-export const KAFKA_OFFERING_CLIENT_ID="offering"
-export const KAFKA_OFFERING_GROUP_ID="offering-consumer"
+export const KAFKA_OFFERING_CLIENT_ID="getapp-offering"
+export const KAFKA_OFFERING_GROUP_ID="getapp-offering-consumer"
 
 @Injectable()
 export class KafkaOfferingConfigService implements ClientsModuleOptionsFactory{
