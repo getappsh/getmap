@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
+import { getKafkaConfigClient } from "./utils";
 
 export const KAFKA_DEVICE_CLIENT_ID="getapp-device"
 export const KAFKA_DEVICE_GROUP_ID="getapp-device-consumer"          
@@ -15,10 +16,7 @@ export class KafkaDeviceConfigService implements ClientsModuleOptionsFactory{
        return {
             transport: Transport.KAFKA,
             options: {
-                client: {
-                    clientId: KAFKA_DEVICE_CLIENT_ID,
-                    brokers : [this.configService.get<string>('KAFKA_BROKER_URL')]
-                },
+                client: getKafkaConfigClient(KAFKA_DEVICE_CLIENT_ID),
                 consumer: {
                     groupId: KAFKA_DEVICE_GROUP_ID
                 }
