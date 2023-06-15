@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/microservices";
 
-export const KAFKA_DEPLOY_CLIENT_ID="deploy"
-export const KAFKA_DEPLOY_GROUP_ID="deploy-consumer"
+export const KAFKA_DEPLOY_CLIENT_ID="getapp-deploy"
+export const KAFKA_DEPLOY_GROUP_ID="getapp-deploy-consumer"
 
 @Injectable()
 export class KafkaDeployConfigService implements ClientsModuleOptionsFactory{
