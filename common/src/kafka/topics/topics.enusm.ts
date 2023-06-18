@@ -1,55 +1,56 @@
 export enum UploadTopics {
-    UPLOAD_ARTIFACT = 'upload.artifact',
-    UPLOAD_MANIFEST = 'upload.manifest',
-    UPDATE_UPLOAD_STATUS = 'upload.update-upload-status',
-    LAST_VERSION = 'upload.last-version'
+    UPLOAD_ARTIFACT = 'getapp-upload.artifact',
+    UPLOAD_MANIFEST = 'getapp-upload.manifest',
+    UPDATE_UPLOAD_STATUS = 'getapp-upload.update-upload-status',
+    LAST_VERSION = 'getapp-upload.last-version'
 }
 
 export enum DiscoveryTopics {
-    DISCOVERY_MESSAGE = "discovery.discovery-message"
+    DISCOVERY_MESSAGE = "getapp-discovery.discovery-message"
 }
 
 export enum DeliveryTopics {
-    UPDATE_DOWNLOAD_STATUS = "delivery.update-download-status",
+    UPDATE_DOWNLOAD_STATUS = "getapp-delivery.update-download-status",
 }
 
 export enum OfferingTopics {
-    CHECK_UPDATES = "offering.check-updates",
-    GET_OFFER_OF_COMP = "offering.get-offering-of-comp",
+    CHECK_UPDATES = "getapp-offering.check-updates",
+    GET_OFFER_OF_COMP = "getapp-offering.get-offering-of-comp",
 }
 
 export enum DeployTopics {
-    UPDATE_DEPLOY_STATUS = "deploy.update-deploy-status",
+    UPDATE_DEPLOY_STATUS = "getapp-deploy.update-deploy-status",
 }
 
 export enum ProjectManagementTopics{
-    GET_USER_PROJECTS = 'project-management.get-user-projects',
-    GET_PROJECT_CONFIG_OPTION = 'project-management.get-project-config-option',
-    CREATE_PROJECT = 'project-management.create-project',
-    CREATE_TOKEN = 'project-management.create-token',
-    ADD_NEW_MEMBER = 'project-management.add-new-member',
-    EDIT_MEMBER = 'project-management.edit-member',
-    REMOVE_MEMBER = 'project-management.remove-member',
-    GET_PROJECT_RELEASES = 'project-management.get-project-releases',
+    GET_USER_PROJECTS = 'getapp-project-management.get-user-projects',
+    GET_PROJECT_CONFIG_OPTION = 'getapp-project-management.get-project-config-option',
+    CREATE_PROJECT = 'getapp-project-management.create-project',
+    CREATE_TOKEN = 'getapp-project-management.create-token',
+    ADD_NEW_MEMBER = 'getapp-project-management.add-new-member',
+    EDIT_MEMBER = 'getapp-project-management.edit-member',
+    REMOVE_MEMBER = 'getapp-project-management.remove-member',
+    GET_PROJECT_RELEASES = 'getapp-project-management.get-project-releases',
 
-    GET_DEVICES_BY_CATALOG_ID = 'project-management.get-devices-by-catalog-id',
-    GET_DEVICES_BY_PROJECT = 'project-management.get-devices-by-project',
-    GET_DEVICES_BY_PLATFORM = 'project-management.get-devices-by-platform',
+    GET_DEVICES_BY_CATALOG_ID = 'getapp-project-management.get-devices-by-catalog-id',
+    GET_DEVICES_BY_PROJECT = 'getapp-project-management.get-devices-by-project',
+    GET_DEVICES_BY_PLATFORM = 'getapp-project-management.get-devices-by-platform',
 
 }
 
 export enum GetMapTopics {
     // Discovery
-    GET_RECORDS_COUNT = 'map.discovery.get-records-count-of-device',
+    GET_RECORDS_COUNT = 'getapp-map.discovery.get-records-count-of-device',
     // Import
-    GET_IMPORT_STATUS = 'map.get.import.status',
-    POST_IMPORT_STATUS = 'map.post.import.status',
-    CREATE_IMPORT = 'map.import.create',
-    CANCEL_IMPORT_CREATE='map.import.create.cancel',
+    GET_IMPORT_STATUS = 'getapp-map.get.import.status',
+    POST_IMPORT_STATUS = 'getapp-map.post.import.status',
+    CREATE_IMPORT = 'getapp-map.import.create',
+    CANCEL_IMPORT_CREATE='getapp-map.import.create.cancel',
 }
 
 export enum DeviceTopics {
-    REGISTER = 'device.map.register',
-    DEVICE_MAP_CONTENT = 'device.content.map.installed',
-    DISCOVERY_MAP = 'device.discover.map',
+    REGISTER = 'getapp-device.map.register',
+    DEVICE_MAP_CONTENT = 'getapp-device.content.map.installed',
+    DISCOVERY_MAP = 'getapp-device.discover.map',
+    DISCOVERY_SOFTWARE = 'getapp-device.discover.software.catalog',
 }
