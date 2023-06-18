@@ -2,7 +2,7 @@ import { Entity, Column, Unique, ManyToOne, Generated, ManyToMany, BeforeInsert 
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
-import { ComponentDto } from "apps/api/src/modules/discovery/dto/get-app-discovery.dto";
+import { ComponentDto } from "apps/api/src/modules/device/dto/discovery/discovery-software.dto";
 import {v4 as uuidv4} from 'uuid'
 
 @Entity('upload_version')
