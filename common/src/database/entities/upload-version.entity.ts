@@ -9,7 +9,7 @@ import {v4 as uuidv4} from 'uuid'
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
 export class UploadVersionEntity extends BaseEntity{
 
-    @Column({name: 'catalog_id', unique: true, nullable: true})
+    @Column({name: 'catalog_id', unique: true})
     catalogId: string;
   
     @BeforeInsert()
