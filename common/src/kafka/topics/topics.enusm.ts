@@ -51,6 +51,7 @@ export enum GetMapTopics {
 export enum DeviceTopics {
     REGISTER = 'getapp-device.map.register',
     DEVICE_MAP_CONTENT = 'getapp-device.content.map.installed',
+    DEVICE_SOFTWARE_CONTENT = 'getapp-device.content.software.installed',
     DISCOVERY_MAP = 'getapp-device.discover.map',
     DISCOVERY_SOFTWARE = 'getapp-device.discover.software.catalog',
 }
