@@ -2,7 +2,6 @@ import { Entity, Column, Unique, ManyToOne, Generated, ManyToMany, BeforeInsert 
 import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
-import { ComponentDto } from "apps/api/src/modules/device/dto/discovery/discovery-software.dto";
 import {v4 as uuidv4} from 'uuid'
 
 @Entity('upload_version')
@@ -100,22 +99,6 @@ export class UploadVersionEntity extends BaseEntity{
 
         return newVersion;
     }
-
-    toComponentRes(): ComponentDto{
-        const compRes = new ComponentDto()
-        compRes.name = this.component;
-        compRes.versionNumber = this.version;
-        compRes.baseVersion = this.baseVersion || "";
-        compRes.prevVersion = this.prevVersion || "";
-        compRes.catalogId = this.catalogId;
-        
-        compRes.virtualSize = this.virtualSize;
-        
-        compRes.category = this.metadata?.category;
-        compRes.releaseNotes = this.metadata?.releaseNote;
-    
-        return compRes
-      }
 
     toString(){
         return JSON.stringify(this)
