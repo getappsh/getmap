@@ -12,7 +12,7 @@ export const uploadVersionEntityStub = (): UploadVersionEntity => {
     baseVersion: null,
     prevVersion: null,
     metadata: {},
-    s3Url: 's3Url',
+    s3Url: 's3/path/',
     uploadStatus: UploadStatus.STARTED,
     deploymentStatus: null,
     securityStatus: null,
