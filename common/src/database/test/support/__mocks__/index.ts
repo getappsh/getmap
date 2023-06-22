@@ -3,3 +3,8 @@ export * from './delivery-status.repo.mock'
 export * from './upload-version.repo.mock'
 export * from './discovery-message.mock'
 export * from './device.repo.mock'
+export * from './project.repo.mock'
+export * from './member.repo.mock'
+export * from './member-project.repo.mock'
+export * from './project-types.repo.mocks'
+
