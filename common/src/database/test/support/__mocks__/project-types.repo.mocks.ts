@@ -1,4 +1,4 @@
-import { categoryEntityStub, formationEntityStub, operationsSystemEntityStub, platformEntityStub } from "../stubs";
+import { categoryEntityStub, formationEntityStub, operationSystemEntityStub, platformEntityStub } from "../stubs";
 
 export const mockCategoryRepo = () => {
   return {
@@ -13,9 +13,9 @@ export const mockFormationRepo = () => {
 };
 
 
-export const mockOperationsSystemRepo = () => {
+export const mockOperationSystemRepo = () => {
   return {
-    find: jest.fn().mockResolvedValue([operationsSystemEntityStub(), operationsSystemEntityStub()]),
+    find: jest.fn().mockResolvedValue([operationSystemEntityStub(), operationSystemEntityStub()]),
   }
 };
 

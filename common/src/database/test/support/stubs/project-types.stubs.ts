@@ -12,7 +12,7 @@ export const formationEntityStub = (): FormationEntity => {
   } as FormationEntity
 };
 
-export const operationsSystemEntityStub = (): OperationSystemEntity => {
+export const operationSystemEntityStub = (): OperationSystemEntity => {
   return {
     name: 'windows'
   } as OperationSystemEntity

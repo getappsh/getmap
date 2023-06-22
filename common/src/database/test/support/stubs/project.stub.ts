@@ -1,11 +1,12 @@
 import { ProjectEntity } from "@app/common/database/entities";
 import { uploadVersionEntityStub } from "./upload-version.stub";
-import { categoryEntityStub, formationEntityStub, operationsSystemEntityStub, platformEntityStub } from "./project-types.stubs";
+import { categoryEntityStub, formationEntityStub, operationSystemEntityStub, platformEntityStub } from "./project-types.stubs";
 
 export const projectEntityStub = (): ProjectEntity => {
   return {
+    id: 34,
     componentName: uploadVersionEntityStub().component,
-    OS: operationsSystemEntityStub(),
+    OS: operationSystemEntityStub(),
     platformType: platformEntityStub(),
     formation: formationEntityStub(),
     category: categoryEntityStub(),
