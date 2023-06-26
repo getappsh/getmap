@@ -1,1 +1,1 @@
-export * from './topics.enusm'
+export * from './topics.enums'
