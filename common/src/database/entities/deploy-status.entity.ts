@@ -1,6 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, Unique } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
-import { DeliveryStatusEnum, DeployStatusEnum, DiscoveryType, Formation, OS } from "./enums.entity";
+import { DeliveryStatusEnum, DeployStatusEnum } from "./enums.entity";
 import { UploadVersionEntity } from "./upload-version.entity";
 
 
