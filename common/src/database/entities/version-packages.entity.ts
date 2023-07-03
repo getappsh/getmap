@@ -1,4 +1,4 @@
-import { Column, Entity, Index, Unique } from "typeorm";
+import { Column, Entity, Index } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { OS, Formation, PackageStatus } from "./enums.entity";
 import { IsValidStringFor } from './../../validators';
