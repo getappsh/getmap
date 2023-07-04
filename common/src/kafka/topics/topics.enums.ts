@@ -24,12 +24,17 @@ export enum DeployTopics {
 
 export enum ProjectManagementTopics{
     GET_USER_PROJECTS = 'getapp-project-management.get-user-projects',
-    ADD_PROJECT = 'getapp-project-management.add-project',
+    GET_PROJECT_CONFIG_OPTION = 'getapp-project-management.get-project-config-option',
+    CREATE_PROJECT = 'getapp-project-management.create-project',
     CREATE_TOKEN = 'getapp-project-management.create-token',
     ADD_NEW_MEMBER = 'getapp-project-management.add-new-member',
     EDIT_MEMBER = 'getapp-project-management.edit-member',
     REMOVE_MEMBER = 'getapp-project-management.remove-member',
-    GET_PROJECT_RELEASES = 'getapp-project-management.get-project-releases'
+    GET_PROJECT_RELEASES = 'getapp-project-management.get-project-releases',
+
+    GET_DEVICES_BY_CATALOG_ID = 'getapp-project-management.get-devices-by-catalog-id',
+    GET_DEVICES_BY_PROJECT = 'getapp-project-management.get-devices-by-project',
+    GET_DEVICES_BY_PLATFORM = 'getapp-project-management.get-devices-by-platform',
 
 }
 
@@ -44,8 +49,10 @@ export enum GetMapTopics {
 }
 
 export enum DeviceTopics {
-    REGISTER = 'getapp-device.map.register',
+    REGISTER_MAP = 'getapp-device.map.register',
+    REGISTER_SOFTWARE = 'getapp-device.register.software',
     DEVICE_MAP_CONTENT = 'getapp-device.content.map.installed',
+    DEVICE_SOFTWARE_CONTENT = 'getapp-device.content.software.installed',
     DISCOVERY_MAP = 'getapp-device.discover.map',
     DISCOVERY_SOFTWARE = 'getapp-device.discover.software.catalog',
 }

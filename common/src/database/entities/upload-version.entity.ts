@@ -3,6 +3,7 @@ import { BaseEntity } from "./base.entity";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 import {v4 as uuidv4} from 'uuid'
+import { DeviceEntity } from "./device.entity";
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
@@ -65,6 +66,9 @@ export class UploadVersionEntity extends BaseEntity{
 
     @ManyToOne(() => ProjectEntity)
     project: ProjectEntity
+
+    @ManyToMany(() => DeviceEntity, deviceEntity => deviceEntity.components)
+    devices: DeviceEntity[]
 
     static fromArtifact({platform, component, formation, OS, version, project, size=0, ...metadata}){
         const newVersion = new UploadVersionEntity()
