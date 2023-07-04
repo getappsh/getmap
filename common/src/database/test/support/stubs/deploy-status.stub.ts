@@ -1,10 +1,11 @@
 import { DeployStatusEntity, DeployStatusEnum } from "@app/common/database/entities";
 import { uploadVersionEntityStub } from "./upload-version.stub";
+import { deviceEntityStub } from "./device.stub";
 
 
 export const deployStatusEntityStub = (): DeployStatusEntity => {
   return {
-    deviceId: 'device123',
+    device: deviceEntityStub(),
     component: uploadVersionEntityStub(),
     deployStatus: DeployStatusEnum.START,
     deployStart: null,
@@ -13,7 +14,6 @@ export const deployStatusEntityStub = (): DeployStatusEntity => {
     deployEstimateTime: 3600,
     currentTime: null,
   } as DeployStatusEntity
-
 };
 
 

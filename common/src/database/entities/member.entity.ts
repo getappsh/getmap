@@ -1,15 +1,12 @@
-import { Column, Entity, Index, OneToMany } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "./base.entity";
 import { MemberProjectEntity } from "./member_project.entity";
+import { ProjectEntity } from "./project.entity";
 
 
 @Entity("member")
 export class MemberEntity extends BaseEntity{
     
-    @Index({unique: true})
-    @Column({name: "member_id"})
-    member_id: string;
-
     @Column({name: "first_name"})
     firstName: string;
 
@@ -20,12 +17,12 @@ export class MemberEntity extends BaseEntity{
     @Column({name: "email"})
     email: string;
 
-    @Column({name: "default_project", default: null})
-    defaultProject: string;
-
     @OneToMany(() => MemberProjectEntity, memberProject => memberProject)
     memberProjects: MemberProjectEntity[];
 
+    @ManyToOne(() => ProjectEntity)
+    @JoinColumn({name: "default_project"})
+    defaultProject: ProjectEntity
 
     toString(){
         return JSON.stringify(this)
