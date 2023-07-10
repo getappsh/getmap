@@ -8,6 +8,7 @@ import { KafkaUploadConfigService } from "./kafka-upload-config.service"
 import { KafkaGetMapConfigService } from "./kafka-get-map-config.service"
 import { KafkaDeployConfigService } from "./kafka-deploy-config.service"
 import { KafkaDeviceConfigService } from "./kafka-device-config.service"
+import { KafkaDeviceMapConfigService } from "./kafka-device-map-config.service"
 
 export const KafkaUploadModule = ClientsModule.registerAsync([{
   name: 'UPLOAD_SERVICE',
@@ -55,5 +56,11 @@ export const KafkaGetMapModule = ClientsModule.registerAsync([{
 export const KafkaDeviceModule = ClientsModule.registerAsync([{
   name: 'DEVICE_SERVICE',
   useExisting: KafkaDeviceConfigService,
+  imports: [KafkaConfigModule]
+}])
+
+export const KafkaDeviceMapModule = ClientsModule.registerAsync([{
+  name: 'DEVICE_MAP_SERVICE',
+  useExisting: KafkaDeviceMapConfigService,
   imports: [KafkaConfigModule]
 }])
