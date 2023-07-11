@@ -7,10 +7,8 @@ const ormConfig = new DataSource({
   type: 'postgres',
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-
+  ...getDBAuthParams(),
   entities: [
     UploadVersionEntity,
     ProjectEntity,
@@ -28,7 +26,25 @@ const ormConfig = new DataSource({
   ],
   migrations: [join(__dirname, '../migration/*.ts')],
   logging: false,
-  synchronize: false,
+  synchronize: true,
   migrationsTableName: "history",
 });
+
+function getDBAuthParams(){
+  switch (process.env.DEPLOY_ENV){
+    case "CTS" : {
+      return {
+        ssl: {
+          cert: process.env.CERT_PATH
+        }      
+      }
+    }
+    default: {
+      return {
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+      }
+    }
+  }
+}
 export default ormConfig;
