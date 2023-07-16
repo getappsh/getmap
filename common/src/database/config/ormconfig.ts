@@ -2,6 +2,8 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity } from '../entities';
 import { join } from 'path';
+import { readFileSync } from 'fs'
+
 
 const ormConfig = new DataSource({
   type: 'postgres',
@@ -37,7 +39,8 @@ function getDBAuthParams(){
     case "CTS" : {
       return {
         ssl: {
-          cert: process.env.CERT_PATH
+          key: [readFileSync('/pg-keys/getapp-playground-kclient-0.key', 'utf-8')],
+          cert: [readFileSync('/pg-keys//pg-keys/getapp-playground-kclient-0.key', 'utf-8')]
         }      
       }
     }
