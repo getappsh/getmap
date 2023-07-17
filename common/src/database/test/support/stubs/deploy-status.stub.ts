@@ -1,4 +1,4 @@
-import { DeployStatusEntity, DeployStatusEnum } from "@app/common/database/entities";
+import { DeliveryTypeEnum, DeployStatusEntity, DeployStatusEnum } from "@app/common/database/entities";
 import { uploadVersionEntityStub } from "./upload-version.stub";
 import { deviceEntityStub } from "./device.stub";
 
@@ -8,6 +8,7 @@ export const deployStatusEntityStub = (): DeployStatusEntity => {
     device: deviceEntityStub(),
     component: uploadVersionEntityStub(),
     deployStatus: DeployStatusEnum.START,
+    type: DeliveryTypeEnum.SOFTWARE,
     deployStart: null,
     deployStop: null,
     deployDone: null,
