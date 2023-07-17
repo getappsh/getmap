@@ -4,7 +4,7 @@ import { ClientProvider, ClientsModuleOptionsFactory, Transport } from "@nestjs/
 import { getKafkaConfigClient } from "./utils";
 
 export const KAFKA_MAP_DEVICE_CLIENT_ID="getapp-map-device"
-export const KAFKA_MAP_DEVICE_GROUP_ID="getapp-map-device-consumer"          
+export const KAFKA_MAP_DEVICE_GROUP_ID="getapp-map-device-consumer.cancel"          
 
 
 @Injectable()

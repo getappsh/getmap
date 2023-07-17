@@ -46,15 +46,14 @@ export enum GetMapTopics {
     POST_IMPORT_STATUS = 'getapp-map.post.import.status',
     CREATE_IMPORT = 'getapp-map.import.create',
     CANCEL_IMPORT_CREATE='getapp-map.import.create.cancel',
+    // Device
+    REGISTER_MAP = 'getapp-device.map.register',
+    DISCOVERY_MAP = 'getapp-device.discover.map',
 }
 
 export enum DeviceTopics {
     REGISTER_SOFTWARE = 'getapp-device.register.software',
     DEVICE_CONTENT = 'getapp-device.content.installed',
     DISCOVERY_SOFTWARE = 'getapp-device.discover.software.catalog',
-}
-export enum DeviceMapTopics {
-    REGISTER_MAP = 'getapp-device.map.register',
-    DISCOVERY_MAP = 'getapp-device.discover.map',
 }
 
