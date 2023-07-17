@@ -20,9 +20,9 @@ function getConfigCTS(clientId?: string): KafkaConfig{
     brokers : [process.env.KAFKA_BROKER_URL],
     ssl: {
       rejectUnauthorized: false,
-      ca: [readFileSync('/kafka-keys/cacerts.pem', 'utf-8')],
-      key: [readFileSync('/kafka-keys/getapp-playground-kclient-0.key', 'utf-8')],
-      cert: [readFileSync('/kafka-keys//kafka-keys/getapp-playground-kclient-0.key', 'utf-8')]
+      ca: [readFileSync(process.env.KAFKA_PEM_PATH)],
+      key: [readFileSync(process.env.KAFKA_KEY_PATH)],
+      cert: [readFileSync(process.env.KAFKA_CERT_PATH)]
     }
 
   }
