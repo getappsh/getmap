@@ -63,3 +63,10 @@ export enum DeployStatusEnum{
     CANCELLED = "Cancelled",
     ERROR = 'Error',
 }
+
+export enum DeliveryTypeEnum {
+    SOFTWARE = 'software',
+    MAP = 'map',
+}
+
+
