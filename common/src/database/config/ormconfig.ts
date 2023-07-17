@@ -39,8 +39,8 @@ function getDBAuthParams(){
     case "CTS" : {
       return {
         ssl: {
-          key: [readFileSync('/pg-keys/getapp-playground-kclient-0.key', 'utf-8')],
-          cert: [readFileSync('/pg-keys//pg-keys/getapp-playground-kclient-0.key', 'utf-8')]
+          key: [readFileSync(process.env.DB_KEY_PATH)],
+          cert: [readFileSync(process.env.DB_CERT_PATH)]
         }      
       }
     }
