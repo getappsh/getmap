@@ -7,17 +7,14 @@ import { KafkaUploadConfigService } from './kafka-upload-config.service';
 import { KafkaGetMapConfigService } from './kafka-get-map-config.service';
 import { KafkaDeployConfigService } from './kafka-deploy-config.service';
 import { KafkaDeviceConfigService } from './kafka-device-config.service';
-import { KafkaDeviceMapConfigService } from './kafka-device-map-config.service';
 
 
 @Module({
   providers: [KafkaUploadConfigService, KafkaDeliveryConfigService, KafkaOfferingConfigService, KafkaDeployConfigService,
-    KafkaDiscoveryConfigService, KafkaProjectManagementConfigService, KafkaGetMapConfigService, KafkaDeviceConfigService, 
-    KafkaDeviceMapConfigService],
+    KafkaDiscoveryConfigService, KafkaProjectManagementConfigService, KafkaGetMapConfigService, KafkaDeviceConfigService],
     
   exports: [KafkaUploadConfigService, KafkaDeliveryConfigService, KafkaOfferingConfigService, KafkaDeployConfigService,
-    KafkaDiscoveryConfigService, KafkaProjectManagementConfigService, KafkaGetMapConfigService, KafkaDeviceConfigService,
-    KafkaDeviceMapConfigService],
+    KafkaDiscoveryConfigService, KafkaProjectManagementConfigService, KafkaGetMapConfigService, KafkaDeviceConfigService],
 })
 export class KafkaConfigModule {}
 

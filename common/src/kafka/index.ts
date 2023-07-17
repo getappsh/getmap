@@ -59,8 +59,8 @@ export const KafkaDeviceModule = ClientsModule.registerAsync([{
   imports: [KafkaConfigModule]
 }])
 
-export const KafkaDeviceMapModule = ClientsModule.registerAsync([{
-  name: 'DEVICE_MAP_SERVICE',
-  useExisting: KafkaDeviceMapConfigService,
-  imports: [KafkaConfigModule]
-}])
+// export const KafkaDeviceMapModule = ClientsModule.registerAsync([{
+//   name: 'DEVICE_MAP_SERVICE',
+//   useExisting: KafkaDeviceMapConfigService,
+//   imports: [KafkaConfigModule]
+// }])
