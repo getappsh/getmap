@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { UploadVersionEntity } from "./upload-version.entity";
+import { MapEntity } from "./map.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -47,5 +48,22 @@ export class DeviceEntity {
 
   })
   components: UploadVersionEntity[];
+
+  @ManyToMany(() => MapEntity, mapEntity => mapEntity.devices, {
+    cascade: true
+  })
+  @JoinTable({
+    name: "device_map",
+    joinColumn: {
+      name: 'device_ID',
+      referencedColumnName: 'ID'
+    },
+    inverseJoinColumn: {
+      name: "map_request_id",
+      referencedColumnName: "requestId"
+    },
+
+  })
+  maps: MapEntity[];
 
 }
