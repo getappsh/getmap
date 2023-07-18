@@ -60,7 +60,7 @@ export class DeviceEntity {
     },
     inverseJoinColumn: {
       name: "map_request_id",
-      referencedColumnName: "requestId"
+      referencedColumnName: "importRequestId"
     },
 
   })

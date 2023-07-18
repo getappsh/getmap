@@ -5,8 +5,8 @@ import { DeviceEntity } from "./device.entity";
 @Entity("map")
 export class MapEntity {
 
-  @PrimaryColumn({ name: 'request_id' })
-  requestId: string;
+  @PrimaryColumn({ name: 'import_request_id' })
+  importRequestId: string;
 
   @Column({ name: 'product_id', nullable: true })
   productId: string;
