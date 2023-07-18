@@ -69,4 +69,12 @@ export enum DeliveryTypeEnum {
     MAP = 'map',
 }
 
+export enum MapImportStatusEnum {
+    START = 'Start',
+    IN_PROGRESS = 'InProgress',
+    DONE = 'Done',
+    CANCEL = 'Cancel',
+    ERROR = 'Error',
+  }
+
 
