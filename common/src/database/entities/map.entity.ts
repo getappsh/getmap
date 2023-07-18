@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { MapImportStatusEnum } from "./enums.entity";
+import { DeviceEntity } from "./device.entity";
 
 @Entity("map")
 export class MapEntity {
@@ -36,6 +37,8 @@ export class MapEntity {
     })
   status: MapImportStatusEnum;
 
+  @ManyToMany(() => DeviceEntity, deviceEntity => deviceEntity.maps)
+  devices: DeviceEntity[]
 
   toString(){
     return JSON.stringify(this)
