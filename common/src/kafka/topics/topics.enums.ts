@@ -56,4 +56,7 @@ export enum DeviceTopics {
     DEVICE_CONTENT = 'getapp-device.content.installed',
     DISCOVERY_SOFTWARE = 'getapp-device.discover.software.catalog',
 }
+export enum DeviceTopicsEmit {
+    SAVE_MAP_DATA = 'getapp-device.map.save-data',
+}
 
