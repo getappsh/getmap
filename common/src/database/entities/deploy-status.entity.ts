@@ -14,12 +14,8 @@ export class DeployStatusEntity extends BaseEntity{
     @JoinColumn()
     device: DeviceEntity
 
-    @ManyToOne(() => UploadVersionEntity)
-    @JoinColumn({
-        name: "component_catalog_id",
-        referencedColumnName: "catalogId"
-    })
-    component: UploadVersionEntity;
+    @Column({name: 'catalogId', nullable: false})
+    catalogId: string;
     
     @Column({
         name: 'status',
