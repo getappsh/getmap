@@ -6,7 +6,7 @@ import { deviceEntityStub } from "./device.stub";
 export const deployStatusEntityStub = (): DeployStatusEntity => {
   return {
     device: deviceEntityStub(),
-    component: uploadVersionEntityStub(),
+    catalogId: uploadVersionEntityStub().catalogId,
     deployStatus: DeployStatusEnum.START,
     type: DeliveryTypeEnum.SOFTWARE,
     deployStart: null,
