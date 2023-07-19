@@ -1,4 +1,4 @@
-import { BadRequestException, Logger } from "@nestjs/common";
+import { InternalServerErrorException, Logger } from "@nestjs/common";
 import { Injectable } from "@nestjs/common/decorators";
 import { ConfigService } from "@nestjs/config";
 import { ClientKafka } from "@nestjs/microservices";
@@ -43,7 +43,7 @@ export class KafkaSenderService {
                     this.logger.log(`Validation error for response of topic: ${topic}`);
                     const constraints = errors.map((error) => Object.values(error.constraints ?? {})).flat();
                     this.logger.debug(`error list: ${errors}`);
-                    throw new BadRequestException(constraints);
+                    throw new InternalServerErrorException(constraints);
                 }
                 return res;
             })
