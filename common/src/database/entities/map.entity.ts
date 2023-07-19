@@ -26,8 +26,8 @@ export class MapEntity {
   @Column({ name: 'bounding_box', nullable: true })
   boundingBox: string;
 
-  @Column({ name: 'url', nullable: true })
-  url: string;
+  @Column({ name: 'package_url', nullable: true })
+  packageUrl: string;
 
   @Column({
      name: 'status',
