@@ -1,12 +1,12 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, ManyToMany, PrimaryColumn } from "typeorm";
 import { MapImportStatusEnum } from "./enums.entity";
 import { DeviceEntity } from "./device.entity";
 
 @Entity("map")
 export class MapEntity {
 
-  @PrimaryColumn({ name: 'import_request_id' })
-  importRequestId: string;
+  @PrimaryColumn({ name: 'catalog_id' })
+  catalogId: string;
 
   @Column({ name: 'product_id', nullable: true })
   productId: string;
