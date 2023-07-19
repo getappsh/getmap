@@ -20,7 +20,7 @@ export class MapEntity {
   @Column({ name: 'zoom_level', nullable: true })
   zoomLevel: number;
 
-  @Column({ name: 'create_date', nullable: true })
+  @Column({ name: 'create_date', type: 'timestamp', nullable: true })
   createDate: Date;
 
   @Column({ name: 'bounding_box', nullable: true })
