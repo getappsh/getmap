@@ -49,6 +49,8 @@ export enum GetMapTopics {
     // Device
     REGISTER_MAP = 'getapp-device.map.register',
     DISCOVERY_MAP = 'getapp-device.discover.map',
+    
+    MPA_PROPERTIES = 'getapp-map.map.properties'
 }
 
 export enum DeviceTopics {
