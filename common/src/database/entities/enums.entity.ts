@@ -64,7 +64,7 @@ export enum DeployStatusEnum{
     ERROR = 'Error',
 }
 
-export enum DeliveryTypeEnum {
+export enum ItemTypeEnum {
     SOFTWARE = 'software',
     MAP = 'map',
 }

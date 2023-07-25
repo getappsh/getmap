@@ -1,4 +1,4 @@
-import { DeliveryStatusEntity, DeliveryStatusEnum, DeliveryTypeEnum } from "@app/common/database/entities";
+import { DeliveryStatusEntity, DeliveryStatusEnum, ItemTypeEnum } from "@app/common/database/entities";
 import { uploadVersionEntityStub } from "./upload-version.stub";
 import { deviceEntityStub } from "./device.stub";
 
@@ -7,7 +7,7 @@ export const deliveryStatusEntityStub = (): DeliveryStatusEntity => {
     device: deviceEntityStub(),
     catalogId: uploadVersionEntityStub().catalogId,
     deliveryStatus: DeliveryStatusEnum.DOWNLOAD,
-    type: DeliveryTypeEnum.SOFTWARE,
+    type: ItemTypeEnum.SOFTWARE,
     downloadStart: null,
     downloadDone: null,
     downloadStop: null,
