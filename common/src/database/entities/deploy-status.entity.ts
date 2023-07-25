@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
-import { DeliveryStatusEnum, DeliveryTypeEnum, DeployStatusEnum } from "./enums.entity";
+import { DeliveryStatusEnum, ItemTypeEnum, DeployStatusEnum } from "./enums.entity";
 import { DeviceEntity } from "./device.entity";
 
 
@@ -27,10 +27,10 @@ export class DeployStatusEntity extends BaseEntity{
     @Column({
         name: 'type',
         type: "enum",
-        enum: DeliveryTypeEnum,
-        default: DeliveryTypeEnum.SOFTWARE
+        enum: ItemTypeEnum,
+        default: ItemTypeEnum.SOFTWARE
       })
-    type: DeliveryTypeEnum
+    type: ItemTypeEnum
 
     @Column({name: 'deploy_start', type: 'timestamp', nullable: true})
     deployStart: Date;
