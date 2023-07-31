@@ -11,7 +11,8 @@ export enum DiscoveryTopics {
 
 export enum DeliveryTopics {
     UPDATE_DOWNLOAD_STATUS = "getapp-delivery.update-download-status",
-    PREPARE_DELIVERY = "getapp-delivery.prepare"
+    PREPARE_DELIVERY = "getapp-delivery.prepare",
+    PREPARED_DELIVERY_STATUS = "getapp-delivery.prepared-status"
 }
 
 export enum OfferingTopics {
