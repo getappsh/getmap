@@ -27,6 +27,7 @@ export enum DeployTopics {
 export enum ProjectManagementTopics{
     GET_USER_PROJECTS = 'getapp-project-management.get-user-projects',
     GET_PROJECT_CONFIG_OPTION = 'getapp-project-management.get-project-config-option',
+    SET_PROJECT_CONFIG_OPTION = 'getapp-project-management.set-project-config-option',
     CREATE_PROJECT = 'getapp-project-management.create-project',
     CREATE_TOKEN = 'getapp-project-management.create-token',
     ADD_NEW_MEMBER = 'getapp-project-management.add-new-member',
