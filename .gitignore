@@ -38,3 +38,5 @@ lerna-debug.log*
 
 temp_docker_images/*
 .gitlab-ci.yml
+
+manifest.json
