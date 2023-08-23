@@ -20,6 +20,9 @@ export function getSocketClientConfig(type: MicroserviceType): ClientProvider {
     case MicroserviceType.DEVICE:
       // For device using discovery microservice
       return socketDiscoveryConfig()
+    case MicroserviceType.MICRO_DISCOVERY:
+      // Using the offering microservice
+      return socketOfferingConfig()
     
   }
 }

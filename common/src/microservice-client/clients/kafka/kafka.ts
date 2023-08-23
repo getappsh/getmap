@@ -20,6 +20,8 @@ export function getKafkaClientConfig(type: MicroserviceType): ClientProvider {
       return kafkaGetMapConfig()
     case MicroserviceType.DEVICE:
       return kafkaDeviceConfig()
+    case MicroserviceType.MICRO_DISCOVERY:
+      return kafkaDiscoverMicroConfig()
   }
 }
 
@@ -132,6 +134,20 @@ const kafkaDeviceConfig = (): ClientProvider => {
         client: getKafkaConnection(KAFKA_MAP_DEVICE_CLIENT_ID),
         consumer: {
             groupId: KAFKA_MAP_DEVICE_GROUP_ID
+        }
+    }
+  }
+}
+
+export const KAFKA_DISCOVERY_MICRO_CLIENT_ID="getapp-discovery-micro"
+export const KAFKA_DISCOVERY_MICRO_GROUP_ID="getapp-discovery-micro-consumer" 
+const kafkaDiscoverMicroConfig = (): ClientProvider => {
+  return {
+    transport: Transport.KAFKA,
+    options: {
+        client: getKafkaConnection(KAFKA_DISCOVERY_MICRO_CLIENT_ID),
+        consumer: {
+            groupId: KAFKA_DISCOVERY_MICRO_GROUP_ID
         }
     }
   }
