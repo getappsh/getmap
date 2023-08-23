@@ -4,18 +4,18 @@ import { getKafkaClientConfig } from "./kafka/kafka";
 import { getSocketClientConfig } from "./socket/socket";
 import { DeployEnv } from "@app/common/utils";
 
-export function getClientConfig(options: MicroserviceModuleOptions): ClientProvider{
-  if (options.deployEnv ==  DeployEnv.CTS){
+export function getClientConfig(options: MicroserviceModuleOptions, deployEnv: DeployEnv): ClientProvider{
+  if (deployEnv ==  DeployEnv.CTS){
     console.log("Deploy env is CTS");
     return getKafkaClientConfig(options.type)
   
-  }else if (options.deployEnv == DeployEnv.TNG) {
+  }else if (deployEnv == DeployEnv.TNG) {
     console.log("Deploy env is TNG");
     return getSocketClientConfig(options.type);
   
-  }else if (options.deployEnv == DeployEnv.LOCAL){
+  }else if (deployEnv == DeployEnv.LOCAL){
     console.log("Deploy env is LOCAL");
-    return getKafkaClientConfig(options.type)
-    // return getSocketClientConfig(options.type);
+    // return getKafkaClientConfig(options.type)
+    return getSocketClientConfig(options.type);
   }
 }

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
 import { getClientConfig } from "./clients";
 import { MODULE_OPTIONS_TOKEN } from "./microservice-client.module-definition";
+import { ConfigService } from "@nestjs/config";
+import { DeployEnv } from "../utils";
 
 
 @Injectable()
@@ -12,8 +14,13 @@ export class MicroserviceClient {
   private client: ClientProxy | ClientKafka
 
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: MicroserviceModuleOptions){
-      this.client = ClientProxyFactory.create(getClientConfig(options))
+    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: MicroserviceModuleOptions,
+    private configService: ConfigService
+    ){
+      const dplEnv = DeployEnv[configService.get<string>('DEPLOY_ENV')]
+      const clientConfig = getClientConfig(options, dplEnv)
+
+      this.client = ClientProxyFactory.create(clientConfig)
     }
 
   
