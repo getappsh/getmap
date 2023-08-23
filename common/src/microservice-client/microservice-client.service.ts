@@ -1,10 +1,12 @@
-import { Inject, Injectable, Logger } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common";
 import { ClientKafka, ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
+import { Observable, map, timeout } from 'rxjs';
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
 import { getClientConfig } from "./clients";
 import { ConfigService } from "@nestjs/config";
 import { DeployEnv } from "../utils";
+import { ClassConstructor, plainToInstance } from "class-transformer";
+import { validate } from "class-validator";
 
 
 @Injectable()
@@ -27,8 +29,35 @@ export class MicroserviceClient {
     return this.emit(pattern, data);
   }
 
-  send<TResult = any, TInput = any>(pattern: any, data: TInput): Observable<TResult>{
-    return this.client.send(pattern, data);
+  send<TResult = any, TInput = any>(pattern: any, data: TInput, waitTime?: number): Observable<TResult>{
+    waitTime = (waitTime) ? waitTime : parseInt(this.configService.get("MICROSERVICE_RESPONSE_WAIT_TIME"));
+    return this.client.send(
+      pattern, 
+      data
+    ).pipe(
+      timeout(waitTime)
+    );
+  }
+
+  sendAndValidate<TResult extends Object>(topic: string, data: any, ClassConstructor: ClassConstructor<TResult>, waitTime?: number): Observable<Promise<TResult>>{
+    waitTime = (waitTime) ? waitTime : parseInt(this.configService.get("MICROSERVICE_RESPONSE_WAIT_TIME"))
+    return this.client.send(
+        topic,
+        data
+    ).pipe(
+        timeout(waitTime),
+        map(async res => {
+            const validationObject = plainToInstance(ClassConstructor, res);
+            const errors = await validate(validationObject);
+            if (errors.length > 0) {
+                this.logger.log(`Validation error for response of topic: ${topic}`);
+                const constraints = errors.map((error) => Object.values(error.constraints ?? {})).flat();
+                this.logger.debug(`error list: ${errors}`);
+                throw new InternalServerErrorException(constraints);
+            }
+            return res;
+        })
+    )
   }
 
   subscribeToResponseOf(topics: string[]): void{
