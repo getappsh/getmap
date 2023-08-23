@@ -8,7 +8,6 @@ import {ConfigService } from "@nestjs/config";
 @Module({})
 export class MicroserviceModule{
   static register(options: MicroserviceModuleOptions): DynamicModule{
-    console.log(options, )
     return{
       module: MicroserviceModule,
       providers: [

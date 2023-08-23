@@ -16,11 +16,11 @@ export const KafkaUploadModule = ClientsModule.registerAsync([{
   imports: [KafkaConfigModule]
 }])
 
-export const KafkaDeliveryModule = ClientsModule.registerAsync([{
-  name: 'DELIVERY_SERVICE',
-  useExisting: KafkaDeliveryConfigService,
-  imports: [KafkaConfigModule]
-}])
+// export const KafkaDeliveryModule = ClientsModule.registerAsync([{
+//   name: 'DELIVERY_SERVICE',
+//   useExisting: KafkaDeliveryConfigService,
+//   imports: [KafkaConfigModule]
+// }])
 
 export const KafkaOfferingModule = ClientsModule.registerAsync([{
   name: 'OFFERING_SERVICE',

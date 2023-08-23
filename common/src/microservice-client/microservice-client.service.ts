@@ -16,8 +16,6 @@ export class MicroserviceClient {
     private readonly options: MicroserviceModuleOptions,
     private configService: ConfigService
     ){
-
-      this.logger.verbose("MicroserviceClient Init")
       const dplEnv = DeployEnv[configService.get<string>('DEPLOY_ENV')]
       const clientConfig = getClientConfig(options, dplEnv)
 
