@@ -21,12 +21,12 @@ import { KafkaDeviceMapConfigService } from "./kafka-device-map-config.service"
 //   useExisting: KafkaDeliveryConfigService,
 //   imports: [KafkaConfigModule]
 // }])
-
-export const KafkaOfferingModule = ClientsModule.registerAsync([{
-  name: 'OFFERING_SERVICE',
-  useExisting: KafkaOfferingConfigService,
-  imports: [KafkaConfigModule]
-}])
+// 
+// export const KafkaOfferingModule = ClientsModule.registerAsync([{
+//   name: 'OFFERING_SERVICE',
+//   useExisting: KafkaOfferingConfigService,
+//   imports: [KafkaConfigModule]
+// }])
 
 export const KafkaDiscoveryModule = ClientsModule.registerAsync([{
   name: 'DISCOVERY_SERVICE',
