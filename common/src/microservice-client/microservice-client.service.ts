@@ -26,7 +26,7 @@ export class MicroserviceClient {
 
   
   emit<TResult = any, TInput = any>(pattern: any, data: TInput): Observable<TResult>{
-    return this.emit(pattern, data);
+    return this.client.emit(pattern, data);
   }
 
   send<TResult = any, TInput = any>(pattern: any, data: TInput, waitTime?: number): Observable<TResult>{
@@ -60,6 +60,9 @@ export class MicroserviceClient {
     )
   }
 
+  isKafka(){
+    return this.client instanceof ClientKafka
+  }
   subscribeToResponseOf(topics: string[]): void{
     if (this.client instanceof ClientKafka) {
       topics.forEach((value) => {
@@ -68,7 +71,11 @@ export class MicroserviceClient {
     }
     
   }
-  connect():Promise<any>{
-    return this.client.connect()
+  async connect():Promise<any>{
+    try {
+      return await this.client.connect();
+    } catch (err) {
+      return this.logger.error(err);
+    }
   }
 }

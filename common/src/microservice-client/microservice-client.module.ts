@@ -1,10 +1,10 @@
-import { DynamicModule, Module } from "@nestjs/common";
+import { DynamicModule, Global, Module } from "@nestjs/common";
 import { MicroserviceClient } from "./microservice-client.service";
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
 import {ConfigService } from "@nestjs/config";
 
 
-
+@Global()
 @Module({})
 export class MicroserviceModule{
   static register(options: MicroserviceModuleOptions): DynamicModule{
