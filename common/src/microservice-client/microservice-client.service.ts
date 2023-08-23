@@ -3,7 +3,6 @@ import { ClientKafka, ClientProxy, ClientProxyFactory } from '@nestjs/microservi
 import { Observable } from 'rxjs';
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
 import { getClientConfig } from "./clients";
-import { MODULE_OPTIONS_TOKEN } from "./microservice-client.module-definition";
 import { ConfigService } from "@nestjs/config";
 import { DeployEnv } from "../utils";
 
@@ -14,9 +13,11 @@ export class MicroserviceClient {
   private client: ClientProxy | ClientKafka
 
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: MicroserviceModuleOptions,
+    private readonly options: MicroserviceModuleOptions,
     private configService: ConfigService
     ){
+
+      this.logger.verbose("MicroserviceClient Init")
       const dplEnv = DeployEnv[configService.get<string>('DEPLOY_ENV')]
       const clientConfig = getClientConfig(options, dplEnv)
 

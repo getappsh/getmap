@@ -1,13 +1,32 @@
-import { Module } from "@nestjs/common";
-import { ConfigurableModuleClass } from "./microservice-client.module-definition";
+import { DynamicModule, Module } from "@nestjs/common";
 import { MicroserviceClient } from "./microservice-client.service";
+import { MicroserviceModuleOptions } from "./microservice-client.interface";
+import {ConfigService } from "@nestjs/config";
 
 
-@Module({
-  providers: [MicroserviceClient],
-  exports: [MicroserviceClient]
-})
-export class MicroserviceModule extends ConfigurableModuleClass{}
+
+@Module({})
+export class MicroserviceModule{
+  static register(options: MicroserviceModuleOptions): DynamicModule{
+    console.log(options, )
+    return{
+      module: MicroserviceModule,
+      providers: [
+       {
+        provide: options.name,
+        useFactory: (cnf: ConfigService) => {
+          return new MicroserviceClient(options, cnf)
+        },
+        inject: [ConfigService]
+       }
+      ],
+      exports: [options.name]
+    }
+  }
+}
+
+
+// export class MicroserviceModule extends ConfigurableModuleClass{}
 
 // export class MicroserviceModule{
 //   static register(options: MicroserviceModuleOptions): DynamicModule {

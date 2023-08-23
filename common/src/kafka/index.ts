@@ -34,11 +34,11 @@ export const KafkaDiscoveryModule = ClientsModule.registerAsync([{
   imports: [KafkaConfigModule]
 }])
 
-export const KafkaDeployModule = ClientsModule.registerAsync([{
-  name: 'DEPLOY_SERVICE',
-  useExisting: KafkaDeployConfigService,
-  imports: [KafkaConfigModule]
-}])
+// export const KafkaDeployModule = ClientsModule.registerAsync([{
+//   name: 'DEPLOY_SERVICE',
+//   useExisting: KafkaDeployConfigService,
+//   imports: [KafkaConfigModule]
+// }])
 
 
 export const KafkaDashboardModule = ClientsModule.registerAsync([{
