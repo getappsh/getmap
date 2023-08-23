@@ -2,9 +2,8 @@ import { Injectable, InternalServerErrorException, Logger } from "@nestjs/common
 import { ClientKafka, ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
 import { Observable, map, timeout } from 'rxjs';
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
-import { getClientConfig } from "./clients";
+import { MSType, getClientConfig } from "./clients";
 import { ConfigService } from "@nestjs/config";
-import { DeployEnv } from "../utils";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 
@@ -18,7 +17,7 @@ export class MicroserviceClient {
     private readonly options: MicroserviceModuleOptions,
     private configService: ConfigService
     ){
-      const dplEnv = DeployEnv[configService.get<string>('DEPLOY_ENV')]
+      const dplEnv = MSType[configService.get<string>('MICRO_SERVICE_TYPE')]
       const clientConfig = getClientConfig(options, dplEnv)
 
       this.client = ClientProxyFactory.create(clientConfig)
