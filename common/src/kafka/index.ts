@@ -10,12 +10,12 @@ import { KafkaDeployConfigService } from "./kafka-deploy-config.service"
 import { KafkaDeviceConfigService } from "./kafka-device-config.service"
 import { KafkaDeviceMapConfigService } from "./kafka-device-map-config.service"
 
-export const KafkaUploadModule = ClientsModule.registerAsync([{
-  name: 'UPLOAD_SERVICE',
-  useExisting: KafkaUploadConfigService,
-  imports: [KafkaConfigModule]
-}])
-
+// export const KafkaUploadModule = ClientsModule.registerAsync([{
+//   name: 'UPLOAD_SERVICE',
+//   useExisting: KafkaUploadConfigService,
+//   imports: [KafkaConfigModule]
+// }])
+// 
 // export const KafkaDeliveryModule = ClientsModule.registerAsync([{
 //   name: 'DELIVERY_SERVICE',
 //   useExisting: KafkaDeliveryConfigService,
@@ -39,13 +39,13 @@ export const KafkaDiscoveryModule = ClientsModule.registerAsync([{
 //   useExisting: KafkaDeployConfigService,
 //   imports: [KafkaConfigModule]
 // }])
-
-
-export const KafkaDashboardModule = ClientsModule.registerAsync([{
-  name: 'PROJECT_MANAGEMENT_SERVICE',
-  useExisting: KafkaProjectManagementConfigService,
-  imports: [KafkaConfigModule]
-}])
+// 
+// 
+// export const KafkaDashboardModule = ClientsModule.registerAsync([{
+//   name: 'PROJECT_MANAGEMENT_SERVICE',
+//   useExisting: KafkaProjectManagementConfigService,
+//   imports: [KafkaConfigModule]
+// }])
 
 export const KafkaGetMapModule = ClientsModule.registerAsync([{
   name: 'GET_MAP_SERVICE',
