@@ -18,7 +18,8 @@ export function getSocketClientConfig(type: MicroserviceType): ClientProvider {
     case MicroserviceType.GET_MAP:
       return socketGetMapConfig()
     case MicroserviceType.DEVICE:
-      return socketDeviceConfig()
+      // For device using discovery microservice
+      return socketDiscoveryConfig()
     
   }
 }
@@ -72,9 +73,9 @@ const socketGetMapConfig = (): ClientProvider => {
   }
 }
 
-const socketDeviceConfig = (): ClientProvider => {
-  return {
-    transport: Transport.TCP , 
-    options: {port: 3008}
-  }
-}
+// const socketDeviceConfig = (): ClientProvider => {
+//   return {
+//     transport: Transport.TCP , 
+//     options: {port: 3008}
+//   }
+// }
