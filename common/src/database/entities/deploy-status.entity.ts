@@ -1,5 +1,5 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { DeliveryStatusEnum, ItemTypeEnum, DeployStatusEnum } from "./enums.entity";
 import { DeviceEntity } from "./device.entity";
 
