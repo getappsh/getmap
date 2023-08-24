@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PlatformDto } from "@app/root/api/src/modules/device/dto/discovery/discovery-software.dto";
+import { PlatformDto } from "@app/common/dto/discovery";
 
 
 export class OfferingResponseDto{

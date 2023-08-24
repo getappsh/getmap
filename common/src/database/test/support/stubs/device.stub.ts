@@ -1,5 +1,5 @@
 import { DeviceEntity } from "@app/common/database/entities";
-import { physicalDiscoveryDtoStub } from "@app/root/api/src/modules/device/stubs/dicsocvery/discovery-general.dto.stub";
+import { physicalDiscoveryDtoStub } from "@app/common/dto/discovery";
 import { uploadVersionEntityStub } from "./upload-version.stub";
 import { mapEntityStub } from "./map.stub";
 
