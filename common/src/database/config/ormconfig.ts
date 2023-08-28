@@ -4,12 +4,13 @@ import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, 
 import { join } from 'path';
 import { readFileSync } from 'fs'
 
+const region = `_${process.env.REGION}` || '';
 
 const ormConfig = new DataSource({
   type: 'postgres',
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),
-  database: process.env.POSTGRES_DB,
+  database: `${process.env.POSTGRES_DB}${region}`,
   username: process.env.POSTGRES_USER,
 
   ...getDBAuthParams(),
