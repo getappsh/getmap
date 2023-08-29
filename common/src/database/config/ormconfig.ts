@@ -4,7 +4,7 @@ import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, 
 import { join } from 'path';
 import { readFileSync } from 'fs'
 
-const region = `_${process.env.REGION}` || '';
+const region = process.env.REGION ? `_${process.env.REGION}` : '';
 
 const ormConfig = new DataSource({
   type: 'postgres',
