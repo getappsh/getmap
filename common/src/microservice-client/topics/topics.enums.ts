@@ -1,5 +1,5 @@
 import 'dotenv/config';
-const region = `.${process.env.REGION}` || '';
+const region = process.env.REGION ? `.${process.env.REGION}` : '';
 
 export const UploadTopics = {
     UPLOAD_ARTIFACT : `getapp-upload.artifact${region}`,
