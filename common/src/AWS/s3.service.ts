@@ -12,7 +12,7 @@ export class S3Service {
 
   constructor(private configService: ConfigService) {
     this.s3 = new S3({
-      region: this.configService.get('REGION'),
+      region: this.configService.get('AWS_REGION'),
       credentials: {
         accessKeyId: this.configService.get('ACCESS_KEY_ID'),
         secretAccessKey: this.configService.get('SECRET_ACCESS_KEY'),
