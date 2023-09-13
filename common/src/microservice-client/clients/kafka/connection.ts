@@ -2,22 +2,22 @@ import { KafkaConfig } from "@nestjs/microservices/external/kafka.interface";
 import { readFileSync } from 'fs'
 
 // TODO return only the ssl values
-export function getKafkaConnection(clientId?: string): KafkaConfig{
-  switch (process.env.DEPLOY_ENV){
-    case "CTS" : {
+export function getKafkaConnection(clientId?: string): KafkaConfig {
+  switch (process.env.DEPLOY_ENV) {
+    case "CTS":
       return getConfigCTS(clientId);
-    }
-    default: {
+
+    default:
       return getConfigDefault(clientId)
-    }
+
   }
 }
 
 
-function getConfigCTS(clientId?: string): KafkaConfig{
+function getConfigCTS(clientId?: string): KafkaConfig {
   return {
     clientId: clientId,
-    brokers : [process.env.KAFKA_BROKER_URL],
+    brokers: [process.env.KAFKA_BROKER_URL],
     ssl: {
       rejectUnauthorized: false,
       ca: [readFileSync(process.env.KAFKA_PEM_PATH)],
@@ -28,9 +28,9 @@ function getConfigCTS(clientId?: string): KafkaConfig{
   }
 }
 
-function getConfigDefault(clientId: string): KafkaConfig{
+function getConfigDefault(clientId: string): KafkaConfig {
   return {
     clientId: clientId,
-    brokers : [process.env.KAFKA_BROKER_URL]
+    brokers: [process.env.KAFKA_BROKER_URL]
   }
 }
