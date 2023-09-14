@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { Progress, Upload } from "@aws-sdk/lib-storage";
+import { S3, PutObjectCommand, GetObjectCommand, PutObjectRequest,  } from "@aws-sdk/client-s3";
 import { ConfigService } from '@nestjs/config';
 import { createReadStream, existsSync } from 'fs';
+import stream from 'stream';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class S3Service {
@@ -57,4 +60,25 @@ export class S3Service {
 
     return this.s3.putObject(params);
   }
+
+  uploadFileFromStream(stream: stream.Readable, objectKey: string): Observable<number> {      
+    const params: PutObjectRequest = {
+      Bucket: this.bucketName,
+      Key: objectKey,
+      Body: stream,
+    };
+      const fileUpload = new Upload({
+      client: this.s3,
+      params: params,
+    })
+  
+    return new Observable(observer => {
+      fileUpload.on("httpUploadProgress", (progress: Progress) => {
+        observer.next(progress.loaded);
+      });
+      fileUpload.done()
+        .then(() => observer.complete())
+        .catch(err => observer.error(err));
+    })
+  }  
 }
