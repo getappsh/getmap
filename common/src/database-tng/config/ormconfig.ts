@@ -8,10 +8,10 @@ const region = process.env.REGION ? `_${process.env.REGION}` : '';
 
 const ormConfig = new DataSource({
   type: 'postgres',
-  host: process.env.TNG_POSTGRES_HOST,
-  port: Number(process.env.TNG_POSTGRES_PORT),
-  database: `${process.env.TNG_POSTGRES_DB}${region}`,
-  username: process.env.TNG_POSTGRES_USER,
+  host: process.env.POSTGRES_HOST,
+  port: Number(process.env.POSTGRES_PORT),
+  database: `${process.env.POSTGRES_DB}${region}`,
+  username: process.env.POSTGRES_USER,
 
   ...getDBAuthParams(),
   entities: [
@@ -35,7 +35,7 @@ function getDBAuthParams(){
     }
     default: {
       return {
-        password: process.env.TNG_POSTGRES_PASSWORD,
+        password: process.env.POSTGRES_PASSWORD,
       }
     }
   }
