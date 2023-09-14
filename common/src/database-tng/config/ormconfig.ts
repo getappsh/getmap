@@ -23,21 +23,21 @@ const ormConfig = new DataSource({
   migrationsTableName: "history",
 });
 
-function getDBAuthParams(){
-  switch (process.env.DEPLOY_ENV){
-    case "CTS" : {
+function getDBAuthParams() {
+  switch (process.env.DEPLOY_ENV) {
+    case "CTS":
+    case "TNG":
       return {
         ssl: {
           key: [readFileSync(process.env.DB_KEY_PATH)],
           cert: [readFileSync(process.env.DB_CERT_PATH)]
-        }      
+        }
       }
-    }
-    default: {
+
+    default:
       return {
-        password: process.env.TNG_POSTGRES_PASSWORD,
+        password: process.env.POSTGRES_PASSWORD,
       }
-    }
   }
 }
 export default ormConfig;
