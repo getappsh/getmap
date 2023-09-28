@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsDate, IsDateString, IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsDate, IsNotEmpty, IsString } from "class-validator";
 
 export class DeviceDiscoverDto{
 
@@ -11,7 +11,7 @@ export class DeviceDiscoverDto{
 
   @ApiProperty()
   @Type(() => Date)
-  @IsDateString()
+  @IsDate()
   produceTime: Date;
 
   @ApiProperty({isArray: true, type: String})

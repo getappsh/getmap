@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsArray, IsDateString, IsNotEmpty, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsDate, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { ComponentDto } from "../../discovery";
 
 export class DeviceDiscoverResDto{
@@ -12,7 +12,7 @@ export class DeviceDiscoverResDto{
 
   @ApiProperty()
   @Type(() => Date)
-  @IsDateString()
+  @IsDate()
   produceTime: Date;
 
   @ApiProperty({type: [ComponentDto]})
