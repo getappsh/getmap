@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { UploadVersionEntity } from "./upload-version.entity";
 import { MapEntity } from "./map.entity";
 

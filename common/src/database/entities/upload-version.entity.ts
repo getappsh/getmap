@@ -1,5 +1,4 @@
-import { Entity, Column, Unique, ManyToOne, Generated, ManyToMany, BeforeInsert } from "typeorm";
-import { BaseEntity } from "./base.entity";
+import { Entity, Column, Unique, ManyToOne, ManyToMany, BeforeInsert, CreateDateColumn, UpdateDateColumn, PrimaryColumn } from "typeorm";
 import { UploadStatus } from "./enums.entity";
 import { ProjectEntity } from "./project.entity";
 import {v4 as uuidv4} from 'uuid'
@@ -7,15 +6,25 @@ import { DeviceEntity } from "./device.entity";
 
 @Entity('upload_version')
 @Unique('platform_component_formation_version_unique_constraint', ['platform', 'component', 'formation', 'version'])
-export class UploadVersionEntity extends BaseEntity{
+export class UploadVersionEntity{
 
-    @Column({name: 'catalog_id', unique: true})
-    catalogId: string;
+    @PrimaryColumn({name: 'catalog_id'})
+    catalogId: string
   
     @BeforeInsert()
     generateUUID() {
       this.catalogId = uuidv4();
     }
+
+    // TODO make sure no one use this column and delete it;
+    @Column({default: null})
+    id: number;
+  
+    @CreateDateColumn()
+    createdDate: Date;
+  
+    @UpdateDateColumn()
+    lastUpdatedDate: Date;
 
     @Column({name: "platform"})
     platform: string;
