@@ -62,11 +62,11 @@ export const DeviceTopics = {
     REGISTER_SOFTWARE : `getapp-device.register.software${region}`,
     DEVICE_CONTENT : `getapp-device.content.installed${region}`,
     DISCOVERY_SOFTWARE : `getapp-device.discover.software.catalog${region}`,
-    UPDATE_TLS_STATUS : `getapp-device.update.tls.status${region}`,
     IM_PULL_DISCOVERY: `getapp-device.im.pull.discovery${region}`,
 } as const
 
 export const DeviceTopicsEmit = {
+    UPDATE_TLS_STATUS : `getapp-device.update.tls.status${region}`,
     SAVE_MAP_DATA : `getapp-device.map.save-data${region}`,
     IM_PUSH_DISCOVERY: `getapp-device.im.push.discovery${region}`,
 } as const
