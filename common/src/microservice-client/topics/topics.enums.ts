@@ -62,6 +62,7 @@ export const DeviceTopics = {
     REGISTER_SOFTWARE : `getapp-device.register.software${region}`,
     DEVICE_CONTENT : `getapp-device.content.installed${region}`,
     DISCOVERY_SOFTWARE : `getapp-device.discover.software.catalog${region}`,
+    UPDATE_TLS_STATUS : `getapp-device.update.tls.status${region}`,
     IM_PULL_DISCOVERY: `getapp-device.im.pull.discovery${region}`,
 } as const
 

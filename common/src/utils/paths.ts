@@ -1,4 +1,3 @@
-
 // global paths
 export const API = "api/";
 
@@ -44,6 +43,7 @@ export const UPDATE_UPLOAD_STATUS = "/updateUploadStatus"
 // nested device paths
 export const DISCOVER = "/discover"
 export const INSTALLED = "/info/installed/"
+export const TLS_STATUS = "/mTlsStatus"
 
 // nested map paths
 export const CREATE = "/import/create"
