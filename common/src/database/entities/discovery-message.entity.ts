@@ -26,7 +26,9 @@ export class DiscoveryMessageEntity extends BaseEntity{
 
     @Column('jsonb', {name: "map", nullable: true})
     map: any;
-
+    
+    @Column('text', {name: "mTls_status", nullable: true})
+    mTlsStatus: string;
 
     toString(){
         return JSON.stringify(this)
