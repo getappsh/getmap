@@ -8,12 +8,11 @@ import * as https from 'https'
 
 @Injectable()
 export class HttpConfigService {
-  httpService: HttpService
 
   constructor(
-    private http: HttpService,
+    public readonly httpService: HttpService,
     private configService: ConfigService,
-  ) {
+  ) { 
     const httpsAgent = new https.Agent({
       ca: fs.readFileSync(process.env.CA_CERT_PATH),
       cert: fs.readFileSync(process.env.SERVER_CERT_PATH),
@@ -21,8 +20,7 @@ export class HttpConfigService {
       // rejectUnauthorized: false
     }
     )
-    this.http.axiosRef.defaults.baseURL = `${this.configService.get("GETAPP_URL")}/${API}`;
-    this.http.axiosRef.defaults.httpsAgent = httpsAgent
-    this.httpService = http
+    this.httpService.axiosRef.defaults.baseURL = `${this.configService.get("GETAPP_URL")}/${API}`;
+    this.httpService.axiosRef.defaults.httpsAgent = httpsAgent
   }
 }
