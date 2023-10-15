@@ -1,12 +1,12 @@
 import { API } from "@app/common/utils/paths";
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Scope } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
 import * as https from 'https'
 
 
-@Injectable()
+@Injectable({scope: Scope.REQUEST})
 export class HttpConfigService {
 
   constructor(
