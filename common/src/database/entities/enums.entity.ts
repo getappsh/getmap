@@ -29,7 +29,8 @@ export enum RoleInProject {
 
 export enum DiscoveryType {
     GET_APP = 'get-app',
-    GET_MAP = 'get-map'
+    GET_MAP = 'get-map',
+    MTLS = 'mTls'
 }
 
 export enum UploadStatus {
