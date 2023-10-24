@@ -22,5 +22,6 @@ export class HttpConfigService {
     )
     this.httpService.axiosRef.defaults.baseURL = `${this.configService.get("GETAPP_URL")}/${API}`;
     this.httpService.axiosRef.defaults.httpsAgent = httpsAgent
+    this.httpService.axiosRef.defaults.headers = {...this.httpService.axiosRef.defaults.headers, "auth_type": "CC"} as any
   }
 }
