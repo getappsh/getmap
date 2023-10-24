@@ -58,11 +58,12 @@ export enum DeliveryStatusEnum{
 export enum DeployStatusEnum{
     START = 'Start',
     DONE = 'Done',
-    INSTALLING = "installing",
+    INSTALLING = "Installing",
     CONTINUE = "Continue",
     PAUSE = "Pause",
     CANCELLED = "Cancelled",
     ERROR = 'Error',
+    UNINSTALL = 'Uninstall'
 }
 
 export enum ItemTypeEnum {
