@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { UploadVersionEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity } from '../entities';
+import { UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity } from '../entities';
 import { join } from 'path';
 import { readFileSync } from 'fs'
 
@@ -28,6 +28,7 @@ const ormConfig = new DataSource({
     CategoryEntity,
     OperationSystemEntity,
     DeviceEntity,
+    DevicesGroupEntity,
     MapEntity
   ],
   migrations: [join(__dirname, '../migration/*.ts')],

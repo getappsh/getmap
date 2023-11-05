@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { UploadVersionEntity } from "./upload-version.entity";
 import { MapEntity } from "./map.entity";
+import { DevicesGroupEntity } from "./devices-group.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -65,5 +66,9 @@ export class DeviceEntity {
 
   })
   maps: MapEntity[];
+
+  
+  @ManyToOne(type => DevicesGroupEntity, {nullable: true})
+  groups: DevicesGroupEntity
 
 }
