@@ -70,3 +70,12 @@ export const DeviceTopicsEmit = {
     SAVE_MAP_DATA : `getapp-device.map.save-data${region}`,
     IM_PUSH_DISCOVERY: `getapp-device.im.push.discovery${region}`,
 } as const
+
+
+export const DevicesGroupTopics = {
+    CREATE_GROUP : `getapp-device.group.create${region}`,
+    EDIT_GROUP : `getapp-device.group.edit${region}`,
+    GET_GROUPS : `getapp-device.group.get-all${region}`,
+    GET_GROUP_DEVICES : `getapp-device.group.get-devices${region}`,
+    SET_GROUP_DEVICES : `getapp-device.group.set-devices${region}`,
+} as const
