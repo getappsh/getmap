@@ -15,4 +15,9 @@ export class CreateDevicesGroupDto {
   @IsNotEmpty()
   @IsOptional()
   description: string
+
+
+  toString(){
+    return JSON.stringify(this);
+  }
 }

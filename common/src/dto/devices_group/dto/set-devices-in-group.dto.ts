@@ -17,4 +17,8 @@ export class SetDevicesInGroup {
   @IsString({ each: true })
   groups: string[];
 
+  toString(){
+    return JSON.stringify(this);
+  }
+
 }

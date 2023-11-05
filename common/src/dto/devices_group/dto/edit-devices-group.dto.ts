@@ -15,4 +15,8 @@ export class EditDevicesGroupDto {
   @IsString()
   @IsOptional()
   description: string
+
+  toString(){
+    return JSON.stringify(this);
+  }
 }
