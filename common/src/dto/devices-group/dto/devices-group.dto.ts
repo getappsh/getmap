@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { DeviceMapDto } from "../../device/dto/device-map.dto";
 import { Type } from "class-transformer";
+import { DevicesGroupEntity } from "@app/common/database/entities";
 
 export class DevicesGroupDto {
 
@@ -30,6 +31,19 @@ export class DevicesGroupDto {
   @ValidateNested({each: true})
   @Type(() => DevicesGroupDto)
   groups: DevicesGroupDto[];
+
+
+  static fromDevicesGroupEntity(dge: DevicesGroupEntity): DevicesGroupDto{
+    let devicesGroupDto = new DevicesGroupDto();
+    devicesGroupDto.id = dge.id;
+    devicesGroupDto.name = dge.name;
+    devicesGroupDto.description = dge?.description;
+    // TODO
+    // devicesGroupDto.devices = dge?.children
+    // devicesGroupDto.groups = dge?.children.forEach(childe => DevicesGroupDto.fromDevicesGroupEntity(childe))
+
+    return devicesGroupDto
+  }
 
   toString(){
     return JSON.stringify(this);
