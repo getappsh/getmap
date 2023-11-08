@@ -12,6 +12,12 @@ export class DiscoveryMapResDto {
   productVersion: string;
 
   @ApiProperty({required: false})
+  footprint: string;
+
+  @ApiProperty({required: false})
+  maxResolution: number
+
+  @ApiProperty({required: false})
   productType: string;
 
   @ApiProperty({required: false})
@@ -22,6 +28,16 @@ export class DiscoveryMapResDto {
 
   @ApiProperty({required: false})
   updateDateUTC: Date;
+
+  @ApiProperty({required: false})
+  takenDate: Date;
+
+  @ApiProperty({required: false})
+  ingestionDate: Date;
+
+
+  @ApiProperty({required: false})
+  region: string;
 
 
   toString() {
