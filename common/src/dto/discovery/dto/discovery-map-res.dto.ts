@@ -21,6 +21,9 @@ export class DiscoveryMapResDto {
   productType: string;
 
   @ApiProperty({required: false})
+  productSubType: string;
+
+  @ApiProperty({required: false})
   boundingBox: string;
 
   @ApiProperty({required: false})
@@ -35,9 +38,14 @@ export class DiscoveryMapResDto {
   @ApiProperty({required: false})
   ingestionDate: Date;
 
-
   @ApiProperty({required: false})
   region: string;
+
+  @ApiProperty({required: false})
+  imagingTimeBeginUTC: Date;
+
+  @ApiProperty({required: false})
+  imagingTimeEndUTC: Date;
 
 
   toString() {
