@@ -55,6 +55,7 @@ export const GetMapTopics = {
     REGISTER_MAP : `getapp-device.map.register${region}`,
     DISCOVERY_MAP : `getapp-device.discover.map${region}`,
 
+    All_MAPS : `getapp-map.map.all${region}`,
     MPA_PROPERTIES : `getapp-map.map.properties${region}`
 } as const
 
