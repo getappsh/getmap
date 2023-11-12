@@ -15,37 +15,13 @@ export class DiscoveryMapResDto {
   productVersion: string;
 
   @ApiProperty({required: false})
-  footprint: string;
-
-  @ApiProperty({required: false})
-  maxResolution: number
-
-  @ApiProperty({required: false})
   productType: string;
 
   @ApiProperty({required: false})
   productSubType: string;
 
   @ApiProperty({required: false})
-  boundingBox: string;
-
-  @ApiProperty({required: false})
-  transparency: string
-
-  @ApiProperty({required: false})
   description: string;
-
-  @ApiProperty({required: false})
-  updateDateUTC: Date;
-
-  @ApiProperty({required: false})
-  takenDate: Date;
-
-  @ApiProperty({required: false})
-  ingestionDate: Date;
-
-  @ApiProperty({required: false})
-  region: string;
 
   @ApiProperty({required: false})
   imagingTimeBeginUTC: Date;
@@ -53,6 +29,20 @@ export class DiscoveryMapResDto {
   @ApiProperty({required: false})
   imagingTimeEndUTC: Date;
 
+  @ApiProperty({required: false})
+  maxResolutionDeg: number
+
+  @ApiProperty({required: false})
+  footprint: string;
+
+  @ApiProperty({required: false})
+  transparency: string
+ 
+  @ApiProperty({required: false})
+  region: string;
+
+  @ApiProperty({required: false})
+  ingestionDate: Date;
 
   toString() {
     return JSON.stringify(this);
