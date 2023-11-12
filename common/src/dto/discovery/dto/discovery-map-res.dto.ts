@@ -3,6 +3,9 @@ import { ApiProperty } from "@nestjs/swagger";
 export class DiscoveryMapResDto {
 
   @ApiProperty({required: false})
+  id: string
+
+  @ApiProperty({required: false})
   productId: string;
 
   @ApiProperty({required: false})
@@ -25,6 +28,9 @@ export class DiscoveryMapResDto {
 
   @ApiProperty({required: false})
   boundingBox: string;
+
+  @ApiProperty({required: false})
+  transparency: string
 
   @ApiProperty({required: false})
   description: string;
