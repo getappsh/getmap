@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class DiscoveryMapResDto {
+export class MapProductResDto {
 
   @ApiProperty({required: false})
   id: string
@@ -48,4 +48,20 @@ export class DiscoveryMapResDto {
     return JSON.stringify(this);
   }
 
+}
+
+export enum MapOfferingStatus {
+  SUCCESS,
+  ERROR
+}
+
+export class OfferingMapResDto {
+  @ApiProperty({required: false, type: MapProductResDto, isArray: true})
+  products: MapProductResDto[];
+
+  @ApiProperty({enum: MapOfferingStatus})
+  status: MapOfferingStatus
+
+  @ApiProperty({required: false})
+  reason: string 
 }

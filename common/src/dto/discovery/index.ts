@@ -1,5 +1,4 @@
 export * from './dto/discovery-general.dto'
-export * from './dto/discovery-map-res.dto'
 export * from './dto/discovery-map.dto'
 export * from './dto/discovery-message.dto'
 export * from './dto/discovery-res.dto'
