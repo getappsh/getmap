@@ -1,4 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsEnum } from "class-validator";
+
 
 export class MapProductResDto {
 
@@ -60,6 +62,7 @@ export class OfferingMapResDto {
   products: MapProductResDto[];
 
   @ApiProperty({enum: MapOfferingStatus})
+  @IsEnum(MapOfferingStatus)
   status: MapOfferingStatus
 
   @ApiProperty({required: false})
