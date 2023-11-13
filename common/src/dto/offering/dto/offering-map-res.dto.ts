@@ -51,8 +51,8 @@ export class MapProductResDto {
 }
 
 export enum MapOfferingStatus {
-  SUCCESS,
-  ERROR
+  SUCCESS = 'Success',
+  ERROR = 'Error'
 }
 
 export class OfferingMapResDto {
