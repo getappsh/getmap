@@ -33,8 +33,8 @@ const ormConfig = new DataSource({
   ],
   migrations: [join(__dirname, '../migration/*.ts')],
   logging: false,
-  synchronize: true,
-  migrationsTableName: "history",
+  synchronize: false,
+  migrationsTableName: "migrations",
 });
 
 function getDBAuthParams() {
