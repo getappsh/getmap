@@ -52,6 +52,7 @@ export enum DeliveryStatusEnum{
     PAUSE = "Pause",
     CONTINUE = "Continue",
     DOWNLOAD = "Download",
+    DELETED = 'Deleted'
 
 }
 
