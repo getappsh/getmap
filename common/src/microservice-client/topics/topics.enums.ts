@@ -13,17 +13,20 @@ export const DiscoveryTopics = {
 } as const
 
 export const DeliveryTopics = {
-    UPDATE_DOWNLOAD_STATUS : `getapp-delivery.update-download-status${region}`,
     PREPARE_DELIVERY : `getapp-delivery.prepare${region}`,
     PREPARED_DELIVERY_STATUS : `getapp-delivery.prepared-status${region}`
 } as const
+
+export const DeliveryTopicsEmit = {
+    UPDATE_DOWNLOAD_STATUS : `getapp-delivery.update-download-status${region}`,
+}
 
 export const OfferingTopics = {
     CHECK_UPDATES : `getapp-offering.check-updates${region}`,
     GET_OFFER_OF_COMP : `getapp-offering.get-offering-of-comp${region}`,
 } as const
 
-export const DeployTopics = {
+export const DeployTopicsEmit = {
     UPDATE_DEPLOY_STATUS : `getapp-deploy.update-deploy-status${region}`,
 } as const
 
