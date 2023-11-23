@@ -17,7 +17,7 @@ export class MapProperties {
   @ApiProperty({type: Number, minimum: 0, maximum: 18})
   @IsInt()
   @Min(0)
-  @Max(18)
+  @Max(20)
   zoomLevel: number;
 
   @ApiProperty({required: false})

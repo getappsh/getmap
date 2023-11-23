@@ -35,6 +35,9 @@ export class ImportStatusResDto{
   @ApiProperty({enum: MapImportStatusEnum, required: false})
   @IsEnum(MapImportStatusEnum)
   status: MapImportStatusEnum
+
+  @ApiProperty({required: false})
+  messageLog: string;
  
   toString(){
     return JSON.stringify(this);
