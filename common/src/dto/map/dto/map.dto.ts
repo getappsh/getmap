@@ -41,7 +41,7 @@ export class MapDto {
     map.productName = mapEntity.productName;
     map.fileName = mapEntity.fileName;
     map.zoomLevel = mapEntity.zoomLevel;
-    map.createDate = mapEntity.createDate;
+    map.createDate = mapEntity.createDateTime;
     map.boundingBox = mapEntity.boundingBox;
     map.packageUrl = mapEntity.packageUrl;
     map.status = mapEntity.status;
