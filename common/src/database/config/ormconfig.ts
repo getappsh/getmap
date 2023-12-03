@@ -5,6 +5,10 @@ import { join } from 'path';
 import { readFileSync } from 'fs'
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
+let migrationsRun: boolean = true
+if (process.env.MIGRATION_RUN){
+  migrationsRun = process.env.MIGRATION_RUN === 'true'
+}
 
 const ormConfig = new DataSource({
   type: 'postgres',
@@ -31,9 +35,10 @@ const ormConfig = new DataSource({
     DevicesGroupEntity,
     MapEntity
   ],
-  migrations: [join(__dirname, '../migration/*.ts')],
+  migrations: [join(__dirname, '../migration/*.{js,ts}')],
   logging: false,
   synchronize: false,
+  migrationsRun: migrationsRun,
   migrationsTableName: "migrations",
 });
 
