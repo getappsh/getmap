@@ -1,6 +1,8 @@
 import { MapImportStatusEnum } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { ErrorDto } from "../../error";
+import { MapMetadatatDto } from "./map-metadata.dto";
 
 export class ImportStatusResDto{
 
@@ -13,32 +15,18 @@ export class ImportStatusResDto{
   @IsString()
   @IsNotEmpty()
   importRequestId : string;
-  
-  
-  @ApiProperty({required: false})
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  packageUrl : string;
-
-  @ApiProperty({required: false})
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  fileName : string;
-
-  @ApiProperty({required: false})
-  @IsOptional()
-  @IsDateString()
-  createDate : Date;
 
   @ApiProperty({enum: MapImportStatusEnum, required: false})
   @IsEnum(MapImportStatusEnum)
   status: MapImportStatusEnum
 
-  @ApiProperty({required: false})
-  messageLog: string;
- 
+  @ApiProperty({type: MapMetadatatDto, required: false})
+  metaData: MapMetadatatDto
+
+  @ApiProperty({type: ErrorDto, required: false})
+  error: ErrorDto
+
+
   toString(){
     return JSON.stringify(this);
   }
