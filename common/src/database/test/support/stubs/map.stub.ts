@@ -3,8 +3,9 @@ import { MapEntity, MapImportStatusEnum } from "@app/common/database/entities";
 export const mapEntityStub = (): MapEntity => {
   return {
     catalogId: "map-catalog-id",
-    productId: "map-product-id",
-    productName: "map-product-name",
+    // TODO
+    // productId: "map-product-id",
+    // productName: "map-product-name",
     fileName: "file-name.ptg",
     zoomLevel: 13,
     createDateTime: new Date("2023-07-19T14:24:54.885Z"),
