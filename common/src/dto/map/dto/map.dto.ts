@@ -37,8 +37,9 @@ export class MapDto {
   static fromMapEntity(mapEntity: MapEntity){
     let map = new MapDto();
     map.catalogId = mapEntity.catalogId;
-    map.productId = mapEntity.productId;
-    map.productName = mapEntity.productName;
+    // TODO
+    // map.productId = mapEntity.productId;
+    // map.productName = mapEntity.productName;
     map.fileName = mapEntity.fileName;
     map.zoomLevel = mapEntity.zoomLevel;
     map.createDate = mapEntity.createDateTime;
