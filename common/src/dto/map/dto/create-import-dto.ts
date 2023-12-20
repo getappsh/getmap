@@ -20,7 +20,7 @@ export class MapProperties {
   @Max(20)
   zoomLevel: number;
 
-  @ApiProperty({required: false})
+  @ApiProperty({required: true})
   @IsString()
   @IsNotEmpty()
   boundingBox: string;
