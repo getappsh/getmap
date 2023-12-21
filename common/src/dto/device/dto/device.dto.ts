@@ -38,8 +38,6 @@ export class DeviceDto {
 
 
   static fromDeviceEntity(deviceE: DeviceEntity, discoveryE: DiscoveryMessageEntity): DeviceDto {
-    console.log({ de: deviceE });
-
     let device = new DeviceDto()
     device.id = deviceE.ID;
     device.lastUpdatedDate = deviceE.lastUpdatedDate
