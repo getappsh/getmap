@@ -63,6 +63,7 @@ export const GetMapTopics = {
 
 export const DeviceTopics = {
     All_DEVICES : `getapp-device.all${region}`,
+    DEVICE_MAPS : `getapp-device.device.maps${region}`,
     All_MAPS : `getapp-map.maps${region}`,
     GET_MAP : `getapp-map.map.id${region}`,
     REGISTER_SOFTWARE : `getapp-device.register.software${region}`,
