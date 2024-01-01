@@ -47,10 +47,10 @@ jobs:
           dockerfile: Dockerfile  # Update with your Dockerfile path
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.REGISTRY_URL }}/getmap:${{ needs.calculate_new_tag.outputs.tag }} .
+        run: docker build -t ${{ secrets.REGISTRY_URL }}/getmap-node:${{ needs.calculate_new_tag.outputs.tag }} .
 
       - name: Log into Docker registry
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin ${{ secrets.REGISTRY_URL }}
 
       - name: Push Docker image
-        run: docker push ${{ secrets.REGISTRY_URL }}/getmap:${{ needs.calculate_new_tag.outputs.tag }}
+        run: docker push ${{ secrets.REGISTRY_URL }}/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
