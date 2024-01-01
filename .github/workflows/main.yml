@@ -43,16 +43,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-docker@v2
+      - name: Docker login
+        uses: docker/login-action@v1
         with:
-          dockerfile: Dockerfile  # Update with your Dockerfile path
+          registry: harbor.getapp.sh
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.REGISTRY_URL }}/getmap-node:1 #${{ needs.calculate_new_tag.outputs.tag }} .
+      - name: Docker build and push
+        uses: actions/checkout@v3
+        run: |
+          docker build -t harbor.getapp.sh/getapp-dev/getmap-node:${{ github.run_number }} -f Dockerfile-cts
+          docker push harbor.getapp.sh/getapp-dev/getmap-node:${{ github.run_number }}
 
-      - name: Log into Docker registry
-        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin ${{ secrets.REGISTRY_URL }}
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.REGISTRY_URL }}/getmap-node:1 #${{ needs.calculate_new_tag.outputs.tag }}
+
+      # - name: Log into Docker registry
+      #   run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin ${{ secrets.REGISTRY_URL }}
+
+      # - name: Push Docker image
+      #   run: docker push ${{ secrets.REGISTRY_URL }}/getmap-node:1 #${{ needs.calculate_new_tag.outputs.tag }}
