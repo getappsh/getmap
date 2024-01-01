@@ -59,10 +59,3 @@ jobs:
           tags: ${{ secrets.REGISTRY_URL }}getapp-dev/getmap-node:1
           # build on feature branches, push only on main branch
           push: true
-
-
-      # - name: Log into Docker registry
-      #   run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin ${{ secrets.REGISTRY_URL }}
-
-      # - name: Push Docker image
-      #   run: docker push ${{ secrets.REGISTRY_URL }}/getmap-node:1 #${{ needs.calculate_new_tag.outputs.tag }}
