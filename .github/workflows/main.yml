@@ -41,21 +41,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Docker login
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: harbor.getapp.sh
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Docker build and push
-        uses: actions/checkout@v3
-        run: |
-          docker build -t harbor.getapp.sh/getapp-dev/getmap-node:${{ github.run_number }} -f Dockerfile-cts
-          docker push harbor.getapp.sh/getapp-dev/getmap-node:${{ github.run_number }}
-
+      - name: Build image and push to Docker Hub and GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./Dockerfile-cts
+          # Note: tags has to be all lower-case
+          tags: ${{ secrets.REGISTRY_URL }}getapp-dev/getmap-node:1
+          # build on feature branches, push only on main branch
+          push: true
 
 
       # - name: Log into Docker registry
