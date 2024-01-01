@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           # relative path to the place where source code with Dockerfile is located
-          context: Dockerfile-cts
+          context: .
           # Note: tags has to be all lower-case
           tags: ${{ secrets.REGISTRY_URL }}getapp-dev/getmap-node:1
           # build on feature branches, push only on main branch
