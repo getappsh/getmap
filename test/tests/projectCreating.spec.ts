@@ -1,7 +1,7 @@
 import { SuperAgentTest } from "supertest";
 import { promises as fs } from "fs";
 
-import { CONFIG_OPTION, CREATE_TOKEN, MANIFEST, PROJECT, PROJECT_MANAGEMENT, RELEASES, UPDATE_UPLOAD_STATUS, UPLOAD } from "@app/root/api/src/utils/paths";
+import { CONFIG_OPTION, CREATE_TOKEN, MANIFEST, PROJECT, PROJECT_MANAGEMENT, RELEASES, UPDATE_UPLOAD_STATUS, UPLOAD } from "@app/common/utils/paths";
 
 import { MemberProjectResDto, ProjectDto, ProjectReleasesDto, ProjectResDto } from "@app/common/dto/project-management";
 import { UpdateUploadStatusDto } from "@app/common/dto/upload";
