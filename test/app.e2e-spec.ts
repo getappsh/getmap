@@ -2,7 +2,7 @@ import { SuperAgentTest, agent as supertest } from 'supertest';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import * as dotenv from "dotenv";
-import { LOGIN, REFRESH } from '@app/root/api/src/utils/paths';
+import { LOGIN, REFRESH } from '@app/common/utils/paths';
 import { createProjectUntilUploadTest, discoveryUntilDeployTest, importCreateTest } from './tests';
 
 
