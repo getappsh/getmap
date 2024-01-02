@@ -1,13 +1,11 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
 import { DiscoveryAttributes } from "../libot-dto/discoveryAttributes.dto";
-import { from, lastValueFrom } from "rxjs";
-import { parseString, parseStringPromise, } from "xml2js"
+import { lastValueFrom } from "rxjs";
 import { toJson } from "xml2json"
-import { RecordsResDto } from "../libot-dto/recordsRes.dto";
-import { MapProductResDto } from "@app/common/dto/map/dto/map-product-res.dto";
+import { MCRasterRecordDto, RecordsResDto } from "../libot-dto/recordsRes.dto";
+import { AxiosResponse } from "axios";
 
-const REQUEST_TIME_OUT = 10000;
 
 @Injectable()
 export class LibotHttpClientService {
@@ -23,25 +21,58 @@ export class LibotHttpClientService {
     } as any
   }
 
-  async getRecords(mapAttrs: DiscoveryAttributes) {
+  async getRecords(mapAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
     let startPos = 1
-    const productsRes: MapProductResDto[] = []
+    let productsRes: MCRasterRecordDto[] = []
     while (startPos > 0) {
+
+      this.logger.debug(`Get records from libot from position ${startPos}`)
+
       const body = this.constructXmlBody(mapAttrs, startPos)
 
       const res = await lastValueFrom(this.httpConfig.post("", body))
-      let results: RecordsResDto = JSON.parse(toJson(res.data, { alternateTextNode: true }))
-      console.log(results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"]);
-      const records = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"]
-      if (Array.isArray(records)) {
-        records.forEach(item => productsRes.push(MapProductResDto.fromRecordsRes(item)))
+
+      if (this.isResSuccess(res, "getRecords")) {
+
+        let results: RecordsResDto = JSON.parse(this.xmlToJson(res.data))
+        const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"]
+
+        if (Array.isArray(records)) {
+          productsRes = [...productsRes, ...records]
+        } else {
+          productsRes.push(records)
+        }
+        startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
       } else {
-        productsRes.push(MapProductResDto.fromRecordsRes(records))
+        if (this.isThereErrorMes) {
+          const error = this.xmlToJson(res.data)
+          this.logger.error(`Error occurs in getRecord req`, error)
+          throw new Error(error)
+        } else {
+          throw new Error(`Error occurs in getRecord req! HTTP StatusCode: ${res.status}, Message: ${res.data}`)
+        }
+
+
       }
-      startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
     }
+
     return productsRes
 
+  }
+
+  isResSuccess(res: AxiosResponse<any, any>, reqName?: string): boolean {
+    const isSuccess = (res.status >= 200 && res.status < 300) && !this.isThereErrorMes(res)
+    this.logger.debug(`${reqName} req is ${isSuccess ? "success" : "finished with error"}`)
+    return isSuccess
+  }
+
+  isThereErrorMes(res: AxiosResponse): boolean {
+    const data: string = res.data
+    return data.includes("ExceptionReport")
+  }
+
+  xmlToJson(xml: string): string {
+    return toJson(xml)
   }
 
   constructXmlBody(mapAttrs: DiscoveryAttributes, startPos: number) {

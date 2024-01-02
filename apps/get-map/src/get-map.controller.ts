@@ -14,9 +14,9 @@ export class GetMapController {
   constructor(private readonly getMapService: GetMapService) { }
 
   @MessagePattern(GetMapTopics.DISCOVERY_MAP)
-  getOffering(@Payload() discoverMap: DiscoveryMapDto): OfferingMapResDto {
+  async getOffering(@Payload() discoverMap: DiscoveryMapDto): Promise<OfferingMapResDto> {
     this.logger.debug("Get products offering")
-    return this.getMapService.getOffering(discoverMap)
+    return await this.getMapService.getOffering(discoverMap)
   }
   
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
