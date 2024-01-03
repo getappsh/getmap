@@ -59,6 +59,6 @@ jobs:
           # path to the Dockerfile
           context: .
           # Note: tags has to be all lower-case
-          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:$TAG1
+          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${TAG1}
           # build on feature branches, push only on main branch
           push: true
