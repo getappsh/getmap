@@ -39,9 +39,10 @@ jobs:
   build_and_push_image:
     needs: calculate_new_tag
     runs-on: ubuntu-latest
-    steps:
       - env:
           TAG1: ${{ needs.calculate_new_tag.outputs.tag }}
+
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -54,6 +55,8 @@ jobs:
 
       - name: Build image and push to Docker Hub and GitHub Container Registry
         uses: docker/build-push-action@v5
+        env:
+          TAG1: ${{ needs.calculate_new_tag.outputs.tag }}
         with:
           # path to the Dockerfile
           context: .
