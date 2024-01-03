@@ -21,21 +21,22 @@ export class LibotHttpClientService {
     } as any
   }
 
-  async getRecords(mapAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
+  async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
     let startPos = 1
     let productsRes: MCRasterRecordDto[] = []
     while (startPos > 0) {
 
       this.logger.debug(`Get records from libot from position ${startPos}`)
 
-      const body = this.constructXmlBody(mapAttrs, startPos)
+      const body = this.constructXmlBody(dAttrs, startPos)
 
       const res = await lastValueFrom(this.httpConfig.post("", body))
 
+
       if (this.isResSuccess(res, "getRecords")) {
 
-        let results: RecordsResDto = JSON.parse(this.xmlToJson(res.data))
-        const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"]
+        let results: RecordsResDto = JSON.parse(this.xmlToJson(res.data)) ?? []
+        const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"] ?? []
 
         if (Array.isArray(records)) {
           productsRes = [...productsRes, ...records]
@@ -45,7 +46,7 @@ export class LibotHttpClientService {
         startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
       } else {
         if (this.isThereErrorMes) {
-          const error = this.xmlToJson(res.data)
+          const error = this.errorFromRes(res.data)
           this.logger.error(`Error occurs in getRecord req`, error)
           throw new Error(error)
         } else {
@@ -75,13 +76,30 @@ export class LibotHttpClientService {
     return toJson(xml)
   }
 
+  errorFromRes(xml: string): string {
+    const json = this.xmlToJson(xml)
+    const obj = JSON.parse(json)
+    const error = obj?.["ows:ExceptionReport"]?.["ows:Exception"]
+    // const error = obj?.["ows:ExceptionReport"]?.["ows:Exception"]?.["ows:ExceptionText"]
+
+    if (error) {
+      return JSON.stringify(error)
+    }
+    return json
+  }
+
   constructXmlBody(mapAttrs: DiscoveryAttributes, startPos: number) {
     if (!mapAttrs.IngestionDate) {
       return this.getRecordsExlNoFilter(startPos)
     }
 
-    return this.getRecordsExlWithFilter(mapAttrs, startPos)
+    // offering for import create flow
+    if (mapAttrs.BBox) {
+    return this.getRecordsExlWithBBoxFilter(mapAttrs, startPos)
+    }
 
+    // offering for discovery flow
+    return this.getRecordsExlWithFilter(mapAttrs, startPos)
   }
 
   getRecordsExlNoFilter(startPos: number) {
@@ -131,6 +149,57 @@ export class LibotHttpClientService {
                 <PropertyName>mc:maxResolutionDeg</PropertyName>
                 <Literal>${mapAttrs.ResolutionDeg}</Literal>
             </PropertyIsLessThanOrEqualTo>
+        </And>
+    </Filter>
+    </csw:Constraint>
+    <ogc:SortBy>
+        <ogc:SortProperty>
+            <ogc:PropertyName>mc:ingestionDate</ogc:PropertyName>
+            <ogc:SortOrder>DESC</ogc:SortOrder>
+        </ogc:SortProperty>
+    </ogc:SortBy>
+    </csw:Query>
+    </csw:GetRecords>`
+  }
+
+  getRecordsExlWithBBoxFilter(mapAttrs: DiscoveryAttributes, startPos: number) {
+    return `<csw:GetRecords 
+    xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" 
+    xmlns:ogc="http://www.opengis.net/ogc" 
+    xmlns:gml="http://www.opengis.net/gml"
+    xmlns:ows="http://www.opengis.net/ows"
+    xmlns:mc="http://schema.mapcolonies.com/raster"
+    service="CSW" version="2.0.2"
+    maxRecords="25"  startPosition="${startPos}" 
+    outputSchema="http://schema.mapcolonies.com/raster" >
+    <csw:Query typeNames="mc:MCRasterRecord">
+    <csw:ElementSetName>full</csw:ElementSetName>
+        <csw:Constraint version="1.1.0">
+        <Filter xmlns="http://www.opengis.net/ogc">
+        <And>
+            <PropertyIsEqualTo>
+                <PropertyName>mc:productType</PropertyName>
+                <Literal>Orthophoto</Literal>
+            </PropertyIsEqualTo>
+            <PropertyIsEqualTo>
+                <PropertyName>mc:transparency</PropertyName>
+                <Literal>OPAQUE</Literal>
+            </PropertyIsEqualTo>
+            <PropertyIsGreaterThan>
+                <PropertyName>mc:ingestionDate</PropertyName>
+                <Literal>${mapAttrs.IngestionDate}</Literal>
+            </PropertyIsGreaterThan>
+            <PropertyIsLessThanOrEqualTo>
+                <PropertyName>mc:maxResolutionDeg</PropertyName>
+                <Literal>${mapAttrs.ResolutionDeg}</Literal>
+            </PropertyIsLessThanOrEqualTo>
+            <ogc:BBOX>
+                <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName>
+                <gml:Envelope srsName="${mapAttrs.CRS}">
+                    <gml:lowerCorner>${mapAttrs.BBox[1]} ${mapAttrs.BBox[0]}</gml:lowerCorner>
+                    <gml:upperCorner>${mapAttrs.BBox[3]} ${mapAttrs.BBox[2]}</gml:upperCorner>
+                </gml:Envelope>
+            </ogc:BBOX>
         </And>
     </Filter>
     </csw:Constraint>
