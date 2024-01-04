@@ -33,6 +33,9 @@ jobs:
     needs: calculate_new_tag
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Create and push tag
         if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
         run: |
@@ -46,6 +49,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure all tags are fetched
 
       - name: Docker login
         uses: docker/login-action@v3
