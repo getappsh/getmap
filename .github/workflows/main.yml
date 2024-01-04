@@ -41,39 +41,37 @@ jobs:
         with:
           github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
           custom_tag: ${{ needs.calculate_new_tag.outputs.tag }}
-          tag_prefix: ""
 
       # - name: Create a GitHub release
       #   uses: ncipollo/release-action@v1
       #   with:
-      #     custom_tag: ${{ needs.calculate_new_tag.outputs.tag }}
       #     tag: ${{ needs.calculate_new_tag.outputs.tag }}
       #     name: Release ${{ needs.calculate_new_tag.outputs.tag }}
       #     body: ${{ needs.calculate_new_tag.outputs.tag }}
 
-  # build_and_push_image:
-  #   needs: calculate_new_tag
-  #   runs-on: ubuntu-latest
+  build_and_push_image:
+    needs: calculate_new_tag
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-  #       with:
-  #         fetch-depth: 0  # Ensure all tags are fetched
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure all tags are fetched
 
-  #     - name: Docker login
-  #       uses: docker/login-action@v3
-  #       with:
-  #         registry: harbor.getapp.sh
-  #         username: ${{ secrets.REGISTRY_USERNAME }}
-  #         password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.getapp.sh
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
-  #     - name: Build image and push to Docker Hub and GitHub Container Registry
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         # path to the Dockerfile
-  #         context: .
-  #         # Note: tags has to be all lower-case
-  #         tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
-  #         # build on feature branches, push only on main branch
-  #         push: true
+      - name: Build image and push to Docker Hub and GitHub Container Registry
+        uses: docker/build-push-action@v5
+        with:
+          # path to the Dockerfile
+          context: .
+          # Note: tags has to be all lower-case
+          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
+          # build on feature branches, push only on main branch
+          push: true
