@@ -1,13 +1,19 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { MapImportStatusEnum } from "./enums.entity";
 import { MapProductEntity, } from "./map-product.entity";
 import { DeviceMapStateEntity } from "./device-map-state.entity";
+import { nanoid } from "nanoid";
 
 @Entity("map")
 export class MapEntity {
-
+  
   @PrimaryColumn({ name: 'catalog_id' })
   catalogId: string;
+  
+  @BeforeInsert()
+  generateCatalogId() {
+    this.catalogId = nanoid();
+  }
 
   @CreateDateColumn({ name: 'create_date' })
   createDateTime: Date;
