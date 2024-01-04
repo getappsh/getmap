@@ -36,6 +36,7 @@ export class ImportAttributes {
     this._BBox[2] = bBoxValues[2];
     this._BBox[3] = bBoxValues[3];
     
+    this._BoundingBox = bBox
   }
 
   static fromImportCreateDto(importDto: CreateImportDto): ImportAttributes {

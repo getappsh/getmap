@@ -1,7 +1,6 @@
 import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { CreateImportDto, CreateImportResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
-import { Injectable, Logger } from '@nestjs/common';
 import { DiscoveryAttributes } from '../libot-dto/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client.service';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
@@ -9,13 +8,21 @@ import { ImportAttributes } from '../libot-dto/importAttributes.dto';
 import { Validators } from '../utils/validators';
 import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
+import { MapError } from '../utils/map-error';
+import { RepoService } from './repo.service';
+import { MapEntity } from '@app/common/database/entities';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class GetMapService {
 
   private readonly logger = new Logger(GetMapService.name);
 
-  constructor(private readonly libot: LibotHttpClientService, private readonly create: ImportCreateService) { }
+  constructor(
+    private readonly libot: LibotHttpClientService,
+    private readonly create: ImportCreateService,
+    private readonly repo: RepoService
+  ) { }
 
   async getOffering(discoverMap: DiscoveryMapDto): Promise<OfferingMapResDto> {
     const mapRes = new OfferingMapResDto
@@ -37,20 +44,46 @@ export class GetMapService {
     return mapRes
   }
 
-  importCreate(importDto: CreateImportDto): CreateImportResDto {
+  async importCreate(importDto: CreateImportDto): Promise<CreateImportResDto> {
 
     const importRes = new CreateImportResDto()
 
     const importAttrs = ImportAttributes.fromImportCreateDto(importDto)
 
     if (!Validators.isBBoxAreaValid(importAttrs.BBox)) {
-      importRes.error = this.throwErrorDto(ErrorCode.MAP_AREA_TOO_LARGE, "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית")
+      // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
+      const mes = "Area too large to distribute, reduce request and try again"
+      importRes.error = this.throwErrorDto(ErrorCode.MAP_AREA_TOO_LARGE, mes)
+      this.logger.error(mes)
       return importRes
     }
 
-    this.create.selectProduct(importAttrs)
+    try {
+      const product = await this.create.selectProduct(importAttrs)
+      this.create.completeAttrs(importAttrs, product)
 
-    throw new Error('Method not implemented.');
+      let existsMap = await this.repo.getMap(importAttrs)
+      
+      if (!existsMap) {
+        const pEntity = await this.repo.getOrSaveProduct(product)
+        existsMap = await this.repo.saveMap(importAttrs, pEntity)
+      }
+      
+      // TODO pass this function to device service and emit it in a topic
+      this.repo.registerMapToDevice(existsMap, importDto.deviceId)
+      this.fromEntityToDto(existsMap, importRes)
+
+      return importRes
+
+    } catch (error) {
+      if (error instanceof MapError) {
+        importRes.error = this.throwErrorDto(error.errorCode, error.message)
+      } else {
+        importRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
+      }
+    }
+
+    return importRes;
   }
 
   importCancel() {
@@ -61,7 +94,14 @@ export class GetMapService {
     throw new Error('Method not implemented.');
   }
 
+  fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
+    dto.importRequestId = entity.catalogId
+    dto.product = entity.mapProduct
+    dto.status = entity.status
+  }
+
   throwErrorDto(code: ErrorCode, mes: string) {
+
     const error = new ErrorDto()
     error.errorCode = code
     error.message = mes.toString()

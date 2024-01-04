@@ -18,21 +18,21 @@ export class GetMapController {
     this.logger.debug("Get products offering")
     return await this.getMapService.getOffering(discoverMap)
   }
-  
+
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
-  importCreate(@Payload() importDto: CreateImportDto ): CreateImportResDto {
-    this.logger.debug("Import create")    
-    return this.getMapService.importCreate(importDto)
+  async importCreate(@Payload() importDto: CreateImportDto): Promise<CreateImportResDto> {
+    this.logger.debug("Import create")
+    return await this.getMapService.importCreate(importDto)
   }
-  
+
   @MessagePattern(GetMapTopics.CANCEL_IMPORT_CREATE)
-  importCancel(){
+  importCancel() {
     this.logger.debug("Cancel import create")
     return this.getMapService.importCancel()
   }
-  
+
   @MessagePattern(GetMapTopics.GET_IMPORT_STATUS)
-  getImportStatus(){
+  getImportStatus() {
     this.logger.debug("Get import create status")
     return this.getMapService.getImportStatus()
   }

@@ -15,7 +15,7 @@ export class DiscoveryAttributes {
   private _BoundingBox: string | null
   CRS: string = "urn:x-ogc:def:crs:EPSG:6.11:4326";
   IngestionDate: string
-  private _ResolutionDeg: string
+  private _ResolutionDeg: number
 
   public get BBox() {
     return this._BBox

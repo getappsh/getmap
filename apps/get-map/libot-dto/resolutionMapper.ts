@@ -26,11 +26,11 @@ export class ResolutionMapper {
     21: 3.35276E-07,
   }
 
-  static level2Resolution(level: number): string {
+  static level2Resolution(level: number): number {
     if (this.mappings[level]) {
-      return this.mappings[level].toString();
+      return this.mappings[level]
     }
-    return 0.0.toString();
+    return 0.0
   }
 
   static resolution2Level(resolution: number) {
