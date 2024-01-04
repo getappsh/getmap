@@ -43,7 +43,8 @@ jobs:
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
-          tag: ${{ needs.calculate_new_tag.outputs.tag }}
+          custom_tag: ${{ needs.calculate_new_tag.outputs.tag }}
+          #tag: ${{ needs.calculate_new_tag.outputs.tag }}
           name: Release ${{ needs.calculate_new_tag.outputs.tag }}
           body: ${{ needs.calculate_new_tag.outputs.tag }}
 
