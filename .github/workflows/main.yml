@@ -9,7 +9,7 @@ jobs:
   calculate_new_tag:
     runs-on: ubuntu-latest
     outputs:
-      tag: ${{ steps.set_tag.outputs.tag }}
+      tag: ${{ steps.set_tag.outputs.NEW_TAG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -21,20 +21,23 @@ jobs:
         with:
           node-version: 14
 
-      # - name: Calculate new tag
-      #   id: set_tag
-      #   run: |
-      #     # Logic to calculate the new tag (modify accordingly)
-      #     PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
-      #     TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
-      #     NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
-      #     echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-
-      # - name: Create and push tag
-      #   if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
-      #   run: |
-      #     git tag -a ${{ needs.calculate_new_tag.outputs.tag }} -m "Version ${{ needs.calculate_new_tag.outputs.tag }}"
-      #     git push origin ${{ needs.calculate_new_tag.outputs.tag }}
+      - name: Calculate new tag
+        id: set_tag
+        run: |
+          # Logic to calculate the new tag (modify accordingly)
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
+          TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
+          NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
+          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+  tag_the_commit:
+    needs: calculate_new_tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create and push tag
+        if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
+        run: |
+          git tag -a ${{ needs.calculate_new_tag.outputs.tag }} -m "Version ${{ needs.calculate_new_tag.outputs.tag }}"
+          git push origin ${{ needs.calculate_new_tag.outputs.tag }}
 
   build_and_push_image:
     needs: calculate_new_tag
