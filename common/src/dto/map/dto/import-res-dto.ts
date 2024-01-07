@@ -6,12 +6,10 @@ import { ErrorDto } from "../../error";
 export class ImportResDto {
 
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+ 
   importRequestId: string;
 
   @ApiProperty({enum: MapImportStatusEnum})
-  @IsEnum(MapImportStatusEnum)
   status: MapImportStatusEnum;
 
   @ApiProperty({type: ErrorDto, required: false})

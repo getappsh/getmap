@@ -25,14 +25,14 @@ export class MapEntity {
   @JoinColumn({ name: "map_product" })
   mapProduct: MapProductEntity
 
-  @Column({ name: 'file_name', nullable: true })
-  fileName: string;
-
   @Column({ name: 'zoom_level', nullable: true })
   zoomLevel: number;
 
   @Column({ name: 'bounding_box', nullable: true })
   boundingBox: string;
+  
+  @Column({ name: 'file_name', nullable: true })
+  fileName: string;
 
   @Column({ name: 'package_url', nullable: true })
   packageUrl: string;
@@ -47,6 +47,9 @@ export class MapEntity {
 
   @Column({ name: 'progress', type: 'int', nullable: true })
   progress: number
+  
+  @Column({ name: 'size', type: 'int', nullable: true })
+  size: number
 
   @Column({ name: 'export_start', type: 'timestamptz', nullable: true })
   exportStart: Date
@@ -54,8 +57,11 @@ export class MapEntity {
   @Column({ name: 'export_end', type: 'timestamptz', nullable: true })
   exportEnd: Date
 
-  @Column({ name: 'job_id', nullable: true })
-  jobId: String
+  @Column({ name: 'job_id', type: "bigint", nullable: true })
+  jobId: number
+  
+  @Column({ name: 'error_reason', nullable: true })
+  errorReason: string
 
   @OneToMany(() => DeviceMapStateEntity, deviceMapStateEntity => deviceMapStateEntity.map, { cascade: true })
   devices: DeviceMapStateEntity[]
