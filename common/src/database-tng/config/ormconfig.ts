@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { join } from 'path';
 import { readFileSync } from 'fs'
-import { DeliveryEntity } from '../entities/delivery.entity';
+import { DeliveryEntity } from '../../database/entities/delivery.entity';
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
 
