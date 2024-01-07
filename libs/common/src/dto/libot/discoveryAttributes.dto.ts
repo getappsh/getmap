@@ -1,5 +1,5 @@
-import { ResolutionMapper } from "./resolutionMapper"
-import { Validators } from "../utils/validators"
+import { ResolutionMapper } from "./utils/resolutionMapper"
+import { Validators } from "./utils/validators"
 
 export class DiscoveryAttributes {
   // Identifier: string

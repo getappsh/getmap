@@ -1,5 +1,5 @@
 import { CreateImportDto } from "@app/common/dto/map"
-import { Validators } from "../utils/validators"
+import { Validators } from "./utils/validators"
 
 export class ImportAttributes {
   ProductId: string

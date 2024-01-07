@@ -1,14 +1,14 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
-import { DiscoveryAttributes } from "../libot-dto/discoveryAttributes.dto";
+import { DiscoveryAttributes } from "@app/common/dto/libot/discoveryAttributes.dto";
 import { lastValueFrom } from "rxjs";
 import { toJson } from "xml2json"
-import { MCRasterRecordDto, RecordsResDto } from "../libot-dto/recordsRes.dto";
+import { MCRasterRecordDto, RecordsResDto } from "@app/common/dto/libot/recordsRes.dto";
 import { AxiosResponse } from "axios";
-import { ImportAttributes } from "../libot-dto/importAttributes.dto";
+import { ImportAttributes } from "@app/common/dto/libot/importAttributes.dto";
 import { ImportPayload } from "@app/common/dto/libot/import-payload";
 import { ImportResPayload } from "@app/common/dto/libot/import-res-payload";
-import { MapError } from "../utils/map-error";
+import { MapError } from "@app/common/dto/libot/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 
 

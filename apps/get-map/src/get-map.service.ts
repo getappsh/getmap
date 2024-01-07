@@ -1,14 +1,13 @@
 import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { CreateImportDto, CreateImportResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
-import { DiscoveryAttributes } from '../libot-dto/discoveryAttributes.dto';
+import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client.service';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
-import { ImportAttributes } from '../libot-dto/importAttributes.dto';
-import { Validators } from '../utils/validators';
+import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
-import { MapError } from '../utils/map-error';
+import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';

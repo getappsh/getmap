@@ -1,5 +1,5 @@
 import { bbox, bboxPolygon, booleanWithin, multiPolygon, polygon } from "@turf/turf";
-import { Footprint, FootprintType } from "../libot-dto/footprint";
+import { Footprint, FootprintType } from "@app/common/dto/libot/footprint";
 
 export class Validators {
 

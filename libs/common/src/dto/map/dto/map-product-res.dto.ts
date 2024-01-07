@@ -1,4 +1,4 @@
-import { MCRasterRecordDto } from "@app/root/get-map/libot-dto/recordsRes.dto";
+import { MCRasterRecordDto } from "@app/common/dto/libot/recordsRes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 

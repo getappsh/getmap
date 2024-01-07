@@ -3,7 +3,7 @@ import { LibotHttpClientService } from './http-client.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, MapProductEntity } from '@app/common/database/entities';
 import { Repository } from 'typeorm';
-import { ImportAttributes } from '../libot-dto/importAttributes.dto';
+import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
