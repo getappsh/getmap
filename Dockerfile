@@ -65,7 +65,7 @@ ARG uid=1004370000
 ARG username=getapp
 
 COPY --chown=${uid}:${uid} package*.json ./
-
+RUN npm cache clean -f
 RUN npm install --only=production --omit=dev
 
 COPY --chown=${uid}:${uid} --from=build /node-app/dist/ .
