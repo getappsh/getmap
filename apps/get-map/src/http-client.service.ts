@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
 import { DiscoveryAttributes } from "@app/common/dto/libot/discoveryAttributes.dto";
 import { lastValueFrom } from "rxjs";
-import { toJson } from "xml2json"
+import { XMLParser } from "fast-xml-parser"
 import { MCRasterRecordDto, RecordsResDto } from "@app/common/dto/libot/recordsRes.dto";
 import { AxiosResponse } from "axios";
 import { ImportAttributes } from "@app/common/dto/libot/importAttributes.dto";
@@ -47,7 +47,7 @@ export class LibotHttpClientService {
 
       if (this.isResSuccess(res, "getRecords")) {
 
-        let results: RecordsResDto = JSON.parse(this.xmlToJson(res.data)) ?? []
+        let results: RecordsResDto = this.xmlToJson(res.data) ?? []
         const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"] ?? []
 
         if (Array.isArray(records)) {
@@ -84,7 +84,7 @@ export class LibotHttpClientService {
 
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
       const resPayload = new ImportResPayload(res.data)
-      this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully` )
+      this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully`)
       return resPayload
     } catch (error) {
       const mas = error.toString()
@@ -106,15 +106,20 @@ export class LibotHttpClientService {
     return data.includes("ExceptionReport")
   }
 
-  xmlToJson(xml: string): string {
-    return toJson(xml)
+  xmlToJson(xml: string) {
+    const data = new XMLParser({
+      ignoreAttributes: false,
+      allowBooleanAttributes: true,
+      attributeNamePrefix: ""
+    }).parse(xml)
+
+    return data
   }
 
   errorFromRes(xml: string): string {
     const json = this.xmlToJson(xml)
-    const obj = JSON.parse(json)
-    const error = obj?.["ows:ExceptionReport"]?.["ows:Exception"]
-    // const error = obj?.["ows:ExceptionReport"]?.["ows:Exception"]?.["ows:ExceptionText"]
+    const error = json?.["ows:ExceptionReport"]?.["ows:Exception"]
+    // const error = json?.["ows:ExceptionReport"]?.["ows:Exception"]?.["ows:ExceptionText"]
 
     if (error) {
       return JSON.stringify(error)
