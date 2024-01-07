@@ -14,6 +14,7 @@ import { ErrorCode } from "@app/common/dto/error";
 
 @Injectable()
 export class LibotHttpClientService {
+
   private readonly logger = new Logger(LibotHttpClientService.name);
 
 
@@ -36,6 +37,7 @@ export class LibotHttpClientService {
     const url = process.env.LIBOT_DISCOVERY_URL
     let startPos = 1
     let productsRes: MCRasterRecordDto[] = []
+
     while (startPos > 0) {
 
       this.logger.debug(`Get records from libot from position ${startPos}`)
@@ -64,11 +66,11 @@ export class LibotHttpClientService {
         } else {
           throw new Error(`Error occurs in getRecord req! HTTP StatusCode: ${res.status}, Message: ${res.data}`)
         }
-
-
       }
+
     }
 
+    this.logger.debug(`received ${productsRes.length} records from libot `)
     return productsRes
 
   }
@@ -95,9 +97,26 @@ export class LibotHttpClientService {
 
   }
 
+  async getMapStatus(reqId: number) {
+    this.logger.debug(`Get import status for job id ${reqId} from libot`)
+
+    const url = process.env.LIBOT_EXPORT_URL + "/" + reqId
+
+    try {
+      const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
+      const resPayload = new ImportResPayload(res.data)
+      this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
+      return resPayload
+    } catch (error) {
+      const mas = error.toString()
+      this.logger.error(`"Get map status" req failed! Got status code: ${error.status}, mes: ${mas}`)
+      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
+    }
+  }
+
   isResSuccess(res: AxiosResponse<any, any>, reqName?: string): boolean {
     const isSuccess = (res.status >= 200 && res.status < 300) && !this.isThereErrorMes(res)
-    this.logger.debug(`${reqName} req is ${isSuccess ? "success" : "finished with error"}`)
+    this.logger.debug(`"${reqName}" req is ${isSuccess ? "success" : "finished with error"}`)
     return isSuccess
   }
 

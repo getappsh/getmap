@@ -25,20 +25,16 @@ export class GetMapController {
     return await this.getMapService.importCreate(importDto)
   }
 
-  @MessagePattern(GetMapTopics.CANCEL_IMPORT_CREATE)
+  @EventPattern(GetMapTopics.CANCEL_IMPORT_CREATE)
   importCancel() {
     this.logger.debug("Cancel import create")
     return this.getMapService.importCancel()
   }
 
   @MessagePattern(GetMapTopics.GET_IMPORT_STATUS)
-  getImportStatus() {
+  getImportStatus(@Payload() reqId: string) {
     this.logger.debug("Get import create status")
-    return this.getMapService.getImportStatus()
+    return this.getMapService.getImportStatus(reqId)
   }
-
-
-
-
 
 }

@@ -1,5 +1,5 @@
 import { DiscoveryMapDto } from '@app/common/dto/discovery';
-import { CreateImportDto, CreateImportResDto } from '@app/common/dto/map';
+import { CreateImportDto, CreateImportResDto, ImportStatusResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client.service';
@@ -9,7 +9,7 @@ import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
-import { MapEntity } from '@app/common/database/entities';
+import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
@@ -63,7 +63,7 @@ export class GetMapService {
       if (!existsMap) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
-      }      
+      }
 
       // TODO pass this function to device service and emit it in a topic
       this.repo.registerMapToDevice(existsMap, importDto.deviceId)
@@ -88,8 +88,16 @@ export class GetMapService {
     throw new Error('Method not implemented.');
   }
 
-  getImportStatus() {
-    throw new Error('Method not implemented.');
+  async getImportStatus(reqId: string): Promise<ImportStatusResDto> {
+    this.logger.debug(`Find map entity if catalog id ${reqId}`)
+    const map = await this.repo.getMapById(reqId)
+    if (map.status === MapImportStatusEnum.START ||
+      map.status === MapImportStatusEnum.PENDING ||
+      map.status === MapImportStatusEnum.IN_PROGRESS) {
+
+      this.create.handleGetMapStatus(map.jobId, map)
+    }
+    return ImportStatusResDto.fromMapEntity(map)
   }
 
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {

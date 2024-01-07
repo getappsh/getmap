@@ -30,6 +30,15 @@ export class RepoService {
     return existMap
   }
 
+  async getMapById(reqId: string): Promise<MapEntity> {
+    const existMap = await this.mapRepo.findOne({
+      where: {
+        catalogId: reqId
+      }
+    })
+    return existMap
+  }
+
   async saveMap(importAttr: ImportAttributes, product?: MapProductEntity): Promise<MapEntity> {
     const newMap = this.mapRepo.create()
     newMap.boundingBox = importAttr.BoundingBox
@@ -59,10 +68,14 @@ export class RepoService {
 
       map.jobId = resData.id
       map.status = this.mapStatus(resData.status)
-      map.progress = resData.progress
-      map.size = resData.estimatedSize
-      map.exportStart = resData.createdAt ? new Date(resData.createdAt) : null
-      map.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : null
+      if (resData.progress) {
+        map.progress = resData.progress
+      }
+      if (resData.estimatedSize) {
+        map.size = resData.estimatedSize
+      }
+      map.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
+      map.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
       map.errorReason = resData.errorReason
 
       if (resData.status === LibotExportStatusEnum.COMPLETED) {

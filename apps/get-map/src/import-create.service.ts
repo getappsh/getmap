@@ -13,6 +13,7 @@ import { MapEntity } from '@app/common/database/entities';
 @Injectable()
 export class ImportCreateService {
 
+
   private readonly logger = new Logger(ImportCreateService.name);
 
   constructor(
@@ -67,8 +68,11 @@ export class ImportCreateService {
   }
 
   async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
-    const resData = await this.libot.exportStampMap(importAttrs)    
+    const resData = await this.libot.exportStampMap(importAttrs)
     this.repo.saveExportRes(resData, map)
+    setTimeout(() => {
+      this.handleGetMapStatus(resData.id, map)
+    }, 5000)
   }
 
   completeAttrs(importAttrs: ImportAttributes, product: MapProductResDto) {
@@ -86,6 +90,12 @@ export class ImportCreateService {
       return
     }
     importAttrs.TargetResolution = ResolutionMapper.level2Resolution(importAttrs.ZoomLevel)
+  }
+
+
+  async handleGetMapStatus(jobId: number, map: MapEntity) {
+    const res = await this.libot.getMapStatus(jobId)
+    this.repo.saveExportRes(res, map)
   }
 
 }
