@@ -85,6 +85,17 @@ export enum MapImportStatusEnum {
     ARCHIVED = 'Archived',
 }
 
+export enum LibotExportStatusEnum {
+    PENDING = 'PENDING',
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    ABORTED = "ABORTED",
+    PAUSED = "PAUSED",
+    FAILED = "FAILED",
+    EXPIRED = "EXPIRED",
+    ARCHIVED = "ARCHIVED",
+}
+
 export enum DeviceMapStateEnum {
     IMPORT = "import",
     DELIVERY = "delivery",
