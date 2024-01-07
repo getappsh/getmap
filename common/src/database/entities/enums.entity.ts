@@ -56,6 +56,13 @@ export enum DeliveryStatusEnum {
 
 }
 
+export enum PrepareStatusEnum {
+    START = "start",
+    IN_PROGRESS = "inProgress",
+    DONE = "done",
+    ERROR = "error",
+  }
+  
 export enum DeployStatusEnum {
     START = 'Start',
     DONE = 'Done',
