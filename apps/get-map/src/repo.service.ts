@@ -5,7 +5,7 @@ import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStat
 import { Repository } from 'typeorm';
 import { ImportAttributes } from '../libot-dto/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
-import { ArtifactsLibotEnum, ImportResPayload } from '../libot-dto/import-res-payload';
+import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
 @Injectable()
 export class RepoService {

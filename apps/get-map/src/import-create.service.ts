@@ -9,7 +9,7 @@ import { MCRasterRecordDto } from '../libot-dto/recordsRes.dto';
 import { ResolutionMapper } from '../libot-dto/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { ImportResPayload } from '../libot-dto/import-res-payload';
+import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapEntity } from '@app/common/database/entities';
 
 @Injectable()

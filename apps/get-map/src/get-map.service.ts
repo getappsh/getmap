@@ -12,7 +12,6 @@ import { MapError } from '../utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
-import { ImportPayload } from '../libot-dto/import-payload';
 
 @Injectable()
 export class GetMapService {

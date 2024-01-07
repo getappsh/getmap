@@ -6,8 +6,8 @@ import { toJson } from "xml2json"
 import { MCRasterRecordDto, RecordsResDto } from "../libot-dto/recordsRes.dto";
 import { AxiosResponse } from "axios";
 import { ImportAttributes } from "../libot-dto/importAttributes.dto";
-import { ImportPayload } from "../libot-dto/import-payload";
-import { ImportResPayload } from "../libot-dto/import-res-payload";
+import { ImportPayload } from "@app/common/dto/libot/import-payload";
+import { ImportResPayload } from "@app/common/dto/libot/import-res-payload";
 import { MapError } from "../utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 
