@@ -1,5 +1,5 @@
-import { Validators } from "../../../../../apps/get-map/utils/validators";
-import { ImportAttributes } from "../../../../../apps/get-map/libot-dto/importAttributes.dto";
+import { Validators } from "./utils/validators";
+import { ImportAttributes } from "./importAttributes.dto";
 
 export class ImportPayload {
   catalogRecordID: string;
