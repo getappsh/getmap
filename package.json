@@ -52,14 +52,13 @@
     "dockerode": "^3.3.5",
     "dotenv": "^16.0.3",
     "kafkajs": "^2.2.3",
-    "nanoid": "^5.0.4",
+    "nanoid": "^3.3.7",
     "nest-keycloak-connect": "^1.9.1",
     "pg": "^8.9.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "typeorm": "^0.3.17",
     "uuid": "^9.0.0",
-    "xml2js": "^0.6.2",
     "xml2json": "^0.12.0"
   },
   "devDependencies": {
@@ -71,7 +70,6 @@
     "@types/multer": "^1.4.7",
     "@types/node": "18.11.18",
     "@types/supertest": "^2.0.12",
-    "@types/xml2js": "^0.4.14",
     "@types/xml2json": "^0.11.6",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",

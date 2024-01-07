@@ -1,4 +1,3 @@
-import { DiscoveryMapDto } from "@app/common/dto/discovery"
 import { ResolutionMapper } from "./resolutionMapper"
 import { Validators } from "../utils/validators"
 
@@ -50,8 +49,8 @@ export class DiscoveryAttributes {
   }
 
   constructor() {
-    this.ResolutionDeg = 17
-    this.IngestionDate = process.env.MCCSWRefDate
+    this.ResolutionDeg = (process.env.TARGET_RESOLUTION) ?? 17
+    this.IngestionDate = process.env.MC_CSW_REF_DATE
   }
 
   toString() {

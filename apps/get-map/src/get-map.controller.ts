@@ -21,7 +21,7 @@ export class GetMapController {
 
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
   async importCreate(@Payload() importDto: CreateImportDto): Promise<CreateImportResDto> {
-    this.logger.debug("Import create")
+    this.logger.debug("Start import create")
     return await this.getMapService.importCreate(importDto)
   }
 

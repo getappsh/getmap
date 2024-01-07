@@ -9,6 +9,8 @@ import { MCRasterRecordDto } from '../libot-dto/recordsRes.dto';
 import { ResolutionMapper } from '../libot-dto/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
+import { ImportResPayload } from '../libot-dto/import-res-payload';
+import { MapEntity } from '@app/common/database/entities';
 
 @Injectable()
 export class ImportCreateService {
@@ -17,7 +19,20 @@ export class ImportCreateService {
 
   constructor(
     private readonly libot: LibotHttpClientService,
+    private readonly repo: RepoService,
   ) { }
+
+
+  isValidBbox(BBox: number[]) {
+    this.logger.debug("checked is bbox area valid")
+
+    if (!Validators.isBBoxAreaValid(BBox)) {
+      // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
+      const mes = "Area too large to distribute, reduce request and try again"
+      this.logger.error(mes)
+      throw new MapError(ErrorCode.MAP_AREA_TOO_LARGE, mes)
+    }
+  }
 
   async selectProduct(importAttrs: ImportAttributes): Promise<MapProductResDto> {
 
@@ -53,6 +68,11 @@ export class ImportCreateService {
     return selectedProduct
   }
 
+  async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
+    const resData = await this.libot.exportStampMap(importAttrs)    
+    this.repo.saveExportRes(resData, map)
+  }
+
   completeAttrs(importAttrs: ImportAttributes, product: MapProductResDto) {
 
     this.logger.debug("completing attributes for import create req")
@@ -69,4 +89,5 @@ export class ImportCreateService {
     }
     importAttrs.TargetResolution = ResolutionMapper.level2Resolution(importAttrs.ZoomLevel)
   }
+
 }

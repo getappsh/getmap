@@ -5,6 +5,11 @@ import { lastValueFrom } from "rxjs";
 import { toJson } from "xml2json"
 import { MCRasterRecordDto, RecordsResDto } from "../libot-dto/recordsRes.dto";
 import { AxiosResponse } from "axios";
+import { ImportAttributes } from "../libot-dto/importAttributes.dto";
+import { ImportPayload } from "../libot-dto/import-payload";
+import { ImportResPayload } from "../libot-dto/import-res-payload";
+import { MapError } from "../utils/map-error";
+import { ErrorCode } from "@app/common/dto/error";
 
 
 @Injectable()
@@ -13,15 +18,22 @@ export class LibotHttpClientService {
 
 
   constructor(private readonly httpConfig: HttpService) {
-    httpConfig.axiosRef.defaults.baseURL = process.env.LIBOT_BASE_URL
     httpConfig.axiosRef.defaults.headers = {
       ...this.httpConfig.axiosRef.defaults.headers,
       "X-API-KEY": process.env.TOKEN_LIBOT,
-      "Content-Type": "application/xml"
     } as any
   }
 
+  getHeaders(cType: "json" | "xml") {
+    const headers = {
+      "Content-Type": `application/${cType}`
+    }
+    return { headers }
+  }
+
   async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
+
+    const url = process.env.LIBOT_DISCOVERY_URL
     let startPos = 1
     let productsRes: MCRasterRecordDto[] = []
     while (startPos > 0) {
@@ -30,7 +42,7 @@ export class LibotHttpClientService {
 
       const body = this.constructXmlBody(dAttrs, startPos)
 
-      const res = await lastValueFrom(this.httpConfig.post("", body))
+      const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
 
 
       if (this.isResSuccess(res, "getRecords")) {
@@ -58,6 +70,28 @@ export class LibotHttpClientService {
     }
 
     return productsRes
+
+  }
+
+  async exportStampMap(imAttrs: ImportAttributes) {
+
+    this.logger.debug("Execute export map to libot")
+
+    const url = process.env.LIBOT_EXPORT_URL
+
+    const payload = new ImportPayload(imAttrs)
+    try {
+
+      const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
+      const resPayload = new ImportResPayload(res.data)
+      this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully` )
+      return resPayload
+    } catch (error) {
+      const mas = error.toString()
+      this.logger.error(`Export map failed! Got status code: ${error.status}, mes: ${mas}`)
+      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
+    }
+
 
   }
 
@@ -95,7 +129,7 @@ export class LibotHttpClientService {
 
     // offering for import create flow
     if (mapAttrs.BBox) {
-    return this.getRecordsExlWithBBoxFilter(mapAttrs, startPos)
+      return this.getRecordsExlWithBBoxFilter(mapAttrs, startPos)
     }
 
     // offering for discovery flow

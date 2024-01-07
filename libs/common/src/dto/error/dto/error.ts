@@ -6,6 +6,7 @@ export enum ErrorCode {
   MAP_OTHER = 'MAP.unknown',
   MAP_BBOX_INVALID = 'MAP.bBoxIsInvalid',
   MAP_BBOX_NOT_IN_POLYGON = 'MAP.bBoxNotInAnyPolygon',
+  MAP_EXPORT_FAILED = 'MAP.exportMapFailed',
   MAP_REQUESTED_IN_PROCESSING = 'MAP.requestInProgress',
   MAP_AREA_TOO_LARGE = "MAP.areaTooLarge",
   MAP_AREA_TOO_SMALL = "MAP.areaTooSmall",
@@ -17,7 +18,8 @@ export class ErrorDto{
     enum: ErrorCode, description: 
     "`MAP.unknown`: Error code not listed in the enum <br /> " +
     "`MAP.bBoxIsInvalid`: BBox is probably invalid <br /> " +
-    "`MAP.MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> " +
+    "`MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> " +
+    "`MAP.exportMapFailed`: Some error occurs when import map <br /> " +
     "`MAP.requestInProgress`: Delivery was already requested and in processing! <br /> " +
     "`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again <br /> " +
     "`MAP.areaTooSmall`: Area too small to distribute, increase request size and try again . "

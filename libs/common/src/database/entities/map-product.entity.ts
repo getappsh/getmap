@@ -37,7 +37,7 @@ export class MapProductEntity {
   @Column({name: 'imaging_time_end_UTC', type: 'timestamptz', nullable: true})
   imagingTimeEndUTC: Date;
 
-  @Column({name: 'max_resolution_deg', nullable: true})
+  @Column({name: 'max_resolution_deg', type: "float8", nullable: true})
   maxResolutionDeg: number
 
   @Column({name: 'footprint'})

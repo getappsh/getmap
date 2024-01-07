@@ -12,6 +12,7 @@ import { MapError } from '../utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
+import { ImportPayload } from '../libot-dto/import-payload';
 
 @Injectable()
 export class GetMapService {
@@ -50,30 +51,26 @@ export class GetMapService {
 
     const importAttrs = ImportAttributes.fromImportCreateDto(importDto)
 
-    if (!Validators.isBBoxAreaValid(importAttrs.BBox)) {
-      // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
-      const mes = "Area too large to distribute, reduce request and try again"
-      importRes.error = this.throwErrorDto(ErrorCode.MAP_AREA_TOO_LARGE, mes)
-      this.logger.error(mes)
-      return importRes
-    }
-
+    let existsMap: MapEntity;
     try {
+
+      this.create.isValidBbox(importAttrs.BBox)
+
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
 
-      let existsMap = await this.repo.getMap(importAttrs)
-      
+      this.logger.debug("save or update map entity")
+      existsMap = await this.repo.getMap(importAttrs)
+
       if (!existsMap) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
-      }
-      
+      }      
+
       // TODO pass this function to device service and emit it in a topic
       this.repo.registerMapToDevice(existsMap, importDto.deviceId)
       this.fromEntityToDto(existsMap, importRes)
 
-      return importRes
 
     } catch (error) {
       if (error instanceof MapError) {
@@ -82,6 +79,9 @@ export class GetMapService {
         importRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
       }
     }
+
+    this.create.executeExport(importAttrs, existsMap)
+
 
     return importRes;
   }
@@ -96,7 +96,7 @@ export class GetMapService {
 
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
     dto.importRequestId = entity.catalogId
-    dto.product = entity.mapProduct
+    // dto.product = entity.mapProduct
     dto.status = entity.status
   }
 
