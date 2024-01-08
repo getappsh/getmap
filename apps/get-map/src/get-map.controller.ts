@@ -15,15 +15,15 @@ export class GetMapController {
   constructor(private readonly getMapService: GetMapService) { }
 
   @MessagePattern(GetMapTopics.DISCOVERY_MAP)
-  async getOffering(@Payload() discoverMap: DiscoveryMapDto): Promise<OfferingMapResDto> {
+  async getOffering() {
     this.logger.debug("Get products offering")
-    return await this.getMapService.getOffering(discoverMap)
+    return this.getMapService.getOffering()
   }
 
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
   async importCreate(@Payload() importDto: CreateImportDto): Promise<CreateImportResDto> {    
     this.logger.debug("Start import create")
-    return await this.getMapService.importCreate(importDto)
+    return this.getMapService.importCreate(importDto)
   }
 
   @EventPattern(GetMapTopics.CANCEL_IMPORT_CREATE)

@@ -25,7 +25,7 @@ export class GetMapService {
     private readonly repo: RepoService
   ) { }
 
-  async getOffering(discoverMap: DiscoveryMapDto): Promise<OfferingMapResDto> {
+  async getOffering(): Promise<OfferingMapResDto> {
     const mapRes = new OfferingMapResDto
     try {
       const mapAttrs = new DiscoveryAttributes()
@@ -65,6 +65,7 @@ export class GetMapService {
       if (!existsMap) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
+        this.create.executeExport(importAttrs, existsMap)
       }
 
       // TODO pass this function to device service and emit it in a topic
@@ -80,7 +81,6 @@ export class GetMapService {
       }
     }
 
-    this.create.executeExport(importAttrs, existsMap)
 
 
     return importRes;
