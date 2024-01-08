@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - get-map-refactor
+      - develop
 ##
 jobs:
   calculate_new_tag:
