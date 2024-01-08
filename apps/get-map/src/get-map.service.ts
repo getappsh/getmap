@@ -93,6 +93,13 @@ export class GetMapService {
   async getImportStatus(reqId: string): Promise<ImportStatusResDto> {
     this.logger.debug(`Find map entity if catalog id ${reqId}`)
     const map = await this.repo.getMapById(reqId)
+    
+    if (!map) {
+      const mes = `map with catalogId ${reqId} not exist`
+      this.logger.error(mes)
+      throw new MapError(ErrorCode.MAP_NOT_FOUND, mes)
+    }
+   
     if (map.status === MapImportStatusEnum.START ||
       map.status === MapImportStatusEnum.PENDING ||
       map.status === MapImportStatusEnum.IN_PROGRESS) {

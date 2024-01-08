@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { ErrorCode } from '@app/common/dto/error';
+import { MapError } from '@app/common/dto/libot/utils/map-error';
 
 @Injectable()
 export class RepoService {
@@ -51,7 +53,8 @@ export class RepoService {
   }
 
   async saveExportRes(resData: ImportResPayload, map?: MapEntity) {
-    const existsMap = await this.mapRepo.find({
+
+    const existMap = await this.mapRepo.find({
       where: [
         { catalogId: map?.catalogId },
         { jobId: resData.id }
@@ -59,7 +62,12 @@ export class RepoService {
       relations: { mapProduct: true }
     })
 
-    existsMap.forEach(cMap => {
+    if (!existMap || existMap.length == 0) {
+      const mes = `map with job id ${resData.id} not exist`
+      this.logger.error(mes)
+    }
+
+    existMap.forEach(cMap => {
 
       // TODO update the correct product
       if (map && cMap.mapProduct?.id != resData.catalogRecordID) {
@@ -93,7 +101,7 @@ export class RepoService {
     })
 
 
-    this.mapRepo.save(existsMap)
+    await this.mapRepo.save(existMap)
 
     // if (resData.status === LibotExportStatusEnum.COMPLETED) {
     //   resData.artifacts?.forEach(art => {

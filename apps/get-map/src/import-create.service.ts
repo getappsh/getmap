@@ -99,9 +99,13 @@ export class ImportCreateService {
     this.handleSaveExportRes(res, map)
   }
 
-  handleSaveExportRes(res: ImportResPayload, map?: MapEntity) {
+  async handleSaveExportRes(res: ImportResPayload, map?: MapEntity) {
     this.logger.debug(`save res data for jobId ${res.id}`)
-    this.repo.saveExportRes(res, map)
+    try {
+      await this.repo.saveExportRes(res, map)
+    } catch (error) {
+      this.logger.error(error.toString())
+    }
   }
 
 }
