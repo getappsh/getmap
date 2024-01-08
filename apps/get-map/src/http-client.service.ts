@@ -43,6 +43,7 @@ export class LibotHttpClientService {
       this.logger.debug(`Get records from libot from position ${startPos}`)
 
       const body = this.constructXmlBody(dAttrs, startPos)
+      this.logger.log(`send to utl ${url}`)
 
       const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
 
@@ -83,6 +84,7 @@ export class LibotHttpClientService {
 
     const payload = new ImportPayload(imAttrs)
     try {
+      this.logger.log(`send to utl ${url}`)
 
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
       const resPayload = new ImportResPayload(res.data)
@@ -102,7 +104,9 @@ export class LibotHttpClientService {
 
     const url = process.env.LIBOT_EXPORT_URL + "/" + reqId
 
+    
     try {
+      this.logger.log(`send to utl ${url}`)
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
       const resPayload = new ImportResPayload(res.data)
       this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)

@@ -11,9 +11,11 @@ import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
+import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
 @Injectable()
 export class GetMapService {
+
 
   private readonly logger = new Logger(GetMapService.name);
 
@@ -98,6 +100,10 @@ export class GetMapService {
       this.create.handleGetMapStatus(map.jobId, map)
     }
     return ImportStatusResDto.fromMapEntity(map)
+  }
+
+  handleNotification(payload: ImportResPayload) {
+    this.create.handleSaveExportRes(payload)
   }
 
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {

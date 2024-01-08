@@ -53,41 +53,41 @@ export class RepoService {
   async saveExportRes(resData: ImportResPayload, map?: MapEntity) {
     const existsMap = await this.mapRepo.find({
       where: [
-        { catalogId: map.catalogId },
+        { catalogId: map?.catalogId },
         { jobId: resData.id }
       ],
       relations: { mapProduct: true }
     })
 
-    existsMap.forEach(map => {
+    existsMap.forEach(cMap => {
 
       // TODO update the correct product
-      if (map?.mapProduct?.id != resData.catalogRecordID) {
-        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${map?.mapProduct?.id} at the export req`)
+      if (map && cMap.mapProduct?.id != resData.catalogRecordID) {
+        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${cMap?.mapProduct?.id} at the export req`)
       }
 
-      map.jobId = resData.id
-      map.status = this.mapStatus(resData.status)
+      cMap.jobId = resData.id
+      cMap.status = this.mapStatus(resData.status)
       if (resData.progress) {
-        map.progress = resData.progress
+        cMap.progress = resData.progress
       }
       if (resData.estimatedSize) {
-        map.size = resData.estimatedSize
+        cMap.size = resData.estimatedSize
       }
-      map.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
-      map.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
-      map.errorReason = resData.errorReason
+      cMap.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
+      cMap.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
+      cMap.errorReason = resData.errorReason
 
       if (resData.status === LibotExportStatusEnum.COMPLETED) {
         resData.artifacts?.forEach(art => {
           if (art.type === ArtifactsLibotEnum.GPKG) {
-            map.fileName = art.name
-            map.packageUrl = art.url
+            cMap.fileName = art.name
+            cMap.packageUrl = art.url
           }
         })
 
         if (this.doUseCache()) {
-          this.handleDownload(map, map.packageUrl)
+          this.handleDownload(cMap, cMap.packageUrl)
         }
       }
     })

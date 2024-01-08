@@ -9,6 +9,7 @@ import { ResolutionMapper } from '@app/common/dto/libot/utils/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
+import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
 @Injectable()
 export class ImportCreateService {
@@ -95,6 +96,11 @@ export class ImportCreateService {
 
   async handleGetMapStatus(jobId: number, map: MapEntity) {
     const res = await this.libot.getMapStatus(jobId)
+    this.handleSaveExportRes(res, map)
+  }
+
+  handleSaveExportRes(res: ImportResPayload, map?: MapEntity) {
+    this.logger.debug(`save res data for jobId ${res.id}`)
     this.repo.saveExportRes(res, map)
   }
 
