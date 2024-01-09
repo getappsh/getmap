@@ -1,78 +1,78 @@
-name: Build and Deploy
+# name: Build and Deploy
 
-on:
-  push:
-    branches:
-      - main
-##
-jobs:
-  calculate_new_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.set_tag.outputs.NEW_TAG }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Ensure all tags are fetched
+# on:
+#   push:
+#     branches:
+#       - main
+# ##
+# jobs:
+#   calculate_new_tag:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       tag: ${{ steps.set_tag.outputs.NEW_TAG }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#         with:
+#           fetch-depth: 0  # Ensure all tags are fetched
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 14
 
-      - name: Calculate new tag
-        id: set_tag
-        run: |
-          # Logic to calculate the new tag (modify accordingly)
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
-          TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
-          NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+#       - name: Calculate new tag
+#         id: set_tag
+#         run: |
+#           # Logic to calculate the new tag (modify accordingly)
+#           PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
+#           TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
+#           NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
+#           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           
-  tag_the_commit:
-    needs: calculate_new_tag
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
-          custom_tag: ${{ needs.calculate_new_tag.outputs.tag }}
-          tag_prefix: ""
+#   tag_the_commit:
+#     needs: calculate_new_tag
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Bump version and push tag
+#         id: tag_version
+#         uses: mathieudutour/github-tag-action@v6.1
+#         with:
+#           github_token: ${{ secrets.SECRET_GITHUB_TOKEN }}
+#           custom_tag: ${{ needs.calculate_new_tag.outputs.tag }}
+#           tag_prefix: ""
 
-      # - name: Create a GitHub release
-      #   uses: ncipollo/release-action@v1
-      #   with:
-      #     tag: ${{ needs.calculate_new_tag.outputs.tag }}
-      #     name: Release ${{ needs.calculate_new_tag.outputs.tag }}
-      #     body: ${{ needs.calculate_new_tag.outputs.tag }}
+#       # - name: Create a GitHub release
+#       #   uses: ncipollo/release-action@v1
+#       #   with:
+#       #     tag: ${{ needs.calculate_new_tag.outputs.tag }}
+#       #     name: Release ${{ needs.calculate_new_tag.outputs.tag }}
+#       #     body: ${{ needs.calculate_new_tag.outputs.tag }}
 
-  build_and_push_image:
-    needs: calculate_new_tag
-    runs-on: ubuntu-latest
+#   build_and_push_image:
+#     needs: calculate_new_tag
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Ensure all tags are fetched
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0  # Ensure all tags are fetched
 
-      - name: Docker login
-        uses: docker/login-action@v3
-        with:
-          registry: harbor.getapp.sh
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+#       - name: Docker login
+#         uses: docker/login-action@v3
+#         with:
+#           registry: harbor.getapp.sh
+#           username: ${{ secrets.REGISTRY_USERNAME }}
+#           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build image and push to Docker Hub and GitHub Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          # path to the Dockerfile
-          context: .
-          # Note: tags has to be all lower-case
-          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
-          # build on feature branches, push only on main branch
-          push: true
+#       - name: Build image and push to Docker Hub and GitHub Container Registry
+#         uses: docker/build-push-action@v5
+#         with:
+#           # path to the Dockerfile
+#           context: .
+#           # Note: tags has to be all lower-case
+#           tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
+#           # build on feature branches, push only on main branch
+#           push: true
