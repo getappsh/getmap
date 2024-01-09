@@ -19,5 +19,9 @@ export class OfferingMapResDto {
   status: MapOfferingStatus
 
   @ApiProperty({required: false})
-  error: ErrorDto 
+  error: ErrorDto
+  
+  toString() {
+    return JSON.stringify(this)
+  }
 }

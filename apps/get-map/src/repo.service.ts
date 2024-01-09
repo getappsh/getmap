@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { ErrorCode } from '@app/common/dto/error';
+import { MapError } from '@app/common/dto/libot/utils/map-error';
 
 @Injectable()
 export class RepoService {
@@ -51,49 +53,55 @@ export class RepoService {
   }
 
   async saveExportRes(resData: ImportResPayload, map?: MapEntity) {
-    const existsMap = await this.mapRepo.find({
+
+    const existMap = await this.mapRepo.find({
       where: [
-        { catalogId: map.catalogId },
+        { catalogId: map?.catalogId },
         { jobId: resData.id }
       ],
       relations: { mapProduct: true }
     })
 
-    existsMap.forEach(map => {
+    if (!existMap || existMap.length == 0) {
+      const mes = `map with job id ${resData.id} not exist`
+      this.logger.error(mes)
+    }
+
+    existMap.forEach(cMap => {
 
       // TODO update the correct product
-      if (map?.mapProduct?.id != resData.catalogRecordID) {
-        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${map?.mapProduct?.id} at the export req`)
+      if (map && cMap.mapProduct?.id != resData.catalogRecordID) {
+        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${cMap?.mapProduct?.id} at the export req`)
       }
 
-      map.jobId = resData.id
-      map.status = this.mapStatus(resData.status)
+      cMap.jobId = resData.id
+      cMap.status = this.mapStatus(resData.status)
       if (resData.progress) {
-        map.progress = resData.progress
+        cMap.progress = resData.progress
       }
       if (resData.estimatedSize) {
-        map.size = resData.estimatedSize
+        cMap.size = resData.estimatedSize
       }
-      map.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
-      map.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
-      map.errorReason = resData.errorReason
+      cMap.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
+      cMap.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
+      cMap.errorReason = resData.errorReason
 
       if (resData.status === LibotExportStatusEnum.COMPLETED) {
         resData.artifacts?.forEach(art => {
           if (art.type === ArtifactsLibotEnum.GPKG) {
-            map.fileName = art.name
-            map.packageUrl = art.url
+            cMap.fileName = art.name
+            cMap.packageUrl = art.url
           }
         })
 
         if (this.doUseCache()) {
-          this.handleDownload(map, map.packageUrl)
+          this.handleDownload(cMap, cMap.packageUrl)
         }
       }
     })
 
 
-    this.mapRepo.save(existsMap)
+    await this.mapRepo.save(existMap)
 
     // if (resData.status === LibotExportStatusEnum.COMPLETED) {
     //   resData.artifacts?.forEach(art => {

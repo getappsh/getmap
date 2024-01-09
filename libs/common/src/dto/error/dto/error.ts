@@ -4,6 +4,7 @@ import { IsEnum, IsString } from "class-validator";
 
 export enum ErrorCode {
   MAP_OTHER = 'MAP.unknown',
+  MAP_NOT_FOUND = 'MAP.notFound',
   MAP_BBOX_INVALID = 'MAP.bBoxIsInvalid',
   MAP_BBOX_NOT_IN_POLYGON = 'MAP.bBoxNotInAnyPolygon',
   MAP_EXPORT_FAILED = 'MAP.exportMapFailed',
@@ -17,6 +18,7 @@ export class ErrorDto{
   @ApiProperty({
     enum: ErrorCode, description: 
     "`MAP.unknown`: Error code not listed in the enum <br /> " +
+    "`MAP.notFound`: No found the map with given id <br /> " +
     "`MAP.bBoxIsInvalid`: BBox is probably invalid <br /> " +
     "`MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> " +
     "`MAP.exportMapFailed`: Some error occurs when import map <br /> " +

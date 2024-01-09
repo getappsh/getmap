@@ -11,9 +11,11 @@ import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
+import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
 @Injectable()
 export class GetMapService {
+
 
   private readonly logger = new Logger(GetMapService.name);
 
@@ -23,7 +25,7 @@ export class GetMapService {
     private readonly repo: RepoService
   ) { }
 
-  async getOffering(discoverMap: DiscoveryMapDto): Promise<OfferingMapResDto> {
+  async getOffering(): Promise<OfferingMapResDto> {
     const mapRes = new OfferingMapResDto
     try {
       const mapAttrs = new DiscoveryAttributes()
@@ -63,6 +65,7 @@ export class GetMapService {
       if (!existsMap) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
+        this.create.executeExport(importAttrs, existsMap)
       }
 
       // TODO pass this function to device service and emit it in a topic
@@ -78,7 +81,6 @@ export class GetMapService {
       }
     }
 
-    this.create.executeExport(importAttrs, existsMap)
 
 
     return importRes;
@@ -91,6 +93,13 @@ export class GetMapService {
   async getImportStatus(reqId: string): Promise<ImportStatusResDto> {
     this.logger.debug(`Find map entity if catalog id ${reqId}`)
     const map = await this.repo.getMapById(reqId)
+    
+    if (!map) {
+      const mes = `map with catalogId ${reqId} not exist`
+      this.logger.error(mes)
+      throw new MapError(ErrorCode.MAP_NOT_FOUND, mes)
+    }
+   
     if (map.status === MapImportStatusEnum.START ||
       map.status === MapImportStatusEnum.PENDING ||
       map.status === MapImportStatusEnum.IN_PROGRESS) {
@@ -98,6 +107,10 @@ export class GetMapService {
       this.create.handleGetMapStatus(map.jobId, map)
     }
     return ImportStatusResDto.fromMapEntity(map)
+  }
+
+  handleNotification(payload: ImportResPayload) {
+    this.create.handleSaveExportRes(payload)
   }
 
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {

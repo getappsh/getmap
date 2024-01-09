@@ -54,6 +54,7 @@ export const GetMapTopics = {
     POST_IMPORT_STATUS : `getapp-map.post.import.status${region}`,
     CREATE_IMPORT : `getapp-map.import.create${region}`,
     CANCEL_IMPORT_CREATE : `getapp-map.import.create.cancel${region}`,
+    EXPORT_NOTIFICATION : `getapp-map.export.notify${region}`,
     // Device
     REGISTER_MAP : `getapp-device.map.register${region}`,
     DISCOVERY_MAP : `getapp-device.discover.map${region}`,

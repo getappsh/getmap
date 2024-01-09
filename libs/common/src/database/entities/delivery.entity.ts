@@ -27,10 +27,10 @@ export class DeliveryEntity{
   @Column({name: "progress", type: "int", default: 0})
   progress: number
 
-  @CreateDateColumn()
+  @CreateDateColumn({type: 'timestamptz'})
   createdDate: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({type: 'timestamptz'})
   lastUpdatedDate: Date;
 
 
