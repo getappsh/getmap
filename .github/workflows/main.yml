@@ -29,6 +29,7 @@ jobs:
           TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
           NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+          echo "new tag is $NEW_TAG"
 
       # - name: Create and push tag
       #   if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
@@ -56,6 +57,6 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: .
           # Note: tags has to be all lower-case
-          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:2 # ${{ needs.calculate_new_tag.outputs.tag }}
+          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
           # build on feature branches, push only on main branch
           push: true
