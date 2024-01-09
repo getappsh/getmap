@@ -85,6 +85,7 @@ export class LibotHttpClientService {
     const payload = new ImportPayload(imAttrs)
     try {
       this.logger.log(`send to utl ${url}`)
+      this.logger.log(payload)
 
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
       const resPayload = new ImportResPayload(res.data)
