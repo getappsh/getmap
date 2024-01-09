@@ -25,6 +25,7 @@ export class GetMapController {
     this.logger.debug("Start import create")
     return this.getMapService.importCreate(importDto)
   }
+  
 
   @EventPattern(GetMapTopics.CANCEL_IMPORT_CREATE)
   importCancel() {
