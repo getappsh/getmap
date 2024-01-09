@@ -17,7 +17,7 @@ export class ImportPayload {
       this.webhook = [
         {
           events: ["TASK_COMPLETED", "TASK_FAILED"],
-          url: "callbackUrl"
+          url: process.env.LIBOT_CALLBACK_URL
         }
       ]
       this.ROI = {
