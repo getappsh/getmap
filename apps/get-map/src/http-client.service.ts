@@ -276,13 +276,9 @@ export class LibotHttpClientService {
     </csw:GetRecords>`
   }
 
-  async reqAndRetry<T>(fn: () => Promise<T>, name?: string, exponential: boolean = false) {
-    console.log(this.RETRY_COUNT);
-    
+  async reqAndRetry<T>(fn: () => Promise<T>, name?: string, exponential: boolean = false) {    
     let err: any;
     for (let i = 0; i < this.RETRY_COUNT; i++) {
-      console.log(12);
-      console.log(12);
       try {
         this.logger.debug(`start ${name} req`)
         return await fn()

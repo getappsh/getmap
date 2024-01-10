@@ -52,7 +52,7 @@ export class RepoService {
     return savedMap
   }
 
-  async saveExportRes(resData: ImportResPayload, map?: MapEntity) {
+  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
 
     const existMap = await this.mapRepo.find({
       where: [
@@ -93,32 +93,11 @@ export class RepoService {
             cMap.packageUrl = art.url
           }
         })
-
-        if (this.doUseCache()) {
-          this.handleDownload(cMap, cMap.packageUrl)
-        }
+        cMap.progress = 100
       }
     })
 
-
-    await this.mapRepo.save(existMap)
-
-    // if (resData.status === LibotExportStatusEnum.COMPLETED) {
-    //   resData.artifacts?.forEach(art => {
-    //     if (art.type === ArtifactsLibotEnum.GPKG) {
-    //       map.fileName = art.name
-    //       if (this.doUseCache() && map.status != MapImportStatusEnum.DONE && map.status != MapImportStatusEnum.IN_DOWNLOAD_PROCESS) {
-    //         map.status = MapImportStatusEnum.IN_DOWNLOAD_PROCESS
-    //         this.handleDownload(map)
-    //       }
-    //       else {
-    //         map.status = MapImportStatusEnum.DONE
-    //         map.packageUrl = art.url
-    //       }
-    //     }
-    //   })
-    // }
-
+    return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map.catalogId)
 
   }
 
@@ -153,11 +132,6 @@ export class RepoService {
   doUseCache() {
     return Boolean(process.env.USE_CACHE)
   }
-
-  handleDownload(map: MapEntity, url: string) {
-    //TODO send to delivery micro to d
-  }
-
 
   async getOrSaveProduct(product: MapProductResDto) {
 

@@ -72,15 +72,22 @@ export class ImportCreateService {
 
   async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
     try {
-      const resData = await this.libot.reqAndRetry<ImportResPayload>(async () => await this.libot.exportStampMap(importAttrs), "Export map")      
+      const resData = await this.libot.reqAndRetry<ImportResPayload>(async () => await this.libot.exportStampMap(importAttrs), "Export map")
+
       try {
-        this.repo.saveExportRes(resData, map)
-        setTimeout(() => {
-          this.handleGetMapStatus(resData.id, map)
-        }, 5000)
+        await this.repo.saveExportRes(resData, map)
       } catch (error) {
         this.logger.error(error.toString())
       }
+
+      setTimeout(async () => {
+        try {
+          await this.handleGetMapStatus(resData.id, map)
+        } catch (error) {
+          this.logger.error(error.toString())
+        }
+      }, 5000)
+      
     } catch (error) {
       this.logger.error(error.toString())
       this.repo.setErrorStatus(map, error.toString())
@@ -105,15 +112,16 @@ export class ImportCreateService {
   }
 
 
-  async handleGetMapStatus(jobId: number, map: MapEntity) {
+  async handleGetMapStatus(jobId: number, map: MapEntity): Promise<MapEntity> {
     const res = await this.libot.getMapStatus(jobId)
-    this.handleSaveExportRes(res, map)
+    const updatedMap = await this.handleSaveExportRes(res, map)
+    return updatedMap
   }
 
-  async handleSaveExportRes(res: ImportResPayload, map?: MapEntity) {
+  async handleSaveExportRes(res: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
     this.logger.debug(`save res data for jobId ${res.id}`)
     try {
-      await this.repo.saveExportRes(res, map)
+      return await this.repo.saveExportRes(res, map)
     } catch (error) {
       this.logger.error(error.toString())
     }
