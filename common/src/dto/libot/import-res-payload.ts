@@ -13,7 +13,7 @@ export enum ArtifactsLibotEnum {
 
 class Artifact {
 
-  @ApiProperty({ required: false, type: ArtifactsLibotEnum })
+  @ApiProperty({ required: false, enum: ArtifactsLibotEnum })
   type: ArtifactsLibotEnum
 
   @ApiProperty({ required: false })
@@ -37,7 +37,7 @@ export class ImportResPayload extends ImportPayload {
   @ApiProperty({ required: false })
   estimatedTime: number;
 
-  @ApiProperty({ required: false, type: LibotExportStatusEnum })
+  @ApiProperty({ required: false, enum: LibotExportStatusEnum })
   status: LibotExportStatusEnum
 
   @ApiProperty({ required: false })
