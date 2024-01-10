@@ -2,6 +2,30 @@ import { LibotExportStatusEnum } from "@app/common/database/entities/enums.entit
 import { ImportPayload } from "./import-payload";
 import { ApiProperty } from "@nestjs/swagger";
 
+export enum ArtifactsLibotEnum {
+  GPKG = "GPKG",
+  LEGEN = "LEGEND",
+  METADAT = "METADATA",
+  THUMBNAILS_SMALL = "THUMBNAILS_SMALL",
+  THUMBNAILS_MEDIUM = "THUMBNAILS_MEDIUM",
+  THUMBNAILS_LARG = "THUMBNAILS_LARGE"
+}
+
+class Artifact {
+
+  @ApiProperty({ required: false, type: ArtifactsLibotEnum })
+  type: ArtifactsLibotEnum
+
+  @ApiProperty({ required: false })
+  name: string
+
+  @ApiProperty({ required: false })
+  size: number
+
+  @ApiProperty({ required: false })
+  url: string
+}
+
 export class ImportResPayload extends ImportPayload {
 
   @ApiProperty({ required: false })
@@ -66,26 +90,4 @@ export class ImportResPayload extends ImportPayload {
   }
 }
 
-export enum ArtifactsLibotEnum {
-  GPKG = "GPKG",
-  LEGEN = "LEGEND",
-  METADAT = "METADATA",
-  THUMBNAILS_SMALL = "THUMBNAILS_SMALL",
-  THUMBNAILS_MEDIUM = "THUMBNAILS_MEDIUM",
-  THUMBNAILS_LARG = "THUMBNAILS_LARGE"
-}
 
-class Artifact {
-
-  @ApiProperty({ required: false, type: ArtifactsLibotEnum })
-  type: ArtifactsLibotEnum
-
-  @ApiProperty({ required: false })
-  name: string
-  
-  @ApiProperty({ required: false })
-  size: number
-  
-  @ApiProperty({ required: false })
-  url: string
-}

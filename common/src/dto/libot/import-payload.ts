@@ -2,6 +2,50 @@ import { Validators } from "./utils/validators";
 import { ImportAttributes } from "./importAttributes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
+
+export class Webhook {
+
+  @ApiProperty({ required: false })
+  events: string[];
+
+  @ApiProperty({ required: false })
+  url: string;
+}
+
+export class Properties {
+  @ApiProperty({ required: false })
+  maxResolutionDeg: number;
+
+  @ApiProperty({ required: false })
+  minResolutionDeg: number;
+}
+
+export class Geometry {
+  @ApiProperty({ required: false })
+  type: "Polygon" | "MultiPolygon";
+
+  @ApiProperty({ required: false })
+  coordinates: Array<Array<number[]>>;
+}
+
+export class Feature {
+  @ApiProperty({ required: false })
+  type: string;
+
+  @ApiProperty({ required: false })
+  properties: Properties;
+
+  @ApiProperty({ required: false })
+  geometry: Geometry;
+}
+
+export class Roi {
+  @ApiProperty({ required: false })
+  type: string;
+  
+  @ApiProperty({ required: false })
+  features: Feature[];
+}
 export class ImportPayload {
 
   @ApiProperty({ required: false })
@@ -19,7 +63,7 @@ export class ImportPayload {
   @ApiProperty({ required: false })
   ROI: Roi;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false , type: Roi})
   description: string;
 
   @ApiProperty({ required: false })
@@ -61,46 +105,10 @@ export class ImportPayload {
 
 }
 
-export class Roi {
-  @ApiProperty({ required: false })
-  type: string;
 
-  @ApiProperty({ required: false })
-  features: Feature[];
-}
 
-export class Feature {
-  @ApiProperty({ required: false })
-  type: string;
 
-  @ApiProperty({ required: false })
-  properties: Properties;
 
-  @ApiProperty({ required: false })
-  geometry: Geometry;
-}
 
-export class Geometry {
-  @ApiProperty({ required: false })
-  type: "Polygon" | "MultiPolygon";
 
-  @ApiProperty({ required: false })
-  coordinates: Array<Array<number[]>>;
-}
 
-export class Properties {
-  @ApiProperty({ required: false })
-  maxResolutionDeg: number;
-
-  @ApiProperty({ required: false })
-  minResolutionDeg: number;
-}
-
-export class Webhook {
-
-  @ApiProperty({ required: false })
-  events: string[];
-
-  @ApiProperty({ required: false })
-  url: string;
-}
