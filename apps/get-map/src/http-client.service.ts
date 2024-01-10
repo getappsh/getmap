@@ -86,10 +86,10 @@ export class LibotHttpClientService {
 
     const url = process.env.LIBOT_EXPORT_URL
 
-    const payload = new ImportPayload(imAttrs)
+    const payload = ImportPayload.fromImportAttrs(imAttrs)
     try {
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
-      const resPayload = new ImportResPayload(res.data)
+      const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully`)
       return resPayload
     } catch (error) {
@@ -109,7 +109,7 @@ export class LibotHttpClientService {
     try {
       this.logger.log(`send to utl ${url}`)
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
-      const resPayload = new ImportResPayload(res.data)
+      const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
       return resPayload
     } catch (error) {
