@@ -16,6 +16,11 @@ import { ErrorCode } from "@app/common/dto/error";
 export class LibotHttpClientService {
 
   private readonly logger = new Logger(LibotHttpClientService.name);
+  private RETRY_COUNT = Number(process.env.RETRY_COUNT ?? 3)
+  private WAIT_TIME = Number(process.env.WAIT_TIME ?? 0.3) 
+  private EXPONENTIAL_TIMES = process.env.EXPONENTIAL_TIMES?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
+
+
 
 
   constructor(private readonly httpConfig: HttpService) {
@@ -43,7 +48,6 @@ export class LibotHttpClientService {
       this.logger.debug(`Get records from libot from position ${startPos}`)
 
       const body = this.constructXmlBody(dAttrs, startPos)
-      this.logger.log(`send to utl ${url}`)
 
       const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
 
@@ -84,9 +88,6 @@ export class LibotHttpClientService {
 
     const payload = new ImportPayload(imAttrs)
     try {
-      this.logger.log(`send to utl ${url}`)
-      this.logger.log(JSON.stringify(payload))
-
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
       const resPayload = new ImportResPayload(res.data)
       this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully`)
@@ -97,7 +98,6 @@ export class LibotHttpClientService {
       throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
     }
 
-
   }
 
   async getMapStatus(reqId: number) {
@@ -105,7 +105,7 @@ export class LibotHttpClientService {
 
     const url = process.env.LIBOT_EXPORT_URL + "/" + reqId
 
-    
+
     try {
       this.logger.log(`send to utl ${url}`)
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
@@ -274,5 +274,25 @@ export class LibotHttpClientService {
     </ogc:SortBy>
     </csw:Query>
     </csw:GetRecords>`
+  }
+
+  async reqAndRetry<T>(fn: () => Promise<T>, name?: string, exponential: boolean = false) {    
+    let err: any;
+    for (let i = 0; i < this.RETRY_COUNT; i++) {
+      try {
+        this.logger.debug(`start ${name} req`)
+        return await fn()
+      } catch (error) {
+        err = error
+        const waitTime = exponential ? this.EXPONENTIAL_TIMES[i] : this.WAIT_TIME
+        this.logger.error(`${name} req failed ! retrying ... in ${waitTime} sec`)
+        await this.sleep(waitTime * 1000)
+      }
+    }
+    throw err
+  }
+
+  async sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }

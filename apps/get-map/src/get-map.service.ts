@@ -62,7 +62,7 @@ export class GetMapService {
       this.logger.debug("save or update map entity")
       existsMap = await this.repo.getMap(importAttrs)
 
-      if (!existsMap) {
+      if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
         this.create.executeExport(importAttrs, existsMap)
@@ -87,26 +87,39 @@ export class GetMapService {
   }
 
   importCancel() {
-    throw new Error('Method not implemented.');
+    throw new Error('not implemented.');
   }
 
   async getImportStatus(reqId: string): Promise<ImportStatusResDto> {
     this.logger.debug(`Find map entity if catalog id ${reqId}`)
-    const map = await this.repo.getMapById(reqId)
-    
-    if (!map) {
-      const mes = `map with catalogId ${reqId} not exist`
-      this.logger.error(mes)
-      throw new MapError(ErrorCode.MAP_NOT_FOUND, mes)
-    }
-   
-    if (map.status === MapImportStatusEnum.START ||
-      map.status === MapImportStatusEnum.PENDING ||
-      map.status === MapImportStatusEnum.IN_PROGRESS) {
+    let importRes = new ImportStatusResDto()
 
-      this.create.handleGetMapStatus(map.jobId, map)
+    try {
+      let map = await this.repo.getMapById(reqId)
+
+      if (!map) {
+        const mes = `map with catalogId ${reqId} not exist`
+        this.logger.error(mes)
+        throw new MapError(ErrorCode.MAP_NOT_FOUND, mes)
+      }
+
+      if (map.status === MapImportStatusEnum.START ||
+        map.status === MapImportStatusEnum.PENDING ||
+        map.status === MapImportStatusEnum.IN_PROGRESS) {
+
+        map = await this.create.handleGetMapStatus(map.jobId, map)
+      }
+      importRes = ImportStatusResDto.fromMapEntity(map)
+
+    } catch (error) {
+      if (error instanceof MapError) {
+        importRes.error = this.throwErrorDto(error.errorCode, error.message)
+      } else {
+        importRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
+      }
     }
-    return ImportStatusResDto.fromMapEntity(map)
+
+    return importRes
   }
 
   handleNotification(payload: ImportResPayload) {

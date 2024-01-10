@@ -41,3 +41,5 @@ temp_docker_images/*
 .gitlab-ci.yml
 
 manifest.json
+docker-compose-local.yaml
+kc-data

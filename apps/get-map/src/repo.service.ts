@@ -52,7 +52,7 @@ export class RepoService {
     return savedMap
   }
 
-  async saveExportRes(resData: ImportResPayload, map?: MapEntity) {
+  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
 
     const existMap = await this.mapRepo.find({
       where: [
@@ -93,33 +93,19 @@ export class RepoService {
             cMap.packageUrl = art.url
           }
         })
-
-        if (this.doUseCache()) {
-          this.handleDownload(cMap, cMap.packageUrl)
-        }
+        cMap.progress = 100
       }
     })
 
+    return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map.catalogId)
 
-    await this.mapRepo.save(existMap)
+  }
 
-    // if (resData.status === LibotExportStatusEnum.COMPLETED) {
-    //   resData.artifacts?.forEach(art => {
-    //     if (art.type === ArtifactsLibotEnum.GPKG) {
-    //       map.fileName = art.name
-    //       if (this.doUseCache() && map.status != MapImportStatusEnum.DONE && map.status != MapImportStatusEnum.IN_DOWNLOAD_PROCESS) {
-    //         map.status = MapImportStatusEnum.IN_DOWNLOAD_PROCESS
-    //         this.handleDownload(map)
-    //       }
-    //       else {
-    //         map.status = MapImportStatusEnum.DONE
-    //         map.packageUrl = art.url
-    //       }
-    //     }
-    //   })
-    // }
+  async setErrorStatus(map: MapEntity, errMes: string) {
+    map.status = MapImportStatusEnum.ERROR
+    map.errorReason = errMes
 
-
+    await this.mapRepo.save(map)
   }
 
   mapStatus(status: LibotExportStatusEnum): MapImportStatusEnum {
@@ -147,11 +133,6 @@ export class RepoService {
     return Boolean(process.env.USE_CACHE)
   }
 
-  handleDownload(map: MapEntity, url: string) {
-    //TODO send to delivery micro to d
-  }
-
-
   async getOrSaveProduct(product: MapProductResDto) {
 
     const existProduct = await this.productRepo.findOneBy({ id: product.id })
@@ -164,28 +145,33 @@ export class RepoService {
   }
 
   async registerMapToDevice(existsMap: MapEntity, deviceId: string) {
-    let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
-    // let device = await this.deviceRepo.createQueryBuilder("device")
-    //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
-    //   .leftJoinAndSelect("device.maps", "dm")
-    //   .leftJoinAndSelect("dm.map", "map")
-    //   .where("device.ID = :deviceId", { deviceId })
-    //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
-    //   .getOne();
+    try {
+      let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
+      // let device = await this.deviceRepo.createQueryBuilder("device")
+      //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
+      //   .leftJoinAndSelect("device.maps", "dm")
+      //   .leftJoinAndSelect("dm.map", "map")
+      //   .where("device.ID = :deviceId", { deviceId })
+      //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
+      //   .getOne();
 
-    if (!device) {
-      const newDevice = this.deviceRepo.create()
-      newDevice.ID = deviceId
-      device = await this.deviceRepo.save(newDevice)
-    }
+      if (!device) {
+        const newDevice = this.deviceRepo.create()
+        newDevice.ID = deviceId
+        device = await this.deviceRepo.save(newDevice)
+      }
 
-    if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
+      if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
 
-      let deviceMap = this.deviceMapRepo.create()
-      deviceMap.device = device
-      deviceMap.map = existsMap
-      deviceMap.state = DeviceMapStateEnum.IMPORT
-      this.deviceMapRepo.save(deviceMap)
+        let deviceMap = this.deviceMapRepo.create()
+        deviceMap.device = device
+        deviceMap.map = existsMap
+        deviceMap.state = DeviceMapStateEnum.IMPORT
+        this.deviceMapRepo.save(deviceMap)
+      }
+
+    } catch (error) {
+      this.logger.error(error.toString())
     }
   }
 }
