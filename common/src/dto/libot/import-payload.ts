@@ -1,69 +1,106 @@
 import { Validators } from "./utils/validators";
 import { ImportAttributes } from "./importAttributes.dto";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class ImportPayload {
-  catalogRecordID: string;
-  domain = "RASTER";
-  artifactCRS = "4326";
-  webhook: Webhook[];
-  ROI: Roi;
-  description: string;
-  keywords: Keywords;
-  parameters: Keywords;
 
-  constructor(attrs?: ImportAttributes) {
-    if (attrs) {
-      this.catalogRecordID = attrs.ProductId
-      this.webhook = [
+  @ApiProperty({ required: false })
+  catalogRecordID: string;
+
+  @ApiProperty({ required: false })
+  domain: string = "RASTER";
+
+  @ApiProperty({ required: false })
+  artifactCRS: string = "4326";
+
+  @ApiProperty({ required: false })
+  webhook: Webhook[];
+
+  @ApiProperty({ required: false })
+  ROI: Roi;
+
+  @ApiProperty({ required: false })
+  description: string;
+
+  @ApiProperty({ required: false })
+  keywords: { [key: string]: string };
+
+  @ApiProperty({ required: false })
+  parameters: { [key: string]: string };
+
+  static fromImportAttrs(attrs: ImportAttributes): ImportPayload {
+    const importPayload = new ImportPayload()
+    importPayload.catalogRecordID = attrs.ProductId
+    importPayload.webhook = [
+      {
+        events: ["TASK_COMPLETED", "TASK_FAILED"],
+        url: process.env.LIBOT_CALLBACK_URL
+      }
+    ]
+    importPayload.ROI = {
+      type: "FeatureCollection",
+      features: [
         {
-          events: ["TASK_COMPLETED", "TASK_FAILED"],
-          url: process.env.LIBOT_CALLBACK_URL
+          type: "Feature",
+          properties: {
+            maxResolutionDeg: attrs.TargetResolution,
+            minResolutionDeg: attrs.MinResolutionDeg
+          },
+          geometry: Validators.bBoxToPolygon(Validators.bBoxStringToArray(attrs.BoundingBox)).geometry
         }
       ]
-      this.ROI = {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {
-              maxResolutionDeg: attrs.TargetResolution,
-              minResolutionDeg: attrs.MinResolutionDeg
-            },
-            geometry: Validators.bBoxToPolygon(Validators.bBoxStringToArray(attrs.BoundingBox)).geometry
-          }
-        ]
-      }
-      this.description = `Export request for prodID: ${attrs.ProductId} BBox: [${attrs.BBox[0]},${attrs.BBox[1]},${attrs.BBox[2]},${attrs.BBox[3]}] resolution: ${attrs.TargetResolution}`
     }
+    importPayload.description = `Export request for prodID: ${attrs.ProductId} BBox: [${attrs.BBox[0]},${attrs.BBox[1]},${attrs.BBox[2]},${attrs.BBox[3]}] resolution: ${attrs.TargetResolution}`
+
+    return importPayload
   }
+
+  toString(): string {
+    return JSON.stringify(this);
+  }
+
 }
 
-export interface Roi {
+export class Roi {
+  @ApiProperty({ required: false })
   type: string;
+
+  @ApiProperty({ required: false })
   features: Feature[];
 }
 
-export interface Feature {
+export class Feature {
+  @ApiProperty({ required: false })
   type: string;
+
+  @ApiProperty({ required: false })
   properties: Properties;
+
+  @ApiProperty({ required: false })
   geometry: Geometry;
 }
 
-export interface Geometry {
+export class Geometry {
+  @ApiProperty({ required: false })
   type: "Polygon" | "MultiPolygon";
+
+  @ApiProperty({ required: false })
   coordinates: Array<Array<number[]>>;
 }
 
-export interface Properties {
+export class Properties {
+  @ApiProperty({ required: false })
   maxResolutionDeg: number;
+
+  @ApiProperty({ required: false })
   minResolutionDeg: number;
 }
 
-export interface Keywords {
-  foo: string;
-}
+export class Webhook {
 
-export interface Webhook {
+  @ApiProperty({ required: false })
   events: string[];
+
+  @ApiProperty({ required: false })
   url: string;
 }

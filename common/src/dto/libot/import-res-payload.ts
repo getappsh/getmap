@@ -1,47 +1,69 @@
 import { LibotExportStatusEnum } from "@app/common/database/entities/enums.entity";
 import { ImportPayload } from "./import-payload";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class ImportResPayload extends ImportPayload {
+
+  @ApiProperty({ required: false })
   id: number;
+
+  @ApiProperty({ required: false })
   estimatedSize: number;
+
+  @ApiProperty({ required: false })
   estimatedTime: number;
+
+  @ApiProperty({ required: false, type: LibotExportStatusEnum })
   status: LibotExportStatusEnum
+
+  @ApiProperty({ required: false })
   errorReason: string;
+
+  @ApiProperty({ required: false })
   progress: number
+
+  @ApiProperty({ required: false })
   artifacts: Artifact[]
+
+  @ApiProperty({ required: false })
   createdAt: string
+
+  @ApiProperty({ required: false })
   expiredAt: string
+
+  @ApiProperty({ required: false })
   finishedAt: string
 
-  constructor(data: ImportResPayload) {    
-    super();
-    this.catalogRecordID = data.catalogRecordID
-    this.domain = data.domain
-    this.artifactCRS = data.artifactCRS
-    this.webhook = data.webhook
-    this.ROI = data.ROI
-    this.description = data.description
-    this.keywords = data.keywords
-    this.parameters = data.parameters
+  static fromImportRes(data: ImportResPayload) {
 
-    this.id = data.id
-    this.estimatedSize = data.estimatedSize
-    this.estimatedTime = data.estimatedTime
-    this.status = data.status
-    this.errorReason = data.errorReason
-    this.progress = data.progress
-    this.artifacts = data.artifacts
-    this.createdAt = data.createdAt
-    this.expiredAt = data.expiredAt
-    this.finishedAt = data.finishedAt
+    const importRes = new ImportResPayload()
+
+    importRes.catalogRecordID = data.catalogRecordID
+    importRes.domain = data.domain
+    importRes.artifactCRS = data.artifactCRS
+    importRes.webhook = data.webhook
+    importRes.ROI = data.ROI
+    importRes.description = data.description
+    importRes.keywords = data.keywords
+    importRes.parameters = data.parameters
+
+    importRes.id = data.id
+    importRes.estimatedSize = data.estimatedSize
+    importRes.estimatedTime = data.estimatedTime
+    importRes.status = data.status
+    importRes.errorReason = data.errorReason
+    importRes.progress = data.progress
+    importRes.artifacts = data.artifacts
+    importRes.createdAt = data.createdAt
+    importRes.expiredAt = data.expiredAt
+    importRes.finishedAt = data.finishedAt
+
+    return importRes
   }
-}
 
-interface Artifact {
-  type: ArtifactsLibotEnum,
-  name: string,
-  size: number
-  url: string
+  toString(): string {
+    return JSON.stringify(this);
+  }
 }
 
 export enum ArtifactsLibotEnum {
@@ -51,4 +73,19 @@ export enum ArtifactsLibotEnum {
   THUMBNAILS_SMALL = "THUMBNAILS_SMALL",
   THUMBNAILS_MEDIUM = "THUMBNAILS_MEDIUM",
   THUMBNAILS_LARG = "THUMBNAILS_LARGE"
+}
+
+class Artifact {
+
+  @ApiProperty({ required: false, type: ArtifactsLibotEnum })
+  type: ArtifactsLibotEnum
+
+  @ApiProperty({ required: false })
+  name: string
+  
+  @ApiProperty({ required: false })
+  size: number
+  
+  @ApiProperty({ required: false })
+  url: string
 }
