@@ -122,6 +122,13 @@ export class RepoService {
 
   }
 
+  async setErrorStatus(map: MapEntity, errMes: string) {
+    map.status = MapImportStatusEnum.ERROR
+    map.errorReason = errMes
+
+    await this.mapRepo.save(map)
+  }
+
   mapStatus(status: LibotExportStatusEnum): MapImportStatusEnum {
     switch (status) {
       case LibotExportStatusEnum.PENDING:
@@ -164,28 +171,33 @@ export class RepoService {
   }
 
   async registerMapToDevice(existsMap: MapEntity, deviceId: string) {
-    let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
-    // let device = await this.deviceRepo.createQueryBuilder("device")
-    //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
-    //   .leftJoinAndSelect("device.maps", "dm")
-    //   .leftJoinAndSelect("dm.map", "map")
-    //   .where("device.ID = :deviceId", { deviceId })
-    //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
-    //   .getOne();
+    try {
+      let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
+      // let device = await this.deviceRepo.createQueryBuilder("device")
+      //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
+      //   .leftJoinAndSelect("device.maps", "dm")
+      //   .leftJoinAndSelect("dm.map", "map")
+      //   .where("device.ID = :deviceId", { deviceId })
+      //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
+      //   .getOne();
 
-    if (!device) {
-      const newDevice = this.deviceRepo.create()
-      newDevice.ID = deviceId
-      device = await this.deviceRepo.save(newDevice)
-    }
+      if (!device) {
+        const newDevice = this.deviceRepo.create()
+        newDevice.ID = deviceId
+        device = await this.deviceRepo.save(newDevice)
+      }
 
-    if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
+      if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
 
-      let deviceMap = this.deviceMapRepo.create()
-      deviceMap.device = device
-      deviceMap.map = existsMap
-      deviceMap.state = DeviceMapStateEnum.IMPORT
-      this.deviceMapRepo.save(deviceMap)
+        let deviceMap = this.deviceMapRepo.create()
+        deviceMap.device = device
+        deviceMap.map = existsMap
+        deviceMap.state = DeviceMapStateEnum.IMPORT
+        this.deviceMapRepo.save(deviceMap)
+      }
+
+    } catch (error) {
+      this.logger.error(error.toString())
     }
   }
 }

@@ -10,6 +10,7 @@ import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { MCRasterRecordDto } from '@app/common/dto/libot/recordsRes.dto';
 
 @Injectable()
 export class ImportCreateService {
@@ -39,9 +40,10 @@ export class ImportCreateService {
     this.logger.debug("selecting product for given bbox")
 
     const discoverAttrs = new DiscoveryAttributes()
+
     discoverAttrs.BoundingBox = importAttrs.BoundingBox
 
-    const records = await this.libot.getRecords(discoverAttrs)
+    const records = await this.libot.reqAndRetry<MCRasterRecordDto[]>(async () => await this.libot.getRecords(discoverAttrs), "Get records")
     const availableProducts = records.map(record => MapProductResDto.fromRecordsRes(record))
     let selectedProduct: MapProductResDto;
 
@@ -69,11 +71,20 @@ export class ImportCreateService {
   }
 
   async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
-    const resData = await this.libot.exportStampMap(importAttrs)
-    this.repo.saveExportRes(resData, map)
-    setTimeout(() => {
-      this.handleGetMapStatus(resData.id, map)
-    }, 5000)
+    try {
+      const resData = await this.libot.reqAndRetry<ImportResPayload>(async () => await this.libot.exportStampMap(importAttrs), "Export map")      
+      try {
+        this.repo.saveExportRes(resData, map)
+        setTimeout(() => {
+          this.handleGetMapStatus(resData.id, map)
+        }, 5000)
+      } catch (error) {
+        this.logger.error(error.toString())
+      }
+    } catch (error) {
+      this.logger.error(error.toString())
+      this.repo.setErrorStatus(map, error.toString())
+    }
   }
 
   completeAttrs(importAttrs: ImportAttributes, product: MapProductResDto) {

@@ -62,7 +62,7 @@ export class GetMapService {
       this.logger.debug("save or update map entity")
       existsMap = await this.repo.getMap(importAttrs)
 
-      if (!existsMap) {
+      if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrSaveProduct(product)
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
         this.create.executeExport(importAttrs, existsMap)
