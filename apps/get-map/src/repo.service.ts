@@ -1,13 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { LibotHttpClientService } from './http-client.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, MapProductEntity } from '@app/common/database/entities';
 import { Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
-import { ErrorCode } from '@app/common/dto/error';
-import { MapError } from '@app/common/dto/libot/utils/map-error';
 
 @Injectable()
 export class RepoService {
@@ -52,8 +49,10 @@ export class RepoService {
     return savedMap
   }
 
-  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
+  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {    
 
+    this.logger.debug(`find maps with job Id ${resData.id} to save the response`)
+    
     const existMap = await this.mapRepo.find({
       where: [
         { catalogId: map?.catalogId },
@@ -97,7 +96,7 @@ export class RepoService {
       }
     })
 
-    return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map.catalogId)
+    return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map?.catalogId)
 
   }
 
