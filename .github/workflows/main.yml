@@ -1,61 +1,61 @@
-name: Build and Deploy
+# name: Build and Deploy
 
-on:
-  push:
-    branches:
-      - get-map-refactor
-##
-jobs:
-  calculate_new_tag:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.set_tag.outputs.tag }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Ensure all tags are fetched
+# on:
+#   push:
+#     branches:
+#       - get-map-refactor
+# ##
+# jobs:
+#   calculate_new_tag:
+#     runs-on: ubuntu-latest
+#     outputs:
+#       tag: ${{ steps.set_tag.outputs.tag }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#         with:
+#           fetch-depth: 0  # Ensure all tags are fetched
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 14
 
-      - name: Calculate new tag
-        id: set_tag
-        run: |
-          # Logic to calculate the new tag (modify accordingly)
-          PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
-          TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
-          NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
-          echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+#       - name: Calculate new tag
+#         id: set_tag
+#         run: |
+#           # Logic to calculate the new tag (modify accordingly)
+#           PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
+#           TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
+#           NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
+#           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
 
-      # - name: Create and push tag
-      #   if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
-      #   run: |
-      #     git tag -a ${{ needs.calculate_new_tag.outputs.tag }} -m "Version ${{ needs.calculate_new_tag.outputs.tag }}"
-      #     git push origin ${{ needs.calculate_new_tag.outputs.tag }}
+#       # - name: Create and push tag
+#       #   if: startsWith(github.ref, 'refs/heads/')  # Only execute if not triggered by a tag
+#       #   run: |
+#       #     git tag -a ${{ needs.calculate_new_tag.outputs.tag }} -m "Version ${{ needs.calculate_new_tag.outputs.tag }}"
+#       #     git push origin ${{ needs.calculate_new_tag.outputs.tag }}
 
-  build_and_push_image:
-    needs: calculate_new_tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   build_and_push_image:
+#     needs: calculate_new_tag
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Docker login
-        uses: docker/login-action@v3
-        with:
-          registry: harbor.getapp.sh
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+#       - name: Docker login
+#         uses: docker/login-action@v3
+#         with:
+#           registry: harbor.getapp.sh
+#           username: ${{ secrets.REGISTRY_USERNAME }}
+#           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build image and push to Docker Hub and GitHub Container Registry
-        uses: docker/build-push-action@v5
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: .
-          # Note: tags has to be all lower-case
-          tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:1
-          # build on feature branches, push only on main branch
-          push: true
+#       - name: Build image and push to Docker Hub and GitHub Container Registry
+#         uses: docker/build-push-action@v5
+#         with:
+#           # relative path to the place where source code with Dockerfile is located
+#           context: .
+#           # Note: tags has to be all lower-case
+#           tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:1
+#           # build on feature branches, push only on main branch
+#           push: true
