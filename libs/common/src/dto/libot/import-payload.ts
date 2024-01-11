@@ -90,7 +90,7 @@ export class ImportPayload {
             maxResolutionDeg: attrs.TargetResolution,
             minResolutionDeg: attrs.MinResolutionDeg
           },
-          geometry: Validators.bBoxToPolygon(Validators.bBoxStringToArray(attrs.BoundingBox)).geometry
+          geometry: Validators.bBoxToPolygon(Validators.bBoxStringToBboxArray(attrs.BoundingBox)).geometry
         }
       ]
     }
