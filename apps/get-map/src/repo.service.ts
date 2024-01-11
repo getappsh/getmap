@@ -93,6 +93,9 @@ export class RepoService {
           }
         })
         cMap.progress = 100
+        if(!cMap.packageUrl){
+          cMap.status = MapImportStatusEnum.IN_PROGRESS
+        }
       }
     })
 

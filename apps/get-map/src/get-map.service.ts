@@ -118,6 +118,7 @@ export class GetMapService {
         importRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
       }
     }
+    this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
 
     return importRes
   }
