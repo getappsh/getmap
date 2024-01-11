@@ -1,4 +1,4 @@
-# name: Build and Deploy
+name: Build and Deploy
 
 on:
   push:
@@ -16,10 +16,10 @@ jobs:
         with:
           fetch-depth: 0  # Ensure all tags are fetched
 
-#       - name: Set up Node.js
-#         uses: actions/setup-node@v3
-#         with:
-#           node-version: 14
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
 
       - name: Calculate new tag
         id: set_tag
@@ -28,7 +28,10 @@ jobs:
           PREVIOUS_TAG=$(git describe --abbrev=0 --tags)
           TAG_PARTS=($(echo $PREVIOUS_TAG | tr '.' ' '))
           NEW_TAG="${TAG_PARTS[0]}.${TAG_PARTS[1]}.$((${TAG_PARTS[2]} + 1))"
+          echo "perevious tag is: $PREVIOUS_TAG"
+          echo "new tag is: $NEW_TAG"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+          
           
   tag_the_commit:
     needs: calculate_new_tag
@@ -60,12 +63,12 @@ jobs:
         with:
           fetch-depth: 0  # Ensure all tags are fetched
 
-#       - name: Docker login
-#         uses: docker/login-action@v3
-#         with:
-#           registry: harbor.getapp.sh
-#           username: ${{ secrets.REGISTRY_USERNAME }}
-#           password: ${{ secrets.REGISTRY_PASSWORD }}
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.getapp.sh
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build image and push to Docker Hub and GitHub Container Registry
         uses: docker/build-push-action@v5
