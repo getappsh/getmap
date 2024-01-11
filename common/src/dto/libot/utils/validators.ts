@@ -1,8 +1,14 @@
-import { bbox, bboxPolygon, booleanWithin, multiPolygon, polygon } from "@turf/turf";
+import { area, bbox, bboxPolygon, booleanWithin, multiPolygon, point, polygon } from "@turf/turf";
 import { Footprint, FootprintType } from "@app/common/dto/libot/footprint";
 
 export class Validators {
 
+  static pointsStringToArray(points: string): number[] {
+    return points.split(",").map(val => Number(val.trim())).filter(val => !isNaN(val));
+  }
+
+
+  // BBox validator
   static isBBoxAreaValid(bBox: number[]): boolean {
     const bboxArea = Math.abs(bBox[2] - bBox[0]) * Math.abs(bBox[3] - bBox[1]);
     const maxArea = Number(process.env.MAX_BBOX_AREA_4_EXPORT) ?? 0.01
@@ -10,14 +16,12 @@ export class Validators {
   }
 
   static isValidStringForBBox(bBox: string): boolean {
-    const bBoxValues: number[] = this.bBoxStringToArray(bBox)
+    const bBoxValues: number[] = Validators.pointsStringToArray(bBox)
     return bBoxValues !== null && bBoxValues.length === 4
   }
 
-  static bBoxStringToArray(bBox: string): [number, number, number, number] {
-    //  return bBox.split(",").map(val => Number(val.trim())).filter(val => !isNaN(val));
-
-    const bbox = bBox.split(",").map(val => Number(val.trim())).filter(val => !isNaN(val));
+  static bBoxStringToBboxArray(bBox: string): [number, number, number, number] {
+    const bbox = Validators.pointsStringToArray(bBox)
     return [
       Math.min(bbox[0], bbox[2]),
       Math.min(bbox[1], bbox[3]),
@@ -26,19 +30,56 @@ export class Validators {
     ]
   }
 
-  static footprintToObj(footprint: string): number[] {
-    return JSON.parse(footprint)
-  }
-
-  static bBoxToPolygon(bbox:[number, number, number, number]){
+  static bBoxToPolygon(bbox: [number, number, number, number]) {
     return bboxPolygon(bbox)
   }
 
   static isBBoxInFootprint(bBox: string, footprint: string): boolean {
     const fp = new Footprint(footprint)
     const fpPoly = fp.type === FootprintType.POLYGON ? polygon(fp.coordinates) : multiPolygon(fp.coordinates)
-    const bBoxPolygon = this.bBoxToPolygon(this.bBoxStringToArray(bBox))
+    const bBoxPolygon = this.bBoxToPolygon(this.bBoxStringToBboxArray(bBox))
     const fpBBox = bboxPolygon(bbox(fpPoly))
     return booleanWithin(bBoxPolygon, fpBBox)
   }
+
+  // Polygon validators 
+  static stringToPolygon(pointsString: string) {
+    const points: number[] = Validators.pointsStringToArray(pointsString)
+    const polygon: number[][] = []
+    if (points !== null && points.length % 2 === 0) {
+      for (let i = 0; i < points.length; i = i + 2) {
+        const point = []
+        point.push(points[i])
+        point.push(points[i + 1])
+        polygon.push(point)
+      }
+    }
+    return polygon
+  }
+
+  static isValidPolygon(polygon: number[][]) {
+    let isValid = true
+    for (let i = 0; i < polygon.length - 1; i++) {
+      if (i % 2 === 0) {
+        isValid = polygon[i][0] === polygon[i + 1][0]
+      } else {
+        isValid = polygon[i][1] === polygon[i + 1][1]
+      }
+      if (!isValid) {
+        return isValid
+      }
+    }
+    isValid = polygon[0][0] === polygon[polygon.length - 1][0] && polygon[0][1] === polygon[polygon.length - 1][1]
+    return isValid
+  }
+
+  static isPolygonAreaValid(poly: number[][]): boolean {
+    const featPoly = polygon([poly])
+    const polyArea = area(featPoly)
+    const maxArea = Number(process.env.MAX_POLYGON_SQUARE_METER) ?? 405573000
+    return polyArea < 0 || polyArea <= maxArea
+    
+  }
+
+
 }
