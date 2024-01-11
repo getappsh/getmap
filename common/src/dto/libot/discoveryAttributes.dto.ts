@@ -27,7 +27,7 @@ export class DiscoveryAttributes {
 
   public set BoundingBox(bBox: string) {
     if (Validators.isValidStringForBBox(bBox)) {
-      const bBoxValues = Validators.bBoxStringToArray(bBox)
+      const bBoxValues = Validators.bBoxStringToBboxArray(bBox)
       this._BBox = []
       this._BBox[0] = bBoxValues[0];
       this._BBox[1] = bBoxValues[1];

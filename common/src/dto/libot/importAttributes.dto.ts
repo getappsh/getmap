@@ -30,7 +30,7 @@ export class ImportAttributes {
       throw new Error("Bounding box values are invalid.");
     }
     
-    const bBoxValues = Validators.bBoxStringToArray(bBox)    
+    const bBoxValues = Validators.bBoxStringToBboxArray(bBox)    
     this._BBox[0] = bBoxValues[0];
     this._BBox[1] = bBoxValues[1];
     this._BBox[2] = bBoxValues[2];
