@@ -1,9 +1,9 @@
-import { area, bbox, bboxPolygon, booleanWithin, multiPolygon, point, polygon } from "@turf/turf";
+import { Feature, area, bbox, bboxPolygon, booleanWithin, multiPolygon, point, polygon } from "@turf/turf";
 import { Footprint, FootprintType } from "@app/common/dto/libot/footprint";
 
 export class Validators {
 
-  static pointsStringToArray(points: string): number[] {
+  static pointsStringToArray(points: string): number[] {    
     return points.split(",").map(val => Number(val.trim())).filter(val => !isNaN(val));
   }
 
@@ -34,7 +34,7 @@ export class Validators {
     return bboxPolygon(bbox)
   }
 
-  static isBBoxInFootprint(bBox: string, footprint: string): boolean {
+  static isBBoxInFootprint(bBox: string, footprint: string): boolean {    
     const fp = new Footprint(footprint)
     const fpPoly = fp.type === FootprintType.POLYGON ? polygon(fp.coordinates) : multiPolygon(fp.coordinates)
     const bBoxPolygon = this.bBoxToPolygon(this.bBoxStringToBboxArray(bBox))
@@ -58,27 +58,22 @@ export class Validators {
   }
 
   static isValidPolygon(polygon: number[][]) {
-    let isValid = true
-    for (let i = 0; i < polygon.length - 1; i++) {
-      if (i % 2 === 0) {
-        isValid = polygon[i][0] === polygon[i + 1][0]
-      } else {
-        isValid = polygon[i][1] === polygon[i + 1][1]
-      }
-      if (!isValid) {
-        return isValid
-      }
-    }
-    isValid = polygon[0][0] === polygon[polygon.length - 1][0] && polygon[0][1] === polygon[polygon.length - 1][1]
-    return isValid
+    return polygon != null &&
+      polygon.length >= 4 &&
+      polygon[0][0] === polygon[polygon.length - 1][0] &&
+      polygon[0][1] === polygon[polygon.length - 1][1]
   }
 
-  static isPolygonAreaValid(poly: number[][]): boolean {
-    const featPoly = polygon([poly])
-    const polyArea = area(featPoly)
+  static isValidStringForPolygon(polyStr: string): false | number[][] {
+    const polygon = Validators.stringToPolygon(polyStr)
+    return Validators.isValidPolygon(polygon) ? polygon : false
+  }
+
+  static isPolygonAreaValid(poly: Feature): boolean {
+    const polyArea = area(poly)
     const maxArea = Number(process.env.MAX_POLYGON_SQUARE_METER) ?? 405573000
     return polyArea < 0 || polyArea <= maxArea
-    
+
   }
 
 
