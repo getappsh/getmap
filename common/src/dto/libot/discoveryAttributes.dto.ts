@@ -2,16 +2,9 @@ import { ResolutionMapper } from "./utils/resolutionMapper"
 import { Validators } from "./utils/validators"
 
 export class DiscoveryAttributes {
-  // Identifier: string
-  // Creator: string
-  // Subject: string
-  // Abstract: string
-  // Description: string
-  // Title: string
-  // Type: string
 
-  private _BBox: number[] | null
-  private _BoundingBox: string | null
+  private _BBox: [number, number, number, number]
+  // private _BoundingBox: string | null
   CRS: string = "urn:x-ogc:def:crs:EPSG:6.11:4326";
   IngestionDate: string
   private _ResolutionDeg: number
@@ -21,23 +14,12 @@ export class DiscoveryAttributes {
   }
 
 
-  public get BoundingBox() {
+  public get BoundingBoxToSting() {
     return `${this._BBox[0]},${this._BBox[1]},${this._BBox[2]},${this._BBox[3]}`;
   }
 
-  public set BoundingBox(bBox: string) {
-    if (Validators.isValidStringForBBox(bBox)) {
-      const bBoxValues = Validators.bBoxStringToBboxArray(bBox)
-      this._BBox = []
-      this._BBox[0] = bBoxValues[0];
-      this._BBox[1] = bBoxValues[1];
-      this._BBox[2] = bBoxValues[2];
-      this._BBox[3] = bBoxValues[3];
-
-      this._BoundingBox = bBox
-    } else {
-      this._BBox = null
-    }
+  public set BoundingBox(bBox: [number, number, number, number]) {
+    this._BBox = bBox
   }
 
   public get ResolutionDeg() {
