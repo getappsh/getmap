@@ -1,12 +1,12 @@
 import { CreateImportDto } from "@app/common/dto/map"
 import { Validators } from "./utils/validators"
-import { Feature, bbox, bboxPolygon, polygon } from "@turf/turf"
+import { Feature, Polygon, bbox, bboxPolygon, polygon } from "@turf/turf"
 
 export class ImportAttributes {
   ProductId: string
   pattern: "bbox" | "polygon"
   private _BBox: [number, number, number, number];
-  private _Polygon: Feature;
+  private _Polygon: Feature<Polygon>;
   private _pointsString: string
   ZoomLevel: number
   TargetResolution: number
