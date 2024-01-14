@@ -24,10 +24,11 @@ export class ImportCreateService {
   ) { }
 
 
-  isValidBbox(BBox: number[]) {
-    this.logger.debug("checked is bbox area valid")
+  isValidBbox(attrs: ImportAttributes) {
+    this.logger.debug("checked if area size is valid")
 
-    if (!Validators.isBBoxAreaValid(BBox)) {
+    if ((attrs.pattern === "bbox" && !Validators.isBBoxAreaValid(attrs.BBox as number[])) ||
+      attrs.pattern === "polygon" && !Validators.isPolygonAreaValid(attrs.Polygon)) {
       // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
       const mes = "Area too large to distribute, reduce request and try again"
       this.logger.error(mes)
@@ -41,28 +42,29 @@ export class ImportCreateService {
 
     const discoverAttrs = new DiscoveryAttributes()
 
-    discoverAttrs.BoundingBox = importAttrs.BoundingBox
+    discoverAttrs.BoundingBox = importAttrs.BBox
 
     const records = await this.libot.reqAndRetry<MCRasterRecordDto[]>(async () => await this.libot.getRecords(discoverAttrs), "Get records")
     const availableProducts = records.map(record => MapProductResDto.fromRecordsRes(record))
+
     let selectedProduct: MapProductResDto;
 
     if (!availableProducts || availableProducts.length == 0) {
-      const mes = `Libot catalog returned no results, BBOX: '${discoverAttrs.BoundingBox}' is probably invalid!`
+      const mes = `Libot catalog returned no results, BBOX: '${discoverAttrs.BoundingBoxToSting}' is probably invalid!`
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_BBOX_INVALID, mes)
     }
 
     availableProducts.forEach(product => {
-      if (!Validators.isBBoxInFootprint(importAttrs.BoundingBox, product.footprint)) {
-        this.logger.warn(`SelectProduct - BBOX ${importAttrs.BoundingBox} is not contained in ${product.productName} footprint ${product.footprint}`)
+      if (!Validators.isBBoxInFootprint(importAttrs.Points, product.footprint)) {
+        this.logger.warn(`SelectProduct - BBOX ${importAttrs.Points} is not contained in ${product.productName} footprint ${product.footprint}`)
         return
       }
       selectedProduct = product
     })
 
     if (!selectedProduct) {
-      const mes = `The requested bbox ${importAttrs.BoundingBox} is not contained in any polygon`
+      const mes = `The requested bbox ${importAttrs.Points} is not contained in any polygon`
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_BBOX_NOT_IN_POLYGON, mes)
     }

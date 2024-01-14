@@ -22,7 +22,7 @@ export class RepoService {
     const existMap = await this.mapRepo.findOne({
       where: {
         mapProduct: { id: importAttr.ProductId },
-        boundingBox: importAttr.BoundingBox,
+        boundingBox: importAttr.Points,
         zoomLevel: importAttr.ZoomLevel
       }
     })
@@ -40,7 +40,7 @@ export class RepoService {
 
   async saveMap(importAttr: ImportAttributes, product?: MapProductEntity): Promise<MapEntity> {
     const newMap = this.mapRepo.create()
-    newMap.boundingBox = importAttr.BoundingBox
+    newMap.boundingBox = importAttr.Points
     newMap.zoomLevel = importAttr.ZoomLevel
     newMap.mapProduct = product
 

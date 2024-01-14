@@ -90,7 +90,7 @@ export class LibotHttpClientService {
     try {
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
       const resPayload = ImportResPayload.fromImportRes(res.data)
-      this.logger.debug(`export map with bbox ${imAttrs.BoundingBox} sent successfully`)
+      this.logger.debug(`export map with bbox ${imAttrs.Points} sent successfully`)
       return resPayload
     } catch (error) {
       const mas = error.toString()

@@ -1,6 +1,7 @@
 import { Validators } from "./utils/validators";
 import { ImportAttributes } from "./importAttributes.dto";
 import { ApiProperty } from "@nestjs/swagger";
+import { Feature } from '@turf/turf';
 
 
 export class Webhook {
@@ -12,32 +13,32 @@ export class Webhook {
   url: string;
 }
 
-export class Properties {
-  @ApiProperty({ required: false })
-  maxResolutionDeg: number;
+// export class Properties {
+//   @ApiProperty({ required: false })
+//   maxResolutionDeg: number;
 
-  @ApiProperty({ required: false })
-  minResolutionDeg: number;
-}
+//   @ApiProperty({ required: false })
+//   minResolutionDeg: number;
+// }
 
-export class Geometry {
-  @ApiProperty({ required: false })
-  type: "Polygon" | "MultiPolygon";
+// export class Geometry {
+//   @ApiProperty({ required: false })
+//   type: "Polygon" | "MultiPolygon";
 
-  @ApiProperty({ required: false })
-  coordinates: Array<Array<number[]>>;
-}
+//   @ApiProperty({ required: false })
+//   coordinates: Array<Array<number[]>>;
+// }
 
-export class Feature {
-  @ApiProperty({ required: false })
-  type: string;
+// export class Feature {
+//   @ApiProperty({ required: false })
+//   type: string;
 
-  @ApiProperty({ required: false })
-  properties: Properties;
+//   @ApiProperty({ required: false })
+//   properties: Properties;
 
-  @ApiProperty({ required: false })
-  geometry: Geometry;
-}
+//   @ApiProperty({ required: false })
+//   geometry: Geometry;
+// }
 
 export class Roi {
   @ApiProperty({ required: false })
@@ -90,12 +91,11 @@ export class ImportPayload {
             maxResolutionDeg: attrs.TargetResolution,
             minResolutionDeg: attrs.MinResolutionDeg
           },
-          geometry: Validators.bBoxToPolygon(Validators.bBoxStringToBboxArray(attrs.BoundingBox)).geometry
+          geometry: attrs.Polygon.geometry
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.ProductId} BBox: [${attrs.BBox[0]},${attrs.BBox[1]},${attrs.BBox[2]},${attrs.BBox[3]}] resolution: ${attrs.TargetResolution}`
-
+    importPayload.description = `Export request for prodID: ${attrs.ProductId} points: [${attrs.Points}}] resolution: ${attrs.TargetResolution}`
     return importPayload
   }
 

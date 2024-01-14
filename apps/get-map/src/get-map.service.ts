@@ -54,7 +54,7 @@ export class GetMapService {
     let existsMap: MapEntity;
     try {
 
-      this.create.isValidBbox(importAttrs.BBox)
+      this.create.isValidBbox(importAttrs)
 
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
@@ -64,6 +64,7 @@ export class GetMapService {
 
       if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrSaveProduct(product)
+        // TODO in case of error or cancel needs to find the exist map
         existsMap = await this.repo.saveMap(importAttrs, pEntity)
         this.create.executeExport(importAttrs, existsMap)
       }
