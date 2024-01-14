@@ -1,9 +1,9 @@
-import { Feature, area, bbox, bboxPolygon, booleanWithin, multiPolygon, point, polygon } from "@turf/turf";
+import { Feature, MultiPolygon, Polygon, area, bbox, bboxPolygon, booleanWithin, intersect, multiPolygon, point, polygon } from "@turf/turf";
 import { Footprint, FootprintType } from "@app/common/dto/libot/footprint";
 
 export class Validators {
 
-  static pointsStringToArray(points: string): number[] {    
+  static pointsStringToArray(points: string): number[] {
     return points.split(",").map(val => Number(val.trim())).filter(val => !isNaN(val));
   }
 
@@ -34,12 +34,19 @@ export class Validators {
     return bboxPolygon(bbox)
   }
 
-  static isBBoxInFootprint(bBox: string, footprint: string): boolean {    
-    const fp = new Footprint(footprint)
-    const fpPoly = fp.type === FootprintType.POLYGON ? polygon(fp.coordinates) : multiPolygon(fp.coordinates)
-    const bBoxPolygon = this.bBoxToPolygon(this.bBoxStringToBboxArray(bBox))
-    const fpBBox = bboxPolygon(bbox(fpPoly))
-    return booleanWithin(bBoxPolygon, JSON.parse(footprint))
+  static isBBoxInFootprint(bBox: Feature, footprint: Feature): boolean {
+    return booleanWithin(bBox, footprint)
+  }
+
+  static isBBoxIntersectFootprint(bBox: Feature<Polygon>, footprint: Feature<Polygon | MultiPolygon>): Feature<Polygon | MultiPolygon> | null {
+    return intersect(bBox, footprint)
+  }
+
+  static getIntersectPercentage(poly: Feature<Polygon>, availablePoly: Feature<Polygon | MultiPolygon>) {
+    let polyArea = area(poly)
+    let availPolyArea = area(availablePoly)
+
+    return availPolyArea / polyArea * 100
   }
 
   // Polygon validators 
