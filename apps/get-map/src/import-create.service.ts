@@ -11,9 +11,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MCRasterRecordDto } from '@app/common/dto/libot/recordsRes.dto';
+import { Feature, Polygon, MultiPolygon } from '@turf/turf';
 
 @Injectable()
 export class ImportCreateService {
+
+  private MIN_INCLUSION = Number(process.env.MIN_INCLUSION_FOR_MAP ?? 60)
 
 
   private readonly logger = new Logger(ImportCreateService.name);
@@ -54,14 +57,7 @@ export class ImportCreateService {
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_BBOX_INVALID, mes)
     }
-
-    availableProducts.forEach(product => {
-      if (!Validators.isBBoxInFootprint(importAttrs.Points, product.footprint)) {
-        this.logger.warn(`SelectProduct - BBOX ${importAttrs.Points} is not contained in ${product.productName} footprint ${product.footprint}`)
-        return
-      }
-      selectedProduct = product
-    })
+    selectedProduct = this.extractMostCompatibleProduct(availableProducts, importAttrs)
 
     if (!selectedProduct) {
       const mes = `The requested bbox ${importAttrs.Points} is not contained in any polygon`
@@ -70,6 +66,38 @@ export class ImportCreateService {
     }
 
     return selectedProduct
+  }
+
+  extractMostCompatibleProduct(products: MapProductResDto[], attrs: ImportAttributes): MapProductResDto {
+    this.logger.log(`select product according inclusion size`)
+
+    let selectedProduct: MapProductResDto;
+    let recentAvailProduct: MapProductResDto;
+    let sumInclusion: number = 0
+    let availPoly: Feature<Polygon | MultiPolygon> | null
+
+    products.forEach(product => {
+
+      // if contains the full polygon return it
+      if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(product.footprint))) {
+        selectedProduct = product
+        return
+      }
+
+      // if it partial inclusion return the biggest inclusion if it more then @MIN_INCLUSION or the most recent
+      if ((availPoly = Validators.isBBoxIntersectFootprint(attrs.Polygon, JSON.parse(product.footprint)))) {
+        if (!recentAvailProduct) {
+          recentAvailProduct = product
+        }
+        const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
+        if (cSumInclusion >= this.MIN_INCLUSION &&
+          Math.max(sumInclusion, cSumInclusion) === cSumInclusion) {
+          selectedProduct = product
+          sumInclusion = cSumInclusion
+        }
+      }
+    })
+    return selectedProduct ? selectedProduct : recentAvailProduct
   }
 
   async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
@@ -89,7 +117,7 @@ export class ImportCreateService {
           this.logger.error(error.toString())
         }
       }, 5000)
-      
+
     } catch (error) {
       this.logger.error(error.toString())
       this.repo.setErrorStatus(map, error.toString())
