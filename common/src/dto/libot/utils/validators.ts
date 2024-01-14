@@ -39,7 +39,7 @@ export class Validators {
     const fpPoly = fp.type === FootprintType.POLYGON ? polygon(fp.coordinates) : multiPolygon(fp.coordinates)
     const bBoxPolygon = this.bBoxToPolygon(this.bBoxStringToBboxArray(bBox))
     const fpBBox = bboxPolygon(bbox(fpPoly))
-    return booleanWithin(bBoxPolygon, fpBBox)
+    return booleanWithin(bBoxPolygon, JSON.parse(footprint))
   }
 
   // Polygon validators 
