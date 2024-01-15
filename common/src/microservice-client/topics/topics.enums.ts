@@ -55,6 +55,8 @@ export const GetMapTopics = {
     CREATE_IMPORT : `getapp-map.import.create${region}`,
     CANCEL_IMPORT_CREATE : `getapp-map.import.create.cancel${region}`,
     EXPORT_NOTIFICATION : `getapp-map.export.notify${region}`,
+     // Inventory
+     GET_INVENTORY_UPDATES : `getapp-map.inventory.updates${region}`,
     // Device
     REGISTER_MAP : `getapp-device.map.register${region}`,
     DISCOVERY_MAP : `getapp-device.discover.map${region}`,
