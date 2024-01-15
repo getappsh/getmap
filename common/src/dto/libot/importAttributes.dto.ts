@@ -1,6 +1,7 @@
 import { CreateImportDto } from "@app/common/dto/map"
 import { Validators } from "./utils/validators"
 import { Feature, Polygon, bbox, bboxPolygon, polygon } from "@turf/turf"
+import { MapEntity } from "@app/common/database/entities"
 
 export class ImportAttributes {
   productId: string
@@ -63,6 +64,12 @@ export class ImportAttributes {
   static fromImportCreateDto(importDto: CreateImportDto): ImportAttributes {
     const attr = new ImportAttributes()
     attr.Points = importDto.mapProperties.boundingBox
+    return attr
+  }
+  
+  static fromMapEntity(mE: MapEntity): ImportAttributes {
+    const attr = new ImportAttributes()
+    attr.Points = mE.boundingBox
     return attr
   }
 }
