@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColum
 
 @Entity("map_product")
 @Index("map_id_product_id_unique", ["id", "productId"], { unique: true })
-export class MapProductEntity {
+export class ProductEntity {
   
   @PrimaryColumn({ name: 'id' })
   id: string;

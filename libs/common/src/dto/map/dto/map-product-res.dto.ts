@@ -1,3 +1,4 @@
+import { ProductEntity } from "@app/common/database/entities";
 import { MCRasterRecordDto } from "@app/common/dto/libot/recordsRes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
@@ -69,6 +70,26 @@ export class MapProductResDto {
     product.transparency = records["mc:transparency"]
     product.region = records["mc:region"]
     product.ingestionDate = new Date(records["mc:ingestionDate"]);
+
+    return product
+  }
+
+  static fromProductEntity(pE: ProductEntity): MapProductResDto {
+    const product = new MapProductResDto()
+    product.id = pE.id
+    product.productId = pE.productId
+    product.productName = pE.productName
+    product.productVersion = pE.productVersion
+    product.productType = pE.productType
+    product.productSubType = pE.productSubType
+    product.description = pE.description
+    product.imagingTimeBeginUTC = new Date(pE.imagingTimeBeginUTC);
+    product.imagingTimeEndUTC = new Date(pE.imagingTimeEndUTC);
+    product.maxResolutionDeg = Number(pE.maxResolutionDeg)
+    product.footprint = pE.footprint
+    product.transparency = pE.transparency
+    product.region = pE.region
+    product.ingestionDate = new Date(pE.ingestionDate);
 
     return product
   }

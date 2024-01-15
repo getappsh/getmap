@@ -8,16 +8,19 @@ import { ImportCreateService } from './import-create.service';
 import { RepoService } from './repo.service';
 import { DatabaseModule } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DeviceEntity, DeviceMapStateEntity, MapEntity, MapProductEntity } from '@app/common/database/entities';
+import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity } from '@app/common/database/entities';
+import { InventoryService } from './inventory.service';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     HttpModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, MapProductEntity])
+    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity]),
+    ScheduleModule.forRoot()
   ],
   controllers: [GetMapController],
-  providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService],
+  providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService, InventoryService],
 })
 export class GetMapModule { }

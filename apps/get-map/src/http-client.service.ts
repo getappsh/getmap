@@ -17,7 +17,7 @@ export class LibotHttpClientService {
 
   private readonly logger = new Logger(LibotHttpClientService.name);
   private RETRY_COUNT = Number(process.env.RETRY_COUNT ?? 3)
-  private WAIT_TIME = Number(process.env.WAIT_TIME ?? 0.3) 
+  private WAIT_TIME = Number(process.env.WAIT_TIME ?? 0.3)
   private EXPONENTIAL_TIMES = process.env.EXPONENTIAL_TIMES?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
 
 
@@ -45,7 +45,7 @@ export class LibotHttpClientService {
 
     while (startPos > 0) {
 
-      this.logger.debug(`Get records from libot from position ${startPos}`)
+      this.logger.log(`Get records from libot from position ${startPos}`)
 
       const body = this.constructXmlBody(dAttrs, startPos)
 
@@ -82,7 +82,7 @@ export class LibotHttpClientService {
 
   async exportStampMap(imAttrs: ImportAttributes) {
 
-    this.logger.debug("Execute export map to libot")
+    this.logger.log("Execute export map to libot")
 
     const url = process.env.LIBOT_EXPORT_URL
 
@@ -101,13 +101,11 @@ export class LibotHttpClientService {
   }
 
   async getMapStatus(reqId: number) {
-    this.logger.debug(`Get import status for job id ${reqId} from libot`)
+    this.logger.log(`Get import status for job id ${reqId} from libot`)
 
     const url = process.env.LIBOT_EXPORT_URL + "/" + reqId
 
-
     try {
-      this.logger.log(`send to utl ${url}`)
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
       const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
@@ -121,7 +119,7 @@ export class LibotHttpClientService {
 
   isResSuccess(res: AxiosResponse<any, any>, reqName?: string): boolean {
     const isSuccess = (res.status >= 200 && res.status < 300) && !this.isThereErrorMes(res)
-    this.logger.debug(`"${reqName}" req is ${isSuccess ? "success" : "finished with error"}`)
+    this.logger.log(`"${reqName}" req is ${isSuccess ? "success" : "finished with error"}`)
     return isSuccess
   }
 
@@ -206,7 +204,7 @@ export class LibotHttpClientService {
             </PropertyIsEqualTo>
             <PropertyIsGreaterThan>
                 <PropertyName>mc:ingestionDate</PropertyName>
-                <Literal>${mapAttrs.ingestionDate}</Literal>
+                <Literal>${mapAttrs.IngestionDate}</Literal>
             </PropertyIsGreaterThan>
             <PropertyIsLessThanOrEqualTo>
                 <PropertyName>mc:maxResolutionDeg</PropertyName>
@@ -250,7 +248,7 @@ export class LibotHttpClientService {
             </PropertyIsEqualTo>
             <PropertyIsGreaterThan>
                 <PropertyName>mc:ingestionDate</PropertyName>
-                <Literal>${mapAttrs.ingestionDate}</Literal>
+                <Literal>${mapAttrs.IngestionDate}</Literal>
             </PropertyIsGreaterThan>
             <PropertyIsLessThanOrEqualTo>
                 <PropertyName>mc:maxResolutionDeg</PropertyName>
@@ -276,11 +274,11 @@ export class LibotHttpClientService {
     </csw:GetRecords>`
   }
 
-  async reqAndRetry<T>(fn: () => Promise<T>, name?: string, exponential: boolean = false) {    
+  async reqAndRetry<T>(fn: () => Promise<T>, name?: string, exponential: boolean = false) {
     let err: any;
     for (let i = 0; i < this.RETRY_COUNT; i++) {
       try {
-        this.logger.debug(`start ${name} req`)
+        this.logger.log(`start ${name} req`)
         return await fn()
       } catch (error) {
         err = error

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, MapProductEntity } from '@app/common/database/entities';
-import { Repository } from 'typeorm';
+import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
+import { IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
@@ -15,7 +15,7 @@ export class RepoService {
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
     @InjectRepository(DeviceEntity) private readonly deviceRepo: Repository<DeviceEntity>,
     @InjectRepository(DeviceMapStateEntity) private readonly deviceMapRepo: Repository<DeviceMapStateEntity>,
-    @InjectRepository(MapProductEntity) private readonly productRepo: Repository<MapProductEntity>
+    @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>
   ) { }
 
   async getMap(importAttr: ImportAttributes): Promise<MapEntity> {
@@ -38,7 +38,32 @@ export class RepoService {
     return existMap
   }
 
-  async saveMap(importAttr: ImportAttributes, product?: MapProductEntity): Promise<MapEntity> {
+  async getUnUpdatedMapsCount(): Promise<number> {
+    const existMapCount = await this.mapRepo.count({
+      where: {
+        isUpdated: true
+      },
+    })
+    return existMapCount
+  }
+
+  async getUnUpdatedMaps(take?: number, skip?: number): Promise<MapEntity[]> {
+    const existMap = await this.mapRepo.find({
+      where: { isUpdated: true },
+      relations: { mapProduct: true },
+      order: { createDateTime: "ASC" },
+      take,
+      skip
+    })
+    return existMap
+  }
+
+  async updateMapAsUnUpdate(map: MapEntity) {
+    map.isUpdated = false
+    return await this.mapRepo.save(map)
+  }
+
+  async saveMap(importAttr: ImportAttributes, product?: ProductEntity): Promise<MapEntity> {
     const newMap = this.mapRepo.create()
     newMap.boundingBox = importAttr.Points
     newMap.zoomLevel = importAttr.zoomLevel
@@ -49,10 +74,10 @@ export class RepoService {
     return savedMap
   }
 
-  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {    
+  async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
 
     this.logger.debug(`find maps with job Id ${resData.id} to save the response`)
-    
+
     const existMap = await this.mapRepo.find({
       where: [
         { catalogId: map?.catalogId },
@@ -93,7 +118,7 @@ export class RepoService {
           }
         })
         cMap.progress = 100
-        if(!cMap.packageUrl){
+        if (!cMap.packageUrl) {
           cMap.status = MapImportStatusEnum.IN_PROGRESS
         }
       }
@@ -131,10 +156,6 @@ export class RepoService {
     }
   }
 
-  doUseCache() {
-    return Boolean(process.env.USE_CACHE)
-  }
-
   async getOrSaveProduct(product: MapProductResDto) {
 
     const existProduct = await this.productRepo.findOneBy({ id: product.id })
@@ -144,6 +165,14 @@ export class RepoService {
     }
     const newProduct = this.productRepo.create(product)
     return await this.productRepo.save(newProduct)
+  }
+
+  async getRecentProduct() {
+    this.logger.log(`Find the must recent available product`)
+    return await this.productRepo.findOne({
+      where: { ingestionDate: Not(IsNull()) },
+      order: { ingestionDate: "DESC" }
+    })
   }
 
   async registerMapToDevice(existsMap: MapEntity, deviceId: string) {

@@ -76,27 +76,30 @@ export class ImportCreateService {
     let sumInclusion: number = 0
     let availPoly: Feature<Polygon | MultiPolygon> | null
 
-    products.forEach(product => {
+    for (let i = 0; i < products.length; i++) {
 
       // if contains the full polygon return it
-      if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(product.footprint))) {
-        selectedProduct = product
-        return
+      if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(products[i].footprint))) {
+        selectedProduct = products[i]
+        break
       }
 
       // if it partial inclusion return the biggest inclusion if it more then @MIN_INCLUSION or the most recent
-      if ((availPoly = Validators.isBBoxIntersectFootprint(attrs.Polygon, JSON.parse(product.footprint)))) {
+      if ((availPoly = Validators.isBBoxIntersectFootprint(attrs.Polygon, JSON.parse(products[i].footprint)))) {
+
         if (!recentAvailProduct) {
-          recentAvailProduct = product
+          recentAvailProduct = products[i]
         }
+
         const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
         if (cSumInclusion >= this.MIN_INCLUSION &&
           Math.max(sumInclusion, cSumInclusion) === cSumInclusion) {
-          selectedProduct = product
+          selectedProduct = products[i]
           sumInclusion = cSumInclusion
         }
       }
-    })
+    }
+
     return selectedProduct ? selectedProduct : recentAvailProduct
   }
 

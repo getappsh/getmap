@@ -6,11 +6,15 @@ export class DiscoveryAttributes {
   private _bBox: [number, number, number, number]
   // private _BoundingBox: string | null
   CRS: string = "urn:x-ogc:def:crs:EPSG:6.11:4326";
-  ingestionDate: string
+  ingestionDate: Date
   private _resolutionDeg: number
 
   public get BBox() {
     return this._bBox
+  }
+  
+  public get IngestionDate() {
+    return this.ingestionDate.toISOString()
   }
 
 
@@ -32,7 +36,7 @@ export class DiscoveryAttributes {
 
   constructor() {
     this.ResolutionDeg = (process.env.TARGET_RESOLUTION) ?? 17
-    this.ingestionDate = process.env.MC_CSW_REF_DATE
+    this.ingestionDate = new Date(process.env.MC_CSW_REF_DATE)
   }
 
   toString() {
