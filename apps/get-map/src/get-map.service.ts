@@ -1,5 +1,5 @@
 import { DiscoveryMapDto } from '@app/common/dto/discovery';
-import { CreateImportDto, CreateImportResDto, ImportStatusResDto } from '@app/common/dto/map';
+import { CreateImportDto, CreateImportResDto, ImportStatusResDto, InventoryUpdatesReqDto, InventoryUpdatesResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client.service';
@@ -15,7 +15,6 @@ import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 
 @Injectable()
 export class GetMapService {
-
 
   private readonly logger = new Logger(GetMapService.name);
 
@@ -87,10 +86,6 @@ export class GetMapService {
     return importRes;
   }
 
-  importCancel() {
-    throw new Error('not implemented.');
-  }
-
   async getImportStatus(reqId: string): Promise<ImportStatusResDto> {
     this.logger.debug(`Find map entity if catalog id ${reqId}`)
     let importRes = new ImportStatusResDto()
@@ -126,6 +121,16 @@ export class GetMapService {
 
   handleNotification(payload: ImportResPayload) {
     this.create.handleSaveExportRes(payload)
+  }
+
+  async getInventoryUpdates(inventoryDto: InventoryUpdatesReqDto) {
+    const res = new InventoryUpdatesResDto()
+    const maps = await this.repo.getMapsIsUpdated(inventoryDto.inventory)
+    res.updates = {}
+    maps.forEach(m => {
+      res.updates[m.catalogId] = m.isUpdated
+    })
+    return res
   }
 
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {

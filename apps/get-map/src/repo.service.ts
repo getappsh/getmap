@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
-import { IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
@@ -47,7 +47,7 @@ export class RepoService {
     return existMapCount
   }
 
-  async getUnUpdatedMaps(take?: number, skip?: number): Promise<MapEntity[]> {
+  async getUpdatedMaps(take?: number, skip?: number): Promise<MapEntity[]> {
     const existMap = await this.mapRepo.find({
       where: { isUpdated: true },
       relations: { mapProduct: true },
@@ -61,6 +61,16 @@ export class RepoService {
   async updateMapAsUnUpdate(map: MapEntity) {
     map.isUpdated = false
     return await this.mapRepo.save(map)
+  }
+
+  async getMapsIsUpdated(inventory: string[]) {
+    const unUpdateMaps = await this.mapRepo.find(
+      {
+        select: ["catalogId", "isUpdated"],
+        where: { catalogId: In(inventory) }
+      }
+    )
+    return unUpdateMaps
   }
 
   async saveMap(importAttr: ImportAttributes, product?: ProductEntity): Promise<MapEntity> {

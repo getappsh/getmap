@@ -61,7 +61,7 @@ export class InventoryService {
     const take = Number(process.env.UPDATE_JOB_MAP_TAKE ?? 25) // defined the limitation of maps on every iterator
     let skip = 0 // defined the offset map from where to state select
     while (skip < await this.repo.getUnUpdatedMapsCount()) {
-      const maps = await this.repo.getUnUpdatedMaps(take, skip)
+      const maps = await this.repo.getUpdatedMaps(take, skip)
       await this.checkUpdatesByGivenMaps(maps, products, mapUnUpdate)
       skip = skip + take
     }
