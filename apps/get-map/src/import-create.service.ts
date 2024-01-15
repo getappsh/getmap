@@ -128,17 +128,17 @@ export class ImportCreateService {
 
     this.logger.debug("completing attributes for import create req")
 
-    importAttrs.ProductId = product.id
-    importAttrs.TargetResolution = Math.max(product.maxResolutionDeg, Number(process.env.MC_MAX_RESOLUTION_DEG))
-    importAttrs.MinResolutionDeg = Number(process.env.MC_MIN_RESOLUTION_DEG)
+    importAttrs.productId = product.id
+    importAttrs.targetResolution = Math.max(product.maxResolutionDeg, Number(process.env.MC_MAX_RESOLUTION_DEG))
+    importAttrs.minResolutionDeg = Number(process.env.MC_MIN_RESOLUTION_DEG)
     this.completeResolution(importAttrs)
   }
 
   completeResolution(importAttrs: ImportAttributes) {
-    if (importAttrs.TargetResolution > 0) {
+    if (importAttrs.targetResolution > 0) {
       return
     }
-    importAttrs.TargetResolution = ResolutionMapper.level2Resolution(importAttrs.ZoomLevel)
+    importAttrs.targetResolution = ResolutionMapper.level2Resolution(importAttrs.zoomLevel)
   }
 
 

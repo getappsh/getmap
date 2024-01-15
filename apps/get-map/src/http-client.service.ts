@@ -152,7 +152,7 @@ export class LibotHttpClientService {
   }
 
   constructXmlBody(mapAttrs: DiscoveryAttributes, startPos: number) {
-    if (!mapAttrs.IngestionDate) {
+    if (!mapAttrs.ingestionDate) {
       return this.getRecordsExlNoFilter(startPos)
     }
 
@@ -206,7 +206,7 @@ export class LibotHttpClientService {
             </PropertyIsEqualTo>
             <PropertyIsGreaterThan>
                 <PropertyName>mc:ingestionDate</PropertyName>
-                <Literal>${mapAttrs.IngestionDate}</Literal>
+                <Literal>${mapAttrs.ingestionDate}</Literal>
             </PropertyIsGreaterThan>
             <PropertyIsLessThanOrEqualTo>
                 <PropertyName>mc:maxResolutionDeg</PropertyName>
@@ -250,7 +250,7 @@ export class LibotHttpClientService {
             </PropertyIsEqualTo>
             <PropertyIsGreaterThan>
                 <PropertyName>mc:ingestionDate</PropertyName>
-                <Literal>${mapAttrs.IngestionDate}</Literal>
+                <Literal>${mapAttrs.ingestionDate}</Literal>
             </PropertyIsGreaterThan>
             <PropertyIsLessThanOrEqualTo>
                 <PropertyName>mc:maxResolutionDeg</PropertyName>

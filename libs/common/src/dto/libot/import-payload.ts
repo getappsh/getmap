@@ -75,7 +75,7 @@ export class ImportPayload {
 
   static fromImportAttrs(attrs: ImportAttributes): ImportPayload {
     const importPayload = new ImportPayload()
-    importPayload.catalogRecordID = attrs.ProductId
+    importPayload.catalogRecordID = attrs.productId
     importPayload.webhook = [
       {
         events: ["TASK_COMPLETED", "TASK_FAILED"],
@@ -88,14 +88,14 @@ export class ImportPayload {
         {
           type: "Feature",
           properties: {
-            maxResolutionDeg: attrs.TargetResolution,
-            minResolutionDeg: attrs.MinResolutionDeg
+            maxResolutionDeg: attrs.targetResolution,
+            minResolutionDeg: attrs.minResolutionDeg
           },
           geometry: attrs.Polygon.geometry
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.ProductId} points: [${attrs.Points}}] resolution: ${attrs.TargetResolution}`
+    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}}] resolution: ${attrs.targetResolution}`
     return importPayload
   }
 

@@ -3,28 +3,28 @@ import { Validators } from "./utils/validators"
 import { Feature, Polygon, bbox, bboxPolygon, polygon } from "@turf/turf"
 
 export class ImportAttributes {
-  ProductId: string
+  productId: string
   pattern: "bbox" | "polygon"
-  private _BBox: [number, number, number, number];
-  private _Polygon: Feature<Polygon>;
+  private _bBox: [number, number, number, number];
+  private _polygon: Feature<Polygon>;
   private _pointsString: string
-  ZoomLevel: number
-  TargetResolution: number
-  MinResolutionDeg: number
-  FileName: string
-  RequestId: string
-  JobId: string
+  zoomLevel: number
+  targetResolution: number
+  minResolutionDeg: number
+  fileName: string
+  requestId: string
+  jobId: string
 
   toString() {
     return JSON.stringify(this);
   }
 
   public get BBox() {
-    return this._BBox
+    return this._bBox
   }
 
   public get Polygon() {
-    return this._Polygon
+    return this._polygon
   }
 
   public get Points() {
@@ -36,13 +36,13 @@ export class ImportAttributes {
     if (Validators.isValidStringForBBox(bBox)) {
       this._pointsString = bBox
       this.setBBoxString(bBox)
-      this._Polygon = bboxPolygon(this._BBox)
+      this._polygon = bboxPolygon(this._bBox)
       this.pattern = "bbox"
     } else if ((poly = Validators.isValidStringForPolygon(bBox))) {
       this._pointsString = bBox
       const fePoly = polygon([poly])
-      this._Polygon = fePoly
-      this._BBox = bbox(fePoly) as [number, number, number, number]
+      this._polygon = fePoly
+      this._bBox = bbox(fePoly) as [number, number, number, number]
       this.pattern = "polygon"
     } else {
       throw new Error("Points box values are invalid.");
@@ -57,7 +57,7 @@ export class ImportAttributes {
     bbox[1] = bBoxValues[1];
     bbox[2] = bBoxValues[2];
     bbox[3] = bBoxValues[3];
-    this._BBox = bbox
+    this._bBox = bbox
   }
 
   static fromImportCreateDto(importDto: CreateImportDto): ImportAttributes {
