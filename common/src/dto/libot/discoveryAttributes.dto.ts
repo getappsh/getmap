@@ -3,36 +3,36 @@ import { Validators } from "./utils/validators"
 
 export class DiscoveryAttributes {
 
-  private _BBox: [number, number, number, number]
+  private _bBox: [number, number, number, number]
   // private _BoundingBox: string | null
   CRS: string = "urn:x-ogc:def:crs:EPSG:6.11:4326";
-  IngestionDate: string
-  private _ResolutionDeg: number
+  ingestionDate: string
+  private _resolutionDeg: number
 
   public get BBox() {
-    return this._BBox
+    return this._bBox
   }
 
 
   public get BoundingBoxToSting() {
-    return `${this._BBox[0]},${this._BBox[1]},${this._BBox[2]},${this._BBox[3]}`;
+    return `${this._bBox[0]},${this._bBox[1]},${this._bBox[2]},${this._bBox[3]}`;
   }
 
   public set BoundingBox(bBox: [number, number, number, number]) {
-    this._BBox = bBox
+    this._bBox = bBox
   }
 
   public get ResolutionDeg() {
-    return this._ResolutionDeg
+    return this._resolutionDeg
   }
 
   public set ResolutionDeg(val: string | number) {
-    this._ResolutionDeg = ResolutionMapper.level2Resolution(Number(val))
+    this._resolutionDeg = ResolutionMapper.level2Resolution(Number(val))
   }
 
   constructor() {
     this.ResolutionDeg = (process.env.TARGET_RESOLUTION) ?? 17
-    this.IngestionDate = process.env.MC_CSW_REF_DATE
+    this.ingestionDate = process.env.MC_CSW_REF_DATE
   }
 
   toString() {
