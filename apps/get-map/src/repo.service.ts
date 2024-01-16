@@ -5,6 +5,7 @@ import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 
 @Injectable()
 export class RepoService {
@@ -196,6 +197,19 @@ export class RepoService {
   async getMapConfig() {
     const configs = await this.configRepo.find({ order: { lastUpdatedDate: "DESC" } })
     return configs.length > 0 ? configs[0] : null
+  }
+
+  async setMapConfig(config: MapConfigDto) {
+    // eConfig === exits config
+    this.logger.debug(`Find exits config and update it`)
+    let eConfig = await this.getMapConfig()
+    if (!eConfig) {
+      eConfig = this.configRepo.create()
+    }
+    for (const key in config) {
+      eConfig[key] = config[key]
+    }
+    await this.configRepo.save(eConfig)
   }
 
   async registerMapToDevice(existsMap: MapEntity, deviceId: string) {

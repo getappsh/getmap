@@ -6,6 +6,7 @@ import { OfferingMapResDto } from '@app/common/dto/offering';
 import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@app/common/dto/map';
 import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 
 @Controller()
 export class GetMapController {
@@ -22,20 +23,20 @@ export class GetMapController {
   }
 
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
-  async importCreate(@Payload() importDto: CreateImportDto): Promise<CreateImportResDto> {    
+  async importCreate(@Payload() importDto: CreateImportDto): Promise<CreateImportResDto> {
     this.logger.log("Start import create")
     return this.getMapService.importCreate(importDto)
   }
-  
-  
+
+
   @MessagePattern(GetMapTopics.GET_IMPORT_STATUS)
   getImportStatus(@Payload() reqId: string) {
     this.logger.log("Get import create status")
     return this.getMapService.getImportStatus(reqId)
   }
-  
+
   @EventPattern(GetMapTopics.EXPORT_NOTIFICATION)
-  exportNotify(@Payload() payload: ImportResPayload) {    
+  exportNotify(@Payload() payload: ImportResPayload) {
     this.logger.log(`got notification from libot for job id ${payload.id} with status ${payload.status}`)
     return this.getMapService.handleNotification(payload)
   }
@@ -49,9 +50,16 @@ export class GetMapController {
 
   // Config
   @MessagePattern(GetMapTopics.GET_MAP_CONFIG)
-  getMapConfig(){
+  getMapConfig() {
+    this.logger.log(`Get maps config`)
     return this.getMapService.getMapConfig()
   }
-  
+
+  @MessagePattern(GetMapTopics.SET_MAP_CONFIG)
+  async setMapConfig(@Payload() config: MapConfigDto) {
+    this.logger.log(`Set maps config`)
+    return await this.getMapService.setMapConfig(config)
+  }
+
 
 }

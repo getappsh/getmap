@@ -137,12 +137,20 @@ export class GetMapService {
 
   // Config
   async getMapConfig() {
-    const configs = await this.repo.getMapConfig()
+    const configs = await this.repo.getMapConfig()    
     if (!configs) {
       this.logger.warn(`There is not exist maps configuration`)
     }
     const configRes = MapConfigDto.fromMapConfig(configs)
     return configRes
+  }
+  
+  async setMapConfig(config: MapConfigDto) {    
+    try {
+      await this.repo.setMapConfig(config)
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
 
   // Utils
