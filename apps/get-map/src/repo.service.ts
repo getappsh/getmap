@@ -9,6 +9,7 @@ import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/impo
 @Injectable()
 export class RepoService {
 
+
   private readonly logger = new Logger(RepoService.name);
 
   constructor(
@@ -173,7 +174,11 @@ export class RepoService {
     if (existProduct) {
       return existProduct
     }
-    const newProduct = this.productRepo.create(product)
+    return await this.saveProducts(product)
+  }
+
+  async saveProducts(newProd: MapProductResDto | MapProductResDto[]): Promise<ProductEntity | ProductEntity[]> {
+    const newProduct = this.productRepo.create(newProd)
     return await this.productRepo.save(newProduct)
   }
 

@@ -19,7 +19,7 @@ export class InventoryService {
     private readonly create: ImportCreateService,
   ) { }
 
-  @Cron(process.env.UPDATE_GOB_TIME ?? '0 0 6 * * *')
+  @Cron(process.env.UPDATE_GOB_TIME ?? '0 0 */6 * * *')
   async checkMapsUpdates() {
 
     this.logger.log(`Start cron gob to check if there updates for exists maps`)
@@ -28,6 +28,7 @@ export class InventoryService {
     if (newProd) {
       try {
         const mapUnUpdate = await this.handleMapsToCheck(newProd)
+        await this.saveNewProducts(newProd)
         this.updateDevicesUnUpdate(mapUnUpdate)
       } catch (error) {
         this.logger.error(error)
@@ -78,7 +79,7 @@ export class InventoryService {
       try {
         const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
         const selectedProd = this.create.extractMostCompatibleProduct(allProd, mapAttrs);
-        if (maps[i].mapProduct.id !== selectedProd.id) {
+        if (maps[i]?.mapProduct?.id !== selectedProd.id) {
           const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);
           mapUnUpdate.push(savedMap);
         }
@@ -86,6 +87,10 @@ export class InventoryService {
         this.logger.error(error);
       }
     }
+  }
+
+  async saveNewProducts(newProd: MapProductResDto[]) {
+    await this.repo.saveProducts(newProd)
   }
 
   async updateDevicesUnUpdate(mapUnUpdate: MapEntity[]) {

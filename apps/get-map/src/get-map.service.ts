@@ -63,8 +63,9 @@ export class GetMapService {
 
       if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrSaveProduct(product)
+        const entityForMap = Array.isArray(pEntity) ? pEntity[0] : pEntity
         // TODO in case of error or cancel needs to find the exist map
-        existsMap = await this.repo.saveMap(importAttrs, pEntity)
+        existsMap = await this.repo.saveMap(importAttrs, entityForMap)
         this.create.executeExport(importAttrs, existsMap)
       }
 
