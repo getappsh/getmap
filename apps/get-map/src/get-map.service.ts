@@ -10,12 +10,12 @@ import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 
 @Injectable()
-export class GetMapService {
+export class GetMapService implements OnApplicationBootstrap {
 
   private readonly logger = new Logger(GetMapService.name);
 
@@ -137,20 +137,45 @@ export class GetMapService {
 
   // Config
   async getMapConfig() {
-    const configs = await this.repo.getMapConfig()    
+    const configs = await this.repo.getMapConfig()
     if (!configs) {
       this.logger.warn(`There is not exist maps configuration`)
     }
     const configRes = MapConfigDto.fromMapConfig(configs)
     return configRes
   }
-  
-  async setMapConfig(config: MapConfigDto) {    
+
+  async setMapConfig(config: MapConfigDto) {
     try {
       await this.repo.setMapConfig(config)
     } catch (error) {
       this.logger.error(error)
     }
+  }
+
+  async setDefaultConfig() {
+    const eCong = await this.repo.getMapConfig()
+
+    if (!eCong) {
+      const defaults = new MapConfigDto()
+      defaults.deliveryTimeout = 30
+      defaults.downloadRetryTime = 3
+      defaults.downloadTimeoutSec = 30
+      defaults.maxMapSizeInMeter = 405573000
+      defaults.maxParallelDownloads = 1
+      defaults.minSpaceByte = 500000000
+      defaults.periodicForInventoryJob = 1440
+      defaults.periodicForMapConf = 1440
+
+      try {
+        this.logger.log(`sets defaults configuration for maps`)
+        await this.repo.setMapConfig(defaults)
+      } catch (error) {
+        this.logger.error(error)
+      }
+    }
+
+
   }
 
   // Utils
@@ -165,6 +190,10 @@ export class GetMapService {
     error.errorCode = code
     error.message = mes.toString()
     return error
+  }
+
+  onApplicationBootstrap() {
+    this.setDefaultConfig()
   }
 
 }
