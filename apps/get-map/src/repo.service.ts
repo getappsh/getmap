@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
+import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
@@ -9,16 +9,17 @@ import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/impo
 @Injectable()
 export class RepoService {
 
-
   private readonly logger = new Logger(RepoService.name);
 
   constructor(
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
     @InjectRepository(DeviceEntity) private readonly deviceRepo: Repository<DeviceEntity>,
     @InjectRepository(DeviceMapStateEntity) private readonly deviceMapRepo: Repository<DeviceMapStateEntity>,
-    @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>
+    @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
+    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>
   ) { }
 
+  // Maps
   async getMap(importAttr: ImportAttributes): Promise<MapEntity> {
     const existMap = await this.mapRepo.findOne({
       where: {
@@ -167,6 +168,7 @@ export class RepoService {
     }
   }
 
+  // Products
   async getOrSaveProduct(product: MapProductResDto) {
 
     const existProduct = await this.productRepo.findOneBy({ id: product.id })
@@ -188,6 +190,12 @@ export class RepoService {
       where: { ingestionDate: Not(IsNull()) },
       order: { ingestionDate: "DESC" }
     })
+  }
+
+  // Config
+  async getMapConfig() {
+    const configs = await this.configRepo.find({ order: { lastUpdatedDate: "DESC" } })
+    return configs.length > 0 ? configs[0] : null
   }
 
   async registerMapToDevice(existsMap: MapEntity, deviceId: string) {

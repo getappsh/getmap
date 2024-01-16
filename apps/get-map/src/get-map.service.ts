@@ -12,6 +12,7 @@ import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { Injectable, Logger } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 
 @Injectable()
 export class GetMapService {
@@ -24,6 +25,7 @@ export class GetMapService {
     private readonly repo: RepoService
   ) { }
 
+  // Import
   async getOffering(): Promise<OfferingMapResDto> {
     const mapRes = new OfferingMapResDto
     try {
@@ -82,8 +84,6 @@ export class GetMapService {
       }
     }
 
-
-
     return importRes;
   }
 
@@ -124,6 +124,7 @@ export class GetMapService {
     this.create.handleSaveExportRes(payload)
   }
 
+  // Inventory
   async getInventoryUpdates(inventoryDto: InventoryUpdatesReqDto) {
     const res = new InventoryUpdatesResDto()
     const maps = await this.repo.getMapsIsUpdated(inventoryDto.inventory)
@@ -134,6 +135,17 @@ export class GetMapService {
     return res
   }
 
+  // Config
+  async getMapConfig() {
+    const configs = await this.repo.getMapConfig()
+    if (!configs) {
+      this.logger.warn(`There is not exist maps configuration`)
+    }
+    const configRes = MapConfigDto.fromMapConfig(configs)
+    return configRes
+  }
+
+  // Utils
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
     dto.importRequestId = entity.catalogId
     // dto.product = entity.mapProduct
@@ -141,7 +153,6 @@ export class GetMapService {
   }
 
   throwErrorDto(code: ErrorCode, mes: string) {
-
     const error = new ErrorDto()
     error.errorCode = code
     error.message = mes.toString()

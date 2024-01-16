@@ -14,6 +14,7 @@ export class GetMapController {
 
   constructor(private readonly getMapService: GetMapService) { }
 
+  // Import
   @MessagePattern(GetMapTopics.DISCOVERY_MAP)
   async getOffering() {
     this.logger.log("Get products offering")
@@ -33,16 +34,24 @@ export class GetMapController {
     return this.getMapService.getImportStatus(reqId)
   }
   
-  @MessagePattern(GetMapTopics.GET_INVENTORY_UPDATES)
-  getInventoryUpdates(@Payload() inventoryDto: InventoryUpdatesReqDto) {
-    this.logger.log("Get inventory updates")
-    return this.getMapService.getInventoryUpdates(inventoryDto)
-  }
-  
   @EventPattern(GetMapTopics.EXPORT_NOTIFICATION)
   exportNotify(@Payload() payload: ImportResPayload) {    
     this.logger.log(`got notification from libot for job id ${payload.id} with status ${payload.status}`)
     return this.getMapService.handleNotification(payload)
   }
+
+  // Inventory
+  @MessagePattern(GetMapTopics.GET_INVENTORY_UPDATES)
+  getInventoryUpdates(@Payload() inventoryDto: InventoryUpdatesReqDto) {
+    this.logger.log("Get inventory updates")
+    return this.getMapService.getInventoryUpdates(inventoryDto)
+  }
+
+  // Config
+  @MessagePattern(GetMapTopics.GET_MAP_CONFIG)
+  getMapConfig(){
+    return this.getMapService.getMapConfig()
+  }
+  
 
 }
