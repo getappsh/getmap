@@ -1,12 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, Timeout } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { RepoService } from './repo.service';
 import { LibotHttpClientService } from './http-client.service';
 import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
-import { MapEntity, ProductEntity, ProjectEntity } from '@app/common/database/entities';
+import { MapEntity } from '@app/common/database/entities';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { ImportCreateService } from './import-create.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class InventoryService {
@@ -14,6 +15,7 @@ export class InventoryService {
   private readonly logger = new Logger(InventoryService.name);
 
   constructor(
+    private readonly env: ConfigService,
     private readonly repo: RepoService,
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
@@ -59,7 +61,7 @@ export class InventoryService {
 
   async handleMapsToCheck(products: MapProductResDto[]) {
     const mapUnUpdate: MapEntity[] = []
-    const take = Number(process.env.UPDATE_JOB_MAP_TAKE ?? 25) // defined the limitation of maps on every iterator
+    const take = Number(this.env.get("UPDATE_JOB_MAP_TAKE") ?? 25) // defined the limitation of maps on every iterator
     let skip = 0 // defined the offset map from where to state select
     while (skip < await this.repo.getUnUpdatedMapsCount()) {
       const maps = await this.repo.getUpdatedMaps(take, skip)

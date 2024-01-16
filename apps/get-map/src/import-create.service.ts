@@ -12,26 +12,30 @@ import { MapEntity } from '@app/common/database/entities';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MCRasterRecordDto } from '@app/common/dto/libot/recordsRes.dto';
 import { Feature, Polygon, MultiPolygon } from '@turf/turf';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ImportCreateService {
 
-  private MIN_INCLUSION = Number(process.env.MIN_INCLUSION_FOR_MAP ?? 60)
+  private MIN_INCLUSION = Number(this.env.get("MIN_INCLUSION_FOR_MAP") ?? 60)
 
 
   private readonly logger = new Logger(ImportCreateService.name);
 
   constructor(
+    private readonly env: ConfigService,
     private readonly libot: LibotHttpClientService,
     private readonly repo: RepoService,
   ) { }
 
 
-  isValidBbox(attrs: ImportAttributes) {
+  async isValidBbox(attrs: ImportAttributes) {
     this.logger.debug("checked if area size is valid")
 
+    const { maxMapSizeInMeter } = await this.repo.getMapConfig()
+
     if ((attrs.pattern === "bbox" && !Validators.isBBoxAreaValid(attrs.BBox as number[])) ||
-      attrs.pattern === "polygon" && !Validators.isPolygonAreaValid(attrs.Polygon)) {
+      attrs.pattern === "polygon" && !Validators.isPolygonAreaValid(attrs.Polygon, maxMapSizeInMeter)) {
       // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
       const mes = "Area too large to distribute, reduce request and try again"
       this.logger.error(mes)
@@ -132,8 +136,8 @@ export class ImportCreateService {
     this.logger.debug("completing attributes for import create req")
 
     importAttrs.productId = product.id
-    importAttrs.targetResolution = Math.max(product.maxResolutionDeg, Number(process.env.MC_MAX_RESOLUTION_DEG))
-    importAttrs.minResolutionDeg = Number(process.env.MC_MIN_RESOLUTION_DEG)
+    importAttrs.targetResolution = Math.max(product.maxResolutionDeg, Number(this.env.get("MC_MAX_RESOLUTION_DEG")))
+    importAttrs.minResolutionDeg = Number(this.env.get("MC_MIN_RESOLUTION_DEG"))
     this.completeResolution(importAttrs)
   }
 

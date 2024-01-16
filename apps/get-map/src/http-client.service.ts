@@ -10,24 +10,26 @@ import { ImportPayload } from "@app/common/dto/libot/import-payload";
 import { ImportResPayload } from "@app/common/dto/libot/import-res-payload";
 import { MapError } from "@app/common/dto/libot/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
+import { ConfigService } from "@nestjs/config";
 
 
 @Injectable()
 export class LibotHttpClientService {
 
   private readonly logger = new Logger(LibotHttpClientService.name);
-  private RETRY_COUNT = Number(process.env.RETRY_COUNT ?? 3)
-  private WAIT_TIME = Number(process.env.WAIT_TIME ?? 0.3)
-  private EXPONENTIAL_TIMES = process.env.EXPONENTIAL_TIMES?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
+  private RETRY_COUNT = Number(this.env.get("RETRY_COUNT") ?? 3)
+  private WAIT_TIME = Number(this.env.get("WAIT_TIME") ?? 0.3)
+  private EXPONENTIAL_TIMES = this.env.get<string>("EXPONENTIAL_TIMES")?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
 
-
-
-
-  constructor(private readonly httpConfig: HttpService) {
+  constructor(
+    private readonly env: ConfigService,
+    private readonly httpConfig: HttpService
+  ) {
     httpConfig.axiosRef.defaults.headers = {
       ...this.httpConfig.axiosRef.defaults.headers,
-      "X-API-KEY": process.env.TOKEN_LIBOT,
+      "X-API-KEY": this.env.get<string>("TOKEN_LIBOT"),
     } as any
+
   }
 
   getHeaders(cType: "json" | "xml") {
@@ -39,7 +41,7 @@ export class LibotHttpClientService {
 
   async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
 
-    const url = process.env.LIBOT_DISCOVERY_URL
+    const url = this.env.get<string>("LIBOT_DISCOVERY_URL")
     let startPos = 1
     let productsRes: MCRasterRecordDto[] = []
 
@@ -84,7 +86,7 @@ export class LibotHttpClientService {
 
     this.logger.log("Execute export map to libot")
 
-    const url = process.env.LIBOT_EXPORT_URL
+    const url = this.env.get<string>("LIBOT_EXPORT_URL")
 
     const payload = ImportPayload.fromImportAttrs(imAttrs)
     try {
@@ -103,7 +105,7 @@ export class LibotHttpClientService {
   async getMapStatus(reqId: number) {
     this.logger.log(`Get import status for job id ${reqId} from libot`)
 
-    const url = process.env.LIBOT_EXPORT_URL + "/" + reqId
+    const url = this.env.get<string>("LIBOT_EXPORT_URL") + "/" + reqId
 
     try {
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
