@@ -10,9 +10,9 @@ import { ImportCreateService } from './import-create.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class InventoryService {
+export class MapUpdatesService {
 
-  private readonly logger = new Logger(InventoryService.name);
+  private readonly logger = new Logger(MapUpdatesService.name);
 
   constructor(
     private readonly env: ConfigService,

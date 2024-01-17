@@ -9,7 +9,7 @@ import { RepoService } from './repo.service';
 import { DatabaseModule } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity, MapConfigEntity } from '@app/common/database/entities';
-import { InventoryService } from './inventory.service';
+import { MapUpdatesService } from './map-updates.service';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -21,6 +21,6 @@ import { ScheduleModule } from '@nestjs/schedule';
     ScheduleModule.forRoot()
   ],
   controllers: [GetMapController],
-  providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService, InventoryService],
+  providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService, MapUpdatesService],
 })
 export class GetMapModule { }
