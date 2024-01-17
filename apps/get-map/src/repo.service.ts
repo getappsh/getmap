@@ -67,13 +67,13 @@ export class RepoService {
   }
 
   async getMapsIsUpdated(inventory: string[]) {
-    const unUpdateMaps = await this.mapRepo.find(
+    const isUpdateMaps = await this.mapRepo.find(
       {
         select: ["catalogId", "isUpdated"],
         where: { catalogId: In(inventory) }
       }
     )
-    return unUpdateMaps
+    return isUpdateMaps
   }
 
   async saveMap(importAttr: ImportAttributes, product?: ProductEntity): Promise<MapEntity> {
