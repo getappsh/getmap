@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColum
 
 @Entity("map_product")
 @Index("map_id_product_id_unique", ["id", "productId"], { unique: true })
-export class MapProductEntity {
+export class ProductEntity {
   
   @PrimaryColumn({ name: 'id' })
   id: string;
@@ -37,7 +37,7 @@ export class MapProductEntity {
   @Column({name: 'imaging_time_end_UTC', type: 'timestamptz', nullable: true})
   imagingTimeEndUTC: Date;
 
-  @Column({name: 'max_resolution_deg', nullable: true})
+  @Column({name: 'max_resolution_deg', type: "float8", nullable: true})
   maxResolutionDeg: number
 
   @Column({name: 'footprint'})

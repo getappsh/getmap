@@ -56,6 +56,13 @@ export enum DeliveryStatusEnum {
 
 }
 
+export enum PrepareStatusEnum {
+    START = "start",
+    IN_PROGRESS = "inProgress",
+    DONE = "done",
+    ERROR = "error",
+  }
+  
 export enum DeployStatusEnum {
     START = 'Start',
     DONE = 'Done',
@@ -83,6 +90,17 @@ export enum MapImportStatusEnum {
     PENDING = 'Pending',
     EXPIRED = 'Expired',
     ARCHIVED = 'Archived',
+}
+
+export enum LibotExportStatusEnum {
+    PENDING = 'PENDING',
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    ABORTED = "ABORTED",
+    PAUSED = "PAUSED",
+    FAILED = "FAILED",
+    EXPIRED = "EXPIRED",
+    ARCHIVED = "ARCHIVED",
 }
 
 export enum DeviceMapStateEnum {

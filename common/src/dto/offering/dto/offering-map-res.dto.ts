@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
 import { MapProductResDto } from "../../map/dto/map-product-res.dto";
+import { ErrorDto } from "../../error";
 
 
 
@@ -18,5 +19,9 @@ export class OfferingMapResDto {
   status: MapOfferingStatus
 
   @ApiProperty({required: false})
-  reason: string 
+  error: ErrorDto
+  
+  toString() {
+    return JSON.stringify(this)
+  }
 }
