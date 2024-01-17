@@ -19,7 +19,7 @@ const ormConfig = new DataSource({
   ],
   migrations: [join(__dirname, '../migration/*.ts')],
   logging: false,
-  synchronize: true,
+  synchronize: false,
   migrationsTableName: "history",
 });
 
