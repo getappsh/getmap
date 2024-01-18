@@ -43,6 +43,11 @@ export class MapConfigDto {
   @IsOptional()
   @IsNumber()
   periodicConfIntervalMins: number
+ 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  periodicMatomoIntervalMins: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -65,6 +70,8 @@ export class MapConfigDto {
     config.minAvailableSpaceBytes = cE.minAvailableSpaceBytes
     config.periodicInventoryIntervalMins = cE.periodicInventoryIntervalMins
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
+    config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
+    config.matomoUrl = cE.matomoUrl
 
     return config
   }
