@@ -51,6 +51,9 @@ export class ProductEntity {
 
   @Column({name: 'ingestionDate', type: 'timestamptz', nullable: true})
   ingestionDate: Date;
+  
+  @Column({name: 'is_checked_against_maps', type: 'timestamptz', nullable: true})
+  isCheckedAgainstMaps: Date;
 
   toString(){
     return JSON.stringify(this)
