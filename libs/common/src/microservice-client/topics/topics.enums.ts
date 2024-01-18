@@ -79,8 +79,8 @@ export const DeviceTopics = {
 } as const
 
 export const DeviceTopicsEmit = {
+    REGISTER_MAP_TO_DEVICE: `getapp-device.map.register-to-device${region}`,
     UPDATE_TLS_STATUS: `getapp-device.update.tls.status${region}`,
-    SAVE_MAP_DATA: `getapp-device.map.save-data${region}`,
     IM_PUSH_DISCOVERY: `getapp-device.im.push.discovery${region}`,
 } as const
 
