@@ -10,9 +10,12 @@ import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
+import { MicroserviceClient, MicroserviceName } from '@app/common/microservice-client';
+import { DeviceTopics, DeviceTopicsEmit } from '@app/common/microservice-client/topics';
+import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
 
 @Injectable()
 export class GetMapService implements OnApplicationBootstrap {
@@ -22,7 +25,8 @@ export class GetMapService implements OnApplicationBootstrap {
   constructor(
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
-    private readonly repo: RepoService
+    private readonly repo: RepoService,
+    @Inject(MicroserviceName.DISCOVERY_SERVICE) private readonly deviceClient: MicroserviceClient
   ) { }
 
   // Import
@@ -72,7 +76,10 @@ export class GetMapService implements OnApplicationBootstrap {
       }
 
       // TODO pass this function to device service and emit it in a topic
-      this.repo.registerMapToDevice(existsMap, importDto.deviceId)
+      const registerDto = new RegisterMapDto()
+      registerDto.deviceId = importDto.deviceId
+      registerDto.map = existsMap
+      this.deviceClient.emit(DeviceTopicsEmit.REGISTER_MAP_TO_DEVICE, registerDto)
       this.fromEntityToDto(existsMap, importRes)
 
 
@@ -132,6 +139,7 @@ export class GetMapService implements OnApplicationBootstrap {
     maps.forEach(m => {
       res.updates[m.catalogId] = m.isUpdated
     })
+    this.deviceClient.emit(DeviceTopics.DEVICE_MAPS, "jjj")
     return res
   }
 

@@ -11,6 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity, MapConfigEntity } from '@app/common/database/entities';
 import { MapUpdatesService } from './map-updates.service';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/common/microservice-client';
 
 @Module({
   imports: [
@@ -18,7 +19,11 @@ import { ScheduleModule } from '@nestjs/schedule';
     HttpModule,
     DatabaseModule,
     TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity]),
-    ScheduleModule.forRoot()
+    ScheduleModule.forRoot(),
+    MicroserviceModule.register({
+      name: MicroserviceName.DISCOVERY_SERVICE,
+      type: MicroserviceType.DISCOVERY,
+    })
   ],
   controllers: [GetMapController],
   providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService, MapUpdatesService],
