@@ -26,15 +26,15 @@ export class MapUpdatesService {
 
     this.logger.log(`Start cron gob to check if there updates for exists maps`)
 
-    const newProd = await this.getNewProduct()
-    if (newProd) {
-      try {
+    try {
+      const newProd = await this.getNewProduct()
+      if (newProd) {
         const mapUnUpdate = await this.handleMapsToCheck(newProd)
         await this.saveNewProducts(newProd)
         this.updateDevicesUnUpdate(mapUnUpdate)
-      } catch (error) {
-        this.logger.error(error)
       }
+    } catch (error) {
+      this.logger.error(`Job - maps are not obsolete - failed`, error)
     }
 
   }
@@ -43,19 +43,14 @@ export class MapUpdatesService {
 
     this.logger.log(`Checks if there a new product`)
 
-    try {
+    const recentProduct = await this.repo.getRecentProduct()
+    const discoveryAttrs = new DiscoveryAttributes()
+    discoveryAttrs.ingestionDate = recentProduct.ingestionDate
 
-      const recentProduct = await this.repo.getRecentProduct()
-      const discoveryAttrs = new DiscoveryAttributes()
-      discoveryAttrs.ingestionDate = recentProduct.ingestionDate
-
-      const records = await this.libot.getRecords(discoveryAttrs)
-      this.logger.debug("Convert records to products")
-      const products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
-      return products
-    } catch (error) {
-      this.logger.error(error)
-    }
+    const records = await this.libot.getRecords(discoveryAttrs)    
+    this.logger.debug("Convert records to products")
+    const products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+    return products
   }
 
 
@@ -81,7 +76,7 @@ export class MapUpdatesService {
       try {
         const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
         const selectedProd = this.create.extractMostCompatibleProduct(allProd, mapAttrs);
-        if (maps[i]?.mapProduct?.id !== selectedProd.id) {
+        if (maps[i]?.mapProduct?.ingestionDate !== selectedProd.ingestionDate) {
           const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);
           mapUnUpdate.push(savedMap);
         }

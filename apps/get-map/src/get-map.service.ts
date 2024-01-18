@@ -139,7 +139,11 @@ export class GetMapService implements OnApplicationBootstrap {
     maps.forEach(m => {
       res.updates[m.catalogId] = m.isUpdated
     })
-    this.deviceClient.emit(DeviceTopics.DEVICE_MAPS, "jjj")
+    inventoryDto.inventory.forEach(m => {
+      if (!res.updates[m]) {
+        res.updates[m] = false
+      }
+    })
     return res
   }
 
