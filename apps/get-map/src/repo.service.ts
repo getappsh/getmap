@@ -47,6 +47,7 @@ export class RepoService {
         isUpdated: true
       },
     })
+    this.logger.debug(`there are ${existMapCount} no obsolete maps `)
     return existMapCount
   }
 

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, Timeout } from '@nestjs/schedule';
 import { RepoService } from './repo.service';
 import { LibotHttpClientService } from './http-client.service';
 import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
@@ -28,10 +28,12 @@ export class MapUpdatesService {
 
     try {
       const newProd = await this.getNewProduct()
-      if (newProd) {
+      if (newProd && newProd.length > 0) {
         const mapUnUpdate = await this.handleMapsToCheck(newProd)
         await this.saveNewProducts(newProd)
         this.updateDevicesUnUpdate(mapUnUpdate)
+      } else {
+        this.logger.log(`there aren't new products`)
       }
     } catch (error) {
       this.logger.error(`Job - maps are not obsolete - failed`, error)
@@ -46,19 +48,22 @@ export class MapUpdatesService {
     const recentProduct = await this.repo.getRecentProduct()
     const discoveryAttrs = new DiscoveryAttributes()
     discoveryAttrs.ingestionDate = recentProduct.ingestionDate
+    const records = await this.libot.getRecords(discoveryAttrs)
 
-    const records = await this.libot.getRecords(discoveryAttrs)    
-    this.logger.debug("Convert records to products")
-    const products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+    let products = []
+    if (records && records.length > 0) {
+      this.logger.debug("Convert records to products")
+      products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+    }
     return products
   }
-
 
   async handleMapsToCheck(products: MapProductResDto[]) {
     const mapUnUpdate: MapEntity[] = []
     const take = Number(this.env.get("UPDATE_JOB_MAP_TAKE") ?? 25) // defined the limitation of maps on every iterator
     let skip = 0 // defined the offset map from where to state select
-    while (skip < await this.repo.getUnUpdatedMapsCount()) {
+    const mapCount = await this.repo.getUnUpdatedMapsCount()
+    while (skip < mapCount) {
       const maps = await this.repo.getUpdatedMaps(take, skip)
       await this.checkUpdatesByGivenMaps(maps, products, mapUnUpdate)
       skip = skip + take
@@ -87,7 +92,7 @@ export class MapUpdatesService {
   }
 
   async saveNewProducts(newProd: MapProductResDto[]) {
-    await this.repo.saveProducts(newProd)
+    return await this.repo.saveProducts(newProd)
   }
 
   async updateDevicesUnUpdate(mapUnUpdate: MapEntity[]) {
