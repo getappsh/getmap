@@ -76,9 +76,9 @@ export class Validators {
     return Validators.isValidPolygon(polygon) ? polygon : false
   }
 
-  static isPolygonAreaValid(poly: Feature): boolean {
+  static isPolygonAreaValid(poly: Feature, maxSize?: number): boolean {
     const polyArea = area(poly)
-    const maxArea = Number(process.env.MAX_POLYGON_SQUARE_METER) ?? 405573000
+    const maxArea = maxSize ?? Number(process.env.MAX_POLYGON_SQUARE_METER) ?? 405573000    
     return polyArea < 0 || polyArea <= maxArea
 
   }
