@@ -1,18 +1,23 @@
 import { MapConfigEntity } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class MapConfigDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  deliveryTimeout: number
+  deliveryTimeoutMins: number
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   maxMapSizeInMeter: number
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  maxMapSizeInMB: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -27,33 +32,39 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  downloadTimeoutSec: number
+  downloadTimeoutMins: number
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  periodicForInventoryJob: number
+  periodicInventoryIntervalMins: number
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  periodicForMapConf: number
+  periodicConfIntervalMins: number
 
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  minSpaceByte: number
+  minAvailableSpaceBytes: number
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoUrl: string
 
   static fromMapConfig(cE: MapConfigEntity) {
     const config = new MapConfigDto()
-    config.deliveryTimeout = cE.deliveryTimeout
+    config.deliveryTimeoutMins = cE.deliveryTimeoutMins
     config.downloadRetryTime = cE.downloadRetryTime
-    config.downloadTimeoutSec = cE.downloadTimeoutSec
+    config.downloadTimeoutMins = cE.downloadTimeoutMins
     config.maxMapSizeInMeter = cE.maxMapSizeInMeter
+    config.maxMapSizeInMB = cE.maxMapSizeInMB
     config.maxParallelDownloads = cE.maxParallelDownloads
-    config.minSpaceByte = cE.minSpaceByte
-    config.periodicForInventoryJob = cE.periodicForInventoryJob
-    config.periodicForMapConf = cE.periodicForMapConf
+    config.minAvailableSpaceBytes = cE.minAvailableSpaceBytes
+    config.periodicInventoryIntervalMins = cE.periodicInventoryIntervalMins
+    config.periodicConfIntervalMins = cE.periodicConfIntervalMins
 
     return config
   }

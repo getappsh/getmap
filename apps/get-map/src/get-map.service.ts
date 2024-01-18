@@ -166,14 +166,15 @@ export class GetMapService implements OnApplicationBootstrap {
 
     if (!eCong) {
       const defaults = new MapConfigDto()
-      defaults.deliveryTimeout = 30
+      defaults.deliveryTimeoutMins = 30
       defaults.downloadRetryTime = 3
-      defaults.downloadTimeoutSec = 30
+      defaults.downloadTimeoutMins = 30
       defaults.maxMapSizeInMeter = 405573000
+      defaults.maxMapSizeInMB = 500
       defaults.maxParallelDownloads = 1
-      defaults.minSpaceByte = 500000000
-      defaults.periodicForInventoryJob = 1440
-      defaults.periodicForMapConf = 1440
+      defaults.minAvailableSpaceBytes = 500000000
+      defaults.periodicInventoryIntervalMins = 1440
+      defaults.periodicConfIntervalMins = 1440
 
       try {
         this.logger.log(`sets defaults configuration for maps`)
