@@ -19,14 +19,10 @@ export class ImportStatusResDto extends ImportResDto {
     const res = new ImportStatusResDto()
     res.importRequestId = mE.catalogId
     res.status = mE.status
-    if(mE.status === MapImportStatusEnum.ERROR){
+    if (mE.status === MapImportStatusEnum.ERROR) {
       res.error = {} as ErrorDto
       res.error.message = mE.errorReason
     }
-
-    res.properties = new MapProperties()
-    res.properties.boundingBox = mE.boundingBox
-    res.properties.zoomLevel = mE.zoomLevel
 
     res.metaData = new MapMetadatatDto()
     res.metaData.jobId = mE.jobId
