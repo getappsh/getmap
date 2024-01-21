@@ -6,19 +6,15 @@ import { MapProperties } from "./create-import-dto";
 
 export class ImportResDto {
 
-  @ApiProperty()
- 
+  @ApiProperty({ required: false })
   importRequestId: string;
 
-  @ApiProperty({enum: MapImportStatusEnum})
+  @ApiProperty({ required: false, enum: MapImportStatusEnum })
   status: MapImportStatusEnum;
-  
-  @ApiProperty()
-  properties: MapProperties;
 
-  @ApiProperty({type: ErrorDto, required: false})
+  @ApiProperty({ type: ErrorDto, required: false })
   error: ErrorDto
- 
+
   toString() {
     return JSON.stringify(this);
   }
