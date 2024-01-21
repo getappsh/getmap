@@ -12,13 +12,14 @@ import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity, MapConfig
 import { MapUpdatesService } from './map-updates.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/common/microservice-client';
+import { MapUpdatesJobEntity } from '@app/common/database/entities/map-updatesCronJob';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     HttpModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity]),
+    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, MapUpdatesJobEntity]),
     ScheduleModule.forRoot(),
     MicroserviceModule.register({
       name: MicroserviceName.DISCOVERY_SERVICE,

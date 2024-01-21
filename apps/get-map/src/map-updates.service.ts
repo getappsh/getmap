@@ -8,6 +8,9 @@ import { MapEntity } from '@app/common/database/entities';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { ImportCreateService } from './import-create.service';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { MapUpdatesJobEntity } from '@app/common/database/entities/map-updatesCronJob';
 
 @Injectable()
 export class MapUpdatesService {
@@ -19,6 +22,7 @@ export class MapUpdatesService {
     private readonly repo: RepoService,
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
+    @InjectRepository(MapUpdatesJobEntity) private readonly mapUpdatesRepo: Repository<MapUpdatesJobEntity>
   ) { }
 
   @Cron(process.env.UPDATE_GOB_TIME ?? '0 0 */6 * * *')
@@ -27,6 +31,7 @@ export class MapUpdatesService {
     this.logger.log(`Start cron gob to check if there updates for exists maps`)
 
     try {
+      await this.tryToSaveJobStartTime()
       const newProd = await this.getNewProduct()
       if (newProd && newProd.length > 0) {
         const mapUnUpdate = await this.handleMapsToCheck(newProd)
@@ -36,9 +41,20 @@ export class MapUpdatesService {
         this.logger.log(`there aren't new products`)
       }
     } catch (error) {
-      this.logger.error(`Job - maps are not obsolete - failed`, error)
+      if (error.code = '23505') {
+        this.logger.log("Maps is obsolete cron job failed, because it started by another service")
+      } else {
+        this.logger.error(`Job - maps are not obsolete - failed`, error)
+      }
     }
 
+  }
+
+  async tryToSaveJobStartTime() {
+    this.logger.log(`try to save cron job start time`)
+    const time = this.mapUpdatesRepo.create()
+    time.time = new Date(Date.now())
+    await this.mapUpdatesRepo.save(time)
   }
 
   async getNewProduct(): Promise<MapProductResDto[]> {
