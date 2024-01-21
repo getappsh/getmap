@@ -6,12 +6,12 @@ export class MapMetadatatDto{
   @ApiProperty({required: false})
   @IsOptional()
   @IsString()
-  jobId: String
+  jobId: number
 
   @ApiProperty({required: false})
   @IsOptional()
   @IsString()
-  mapId: String
+  mapId: string
 
   @ApiProperty({required: false})
   @IsOptional()
@@ -26,6 +26,10 @@ export class MapMetadatatDto{
   @ApiProperty({type: 'integer', default: 0})
   @IsNumber()
   progress: number
+  
+  @ApiProperty({type: 'integer', default: 0})
+  @IsNumber()
+  size: number
 
   @ApiProperty({type: 'integer', default: 1})
   zoomLevel: number
