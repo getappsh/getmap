@@ -23,15 +23,15 @@ export class MapMetadatatDto{
   @IsDateString()
   exportEnd : Date
 
-  @ApiProperty({type: 'integer', default: 0})
+  @ApiProperty({required: false, type: 'integer', default: 0})
   @IsNumber()
   progress: number
   
-  @ApiProperty({type: 'integer', default: 0})
+  @ApiProperty({required: false, type: 'integer', default: 0})
   @IsNumber()
   size: number
 
-  @ApiProperty({type: 'integer', default: 1})
+  @ApiProperty({required: false, type: 'integer', default: 1})
   zoomLevel: number
 
   @ApiProperty({required: false})
