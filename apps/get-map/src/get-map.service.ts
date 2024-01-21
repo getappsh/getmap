@@ -114,15 +114,17 @@ export class GetMapService implements OnApplicationBootstrap {
         map = await this.create.handleGetMapStatus(map.jobId, map)
       }
       importRes = ImportStatusResDto.fromMapEntity(map)
+      this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
 
     } catch (error) {
+      console.log(error);
+      
       if (error instanceof MapError) {
         importRes.error = this.throwErrorDto(error.errorCode, error.message)
       } else {
         importRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
       }
     }
-    this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
 
     return importRes
   }
