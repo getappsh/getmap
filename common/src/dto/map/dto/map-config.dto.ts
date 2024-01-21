@@ -1,6 +1,6 @@
 import { MapConfigEntity } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class MapConfigDto {
 
@@ -58,6 +58,11 @@ export class MapConfigDto {
   @IsOptional()
   @IsString()
   matomoUrl: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsDate()
+  lastUpdate: Date
 
   static fromMapConfig(cE: MapConfigEntity) {
     const config = new MapConfigDto()
@@ -72,6 +77,7 @@ export class MapConfigDto {
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
     config.matomoUrl = cE.matomoUrl
+    config.lastUpdate = cE.lastUpdatedDate
 
     return config
   }
