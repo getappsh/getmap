@@ -1,6 +1,6 @@
 import { MapConfigEntity } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class MapConfigDto {
 
@@ -61,7 +61,6 @@ export class MapConfigDto {
   
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsDate()
   lastUpdate: Date
 
   static fromMapConfig(cE: MapConfigEntity) {
