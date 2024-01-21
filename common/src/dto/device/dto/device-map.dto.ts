@@ -2,12 +2,11 @@ import { DeviceEntity, DiscoveryMessageEntity } from "@app/common/database/entit
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 import { DeviceDto } from "./device.dto";
-import { MapDto } from "../../map";
 import { MapStateDto } from "../../map/dto/map-state.dto";
 
 export class DeviceMapDto extends DeviceDto {
 
-  @ApiProperty({ isArray: true, type: MapDto })
+  @ApiProperty({ isArray: true, type: MapStateDto })
   @IsNotEmpty()
   maps: MapStateDto[];
 
