@@ -82,6 +82,7 @@ export class MapUpdatesService {
         const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
         const selectedProd = this.create.extractMostCompatibleProduct(allProd, mapAttrs);
         if (maps[i]?.mapProduct?.ingestionDate !== selectedProd.ingestionDate) {
+          this.logger.debug(`map with catalogID ${maps[i].catalogId} is obsolete`)
           const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);
           mapUnUpdate.push(savedMap);
         }
@@ -92,7 +93,7 @@ export class MapUpdatesService {
   }
 
   async saveNewProducts(newProd: MapProductResDto[]) {
-    return await this.repo.saveProducts(newProd)
+    return await this.repo.saveProducts(newProd, true)
   }
 
   async updateDevicesUnUpdate(mapUnUpdate: MapEntity[]) {

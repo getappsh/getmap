@@ -181,15 +181,24 @@ export class RepoService {
     return await this.saveProducts(product)
   }
 
-  async saveProducts(newProd: MapProductResDto | MapProductResDto[]): Promise<ProductEntity | ProductEntity[]> {
+  async saveProducts(newProd: MapProductResDto | MapProductResDto[], isCheckedAgainstMaps: boolean = false): Promise<ProductEntity | ProductEntity[]> {
     const newProduct = this.productRepo.create(newProd)
+    if (isCheckedAgainstMaps) {
+      if (Array.isArray(newProduct)) {
+        newProduct.forEach(p => {
+          p.isCheckedAgainstMaps = new Date(Date.now())
+        });
+      } else {
+        newProduct.isCheckedAgainstMaps = new Date(Date.now())
+      }
+    }
     return await this.productRepo.save(newProduct)
   }
 
   async getRecentProduct() {
     this.logger.log(`Find the must recent available product`)
     return await this.productRepo.findOne({
-      where: { ingestionDate: Not(IsNull()) },
+      where: { ingestionDate: Not(IsNull()), isCheckedAgainstMaps: Not(IsNull()) },
       order: { ingestionDate: "DESC" }
     })
   }

@@ -74,7 +74,7 @@ export class ImportCreateService {
 
   extractMostCompatibleProduct(products: MapProductResDto[], attrs: ImportAttributes): MapProductResDto {
     this.logger.log(`select product according inclusion size`)
-    this.logger.debug(`Check footprint ${attrs.Points}`)
+    this.logger.verbose(`Check footprint ${attrs.Points}`)
 
     let selectedProduct: MapProductResDto;
     let recentAvailProduct: MapProductResDto;
@@ -111,8 +111,10 @@ export class ImportCreateService {
       } else {
         this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType} with ${sumInclusion} inclusion`)
       }
-    } else {
+    } else if (recentAvailProduct) {
       this.logger.debug(`select most updated product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType} with any inclusion`)
+    } else {
+      this.logger.debug(`map there is no intersect with product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType}`)
     }
     return selectedProduct ? selectedProduct : recentAvailProduct
   }
