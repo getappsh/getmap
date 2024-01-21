@@ -179,6 +179,7 @@ export class GetMapService implements OnApplicationBootstrap {
       defaults.minAvailableSpaceBytes = 500000000
       defaults.periodicInventoryIntervalMins = 1440
       defaults.periodicConfIntervalMins = 1440
+      defaults.periodicMatomoIntervalMins = 1440
 
       try {
         this.logger.log(`sets defaults configuration for maps`)
