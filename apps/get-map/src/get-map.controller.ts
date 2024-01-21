@@ -2,9 +2,7 @@ import { Controller, Logger } from '@nestjs/common';
 import { GetMapService } from './get-map.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { GetMapTopics } from '@app/common/microservice-client/topics';
-import { OfferingMapResDto } from '@app/common/dto/offering';
 import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@app/common/dto/map';
-import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 

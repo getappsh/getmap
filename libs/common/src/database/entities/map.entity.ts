@@ -69,6 +69,9 @@ export class MapEntity {
   @Column({ name: 'is_updated', type: "boolean", default: true })
   isUpdated: boolean
 
+  @Column({ name: 'last_check is_obsolete', type: "timestamptz", nullable: true })
+  lastCheckIsObsolete: Date
+
   @OneToMany(() => DeviceMapStateEntity, deviceMapStateEntity => deviceMapStateEntity.map, { cascade: true })
   devices: DeviceMapStateEntity[]
 

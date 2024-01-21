@@ -62,6 +62,18 @@ export class RepoService {
     return existMap
   }
 
+  async updateLastCheckForMaps(maps: MapEntity[]) {
+    this.logger.log(`Save the is obsolete check time for maps `)
+    try {
+      maps.forEach(m => {
+        m.lastCheckIsObsolete = new Date(Date.now())
+      })
+      await this.mapRepo.save(maps)
+    } catch (error) {
+      this.logger.error(error)
+    } 
+  }
+
   async updateMapAsUnUpdate(map: MapEntity) {
     map.isUpdated = false
     return await this.mapRepo.save(map)

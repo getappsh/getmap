@@ -144,6 +144,7 @@ export class GetMapService implements OnApplicationBootstrap {
         res.updates[m] = false
       }
     })
+    this.repo.updateLastCheckForMaps(maps)
     return res
   }
 
