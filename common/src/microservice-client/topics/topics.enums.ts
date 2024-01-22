@@ -8,9 +8,7 @@ export const UploadTopics = {
     LAST_VERSION: `getapp-upload.last-version${region}`
 } as const
 
-export const DiscoveryTopics = {
-    DISCOVERY_MESSAGE: `getapp-discovery.discovery-message${region}`
-} as const
+
 
 export const DeliveryTopics = {
     PREPARE_DELIVERY: `getapp-delivery.prepare${region}`,
