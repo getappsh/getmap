@@ -13,7 +13,7 @@ export class MapConfigDto {
   @IsOptional()
   @IsNumber()
   maxMapSizeInMeter: number
-  
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
@@ -43,7 +43,7 @@ export class MapConfigDto {
   @IsOptional()
   @IsNumber()
   periodicConfIntervalMins: number
- 
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
@@ -53,12 +53,17 @@ export class MapConfigDto {
   @IsOptional()
   @IsNumber()
   minAvailableSpaceBytes: number
-  
+
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   matomoUrl: string
-  
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  mapMinInclusionInPercentages: number
+
   @ApiProperty({ required: false })
   @IsOptional()
   lastUpdate: Date
@@ -76,11 +81,12 @@ export class MapConfigDto {
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
     config.matomoUrl = cE.matomoUrl
+    config.mapMinInclusionInPercentages = cE.mapMinInclusionInPercentages
     config.lastUpdate = cE.lastUpdatedDate
 
     return config
   }
-  
+
   toString() {
     return JSON.stringify(this)
   }
