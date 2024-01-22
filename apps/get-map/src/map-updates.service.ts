@@ -41,7 +41,7 @@ export class MapUpdatesService {
         this.logger.log(`there aren't new products`)
       }
     } catch (error) {
-      if (error.code = '23505') {
+      if (error.code === '23505') {
         this.logger.log("Maps is obsolete cron job failed, because it started by another service")
       } else {
         this.logger.error(`Job - maps are not obsolete - failed`, error)
@@ -63,7 +63,7 @@ export class MapUpdatesService {
 
     const recentProduct = await this.repo.getRecentProduct()
     const discoveryAttrs = new DiscoveryAttributes()
-    discoveryAttrs.ingestionDate = recentProduct.ingestionDate
+    discoveryAttrs.ingestionDate = recentProduct ? recentProduct.ingestionDate : new Date(this.env.get("MC_CSW_REF_DATE"))
     const records = await this.libot.getRecords(discoveryAttrs)
 
     let products = []

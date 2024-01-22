@@ -181,6 +181,8 @@ export class GetMapService implements OnApplicationBootstrap {
       defaults.periodicInventoryIntervalMins = 1440
       defaults.periodicConfIntervalMins = 1440
       defaults.periodicMatomoIntervalMins = 1440
+      defaults.mapMinInclusionInPercentages = 60
+      
 
       try {
         this.logger.log(`sets defaults configuration for maps`)
@@ -210,5 +212,7 @@ export class GetMapService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     this.setDefaultConfig()
   }
+
+
 
 }
