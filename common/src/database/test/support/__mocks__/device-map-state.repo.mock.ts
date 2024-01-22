@@ -2,6 +2,7 @@ import { deviceMapEntityStub } from "../stubs/device-map-state.stub";
 
 export const mockDeviceMapStateRepo = () => {
   return {
-    findOneBy: jest.fn().mockResolvedValue(deviceMapEntityStub()),
+    findOne: jest.fn().mockResolvedValue(deviceMapEntityStub()),
+    save: jest.fn().mockResolvedValue(deviceMapEntityStub()),
   }
 };
