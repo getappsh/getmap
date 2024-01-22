@@ -59,5 +59,11 @@ export class GetMapController {
     return await this.getMapService.setMapConfig(config)
   }
 
+  // Utils
+  @MessagePattern(GetMapTopics.CHECK_HEALTH)
+  healthCheckSuccess(){
+    return "Get map service is success"
+  }
+
 
 }
