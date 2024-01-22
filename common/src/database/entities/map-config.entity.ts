@@ -4,7 +4,7 @@ import { BaseEntity } from "./base.entity";
 @Entity("map_configs")
 export class MapConfigEntity extends BaseEntity {
 
-  @Column({ name: "delivery_timeout", nullable: true })
+  @Column({ name: "delivery_timeout_mins", nullable: true })
   deliveryTimeoutMins: number
 
   @Column({ name: "max_map_size_meter", nullable: true })
@@ -16,10 +16,10 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "max_parallel_download", nullable: true })
   maxParallelDownloads: number
 
-  @Column({ name: "download_retry", nullable: true })
+  @Column({ name: "download_retry_time", nullable: true })
   downloadRetryTime: number
 
-  @Column({ name: "download_timeout", nullable: true })
+  @Column({ name: "download_timeout_mins", nullable: true })
   downloadTimeoutMins: number
 
   @Column({ name: "inventory_job_periodic_mins", nullable: true })
@@ -36,6 +36,9 @@ export class MapConfigEntity extends BaseEntity {
 
   @Column({ name: "matomo_url", nullable: true })
   matomoUrl: string
+  
+  @Column({ name: "map_min_inclusion_in_percentages", nullable: true })
+  mapMinInclusionInPercentages: number
 
   toString() {
     return JSON.stringify(this)
