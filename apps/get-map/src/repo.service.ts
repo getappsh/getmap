@@ -71,7 +71,7 @@ export class RepoService {
       await this.mapRepo.save(maps)
     } catch (error) {
       this.logger.error(error)
-    } 
+    }
   }
 
   async updateMapAsUnUpdate(map: MapEntity) {
@@ -209,10 +209,17 @@ export class RepoService {
 
   async getRecentProduct() {
     this.logger.log(`Find the must recent available product`)
-    return await this.productRepo.findOne({
+    let recentProduct = await this.productRepo.findOne({
       where: { ingestionDate: Not(IsNull()), isCheckedAgainstMaps: Not(IsNull()) },
       order: { ingestionDate: "DESC" }
     })
+    if (!recentProduct) {
+      recentProduct = await this.productRepo.findOne({
+        where: { ingestionDate: Not(IsNull()) },
+        order: { ingestionDate: "DESC" }
+      })
+    }
+    return recentProduct
   }
 
   // Config
