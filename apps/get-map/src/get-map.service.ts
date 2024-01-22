@@ -116,7 +116,7 @@ export class GetMapService implements OnApplicationBootstrap {
       importRes = ImportStatusResDto.fromMapEntity(map)
       this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
 
-    } catch (error) {      
+    } catch (error) {
       if (error instanceof MapError) {
         importRes.error = this.throwErrorDto(error.errorCode, error.message)
       } else {
@@ -134,12 +134,13 @@ export class GetMapService implements OnApplicationBootstrap {
   // Inventory
   async getInventoryUpdates(inventoryDto: InventoryUpdatesReqDto) {
     const res = new InventoryUpdatesResDto()
-    const maps = await this.repo.getMapsIsUpdated(inventoryDto.inventory)
+    const inventoryIds = Object.keys(inventoryDto.inventory)
+    const maps = await this.repo.getMapsIsUpdated(inventoryIds)
     res.updates = {}
     maps.forEach(m => {
       res.updates[m.catalogId] = m.isUpdated
     })
-    inventoryDto.inventory.forEach(m => {
+    inventoryIds.forEach(m => {
       if (!res.updates[m]) {
         res.updates[m] = false
       }
@@ -182,7 +183,7 @@ export class GetMapService implements OnApplicationBootstrap {
       defaults.periodicConfIntervalMins = 1440
       defaults.periodicMatomoIntervalMins = 1440
       defaults.mapMinInclusionInPercentages = 60
-      
+
 
       try {
         this.logger.log(`sets defaults configuration for maps`)
