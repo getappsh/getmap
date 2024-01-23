@@ -75,7 +75,6 @@ export class GetMapService implements OnApplicationBootstrap {
         this.create.executeExport(importAttrs, existsMap)
       }
 
-      // TODO pass this function to device service and emit it in a topic
       const registerDto = new RegisterMapDto()
       registerDto.deviceId = importDto.deviceId
       registerDto.map = existsMap
