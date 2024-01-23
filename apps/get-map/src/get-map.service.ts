@@ -16,6 +16,7 @@ import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { MicroserviceClient, MicroserviceName } from '@app/common/microservice-client';
 import { DeviceTopics, DeviceTopicsEmit } from '@app/common/microservice-client/topics';
 import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
+import { InventoryDeviceUpdatesDto } from '@app/common/dto/map/dto/inventory-device-updates-dto';
 
 @Injectable()
 export class GetMapService implements OnApplicationBootstrap {
@@ -145,6 +146,9 @@ export class GetMapService implements OnApplicationBootstrap {
       }
     })
     this.repo.updateLastCheckForMaps(maps)
+
+    const deviceUpdates = InventoryDeviceUpdatesDto.fromInventoryUpdatesReq(inventoryDto, maps)
+    this.deviceClient.emit(DeviceTopicsEmit.MAP_INVENTORY, deviceUpdates)
     return res
   }
 
@@ -181,15 +185,15 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.periodicConfIntervalMins = 1440
     defaults.periodicMatomoIntervalMins = 1440
     defaults.mapMinInclusionInPercentages = 600
-    
+
     const defaultsToSave = Object.assign({}, defaults, eCong)
-    
+
     for (const prop in defaults) {
       if (defaults.hasOwnProperty(prop) && !defaultsToSave[prop]) {
         defaultsToSave[prop] = defaults[prop];
       }
     }
-    
+
     try {
       this.logger.log(`sets defaults configuration for maps`)
       await this.repo.setMapConfig(defaultsToSave)
@@ -197,7 +201,7 @@ export class GetMapService implements OnApplicationBootstrap {
       this.logger.error(error)
     }
   }
- 
+
   // Utils
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
     dto.importRequestId = entity.catalogId
