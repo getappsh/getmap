@@ -170,32 +170,35 @@ export class GetMapService implements OnApplicationBootstrap {
   async setDefaultConfig() {
     const eCong = await this.repo.getMapConfig()
 
-    if (!eCong) {
-      const defaults = new MapConfigDto()
-      defaults.deliveryTimeoutMins = 30
-      defaults.downloadRetryTime = 3
-      defaults.downloadTimeoutMins = 30
-      defaults.maxMapSizeInMeter = 405573000
-      defaults.maxMapSizeInMB = 500
-      defaults.maxParallelDownloads = 1
-      defaults.minAvailableSpaceBytes = 500000000
-      defaults.periodicInventoryIntervalMins = 1440
-      defaults.periodicConfIntervalMins = 1440
-      defaults.periodicMatomoIntervalMins = 1440
-      defaults.mapMinInclusionInPercentages = 60
-
-
-      try {
-        this.logger.log(`sets defaults configuration for maps`)
-        await this.repo.setMapConfig(defaults)
-      } catch (error) {
-        this.logger.error(error)
+    const defaults = new MapConfigDto()
+    defaults.deliveryTimeoutMins = 35
+    defaults.downloadRetryTime = 3
+    defaults.downloadTimeoutMins = 30
+    defaults.maxMapSizeInMeter = 405573000
+    defaults.maxMapSizeInMB = 500
+    defaults.maxParallelDownloads = 1
+    defaults.minAvailableSpaceBytes = 500000000
+    defaults.periodicInventoryIntervalMins = 1440
+    defaults.periodicConfIntervalMins = 1440
+    defaults.periodicMatomoIntervalMins = 1440
+    defaults.mapMinInclusionInPercentages = 600
+    
+    const defaultsToSave = Object.assign({}, defaults, eCong)
+    
+    for (const prop in defaults) {
+      if (defaults.hasOwnProperty(prop) && !defaultsToSave[prop]) {
+        defaultsToSave[prop] = defaults[prop];
       }
     }
-
-
+    
+    try {
+      this.logger.log(`sets defaults configuration for maps`)
+      await this.repo.setMapConfig(defaultsToSave)
+    } catch (error) {
+      this.logger.error(error)
+    }
   }
-
+ 
   // Utils
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
     dto.importRequestId = entity.catalogId
