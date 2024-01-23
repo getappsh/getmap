@@ -216,7 +216,7 @@ export class RepoService {
     if (!recentProduct) {
       recentProduct = await this.productRepo.findOne({
         where: { ingestionDate: Not(IsNull()) },
-        order: { ingestionDate: "DESC" }
+        order: { ingestionDate: "ASC" }
       })
     }
     return recentProduct

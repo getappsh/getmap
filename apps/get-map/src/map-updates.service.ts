@@ -37,7 +37,7 @@ export class MapUpdatesService {
         const mapUnUpdate = await this.handleMapsToCheck(newProd)
         await this.saveNewProducts(newProd)
         this.updateDevicesUnUpdate(mapUnUpdate)
-      } else {
+      } else if(newProd) {
         this.logger.log(`there aren't new products`)
       }
     } catch (error) {
@@ -62,16 +62,20 @@ export class MapUpdatesService {
     this.logger.log(`Checks if there a new product`)
 
     const recentProduct = await this.repo.getRecentProduct()
-    const discoveryAttrs = new DiscoveryAttributes()
-    discoveryAttrs.ingestionDate = recentProduct ? recentProduct.ingestionDate : new Date(this.env.get("MC_CSW_REF_DATE"))
-    const records = await this.libot.getRecords(discoveryAttrs)
+    if (recentProduct) {
+      const discoveryAttrs = new DiscoveryAttributes()
+      discoveryAttrs.ingestionDate = recentProduct.ingestionDate
+      const records = await this.libot.getRecords(discoveryAttrs)
 
-    let products = []
-    if (records && records.length > 0) {
-      this.logger.debug("Convert records to products")
-      products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+      let products = []
+      if (records && records.length > 0) {
+        this.logger.debug("Convert records to products")
+        products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+      }
+      return products
+    } else {
+      this.logger.warn(`"Maps is obsolete" did not work, because there are no existing maps`)
     }
-    return products
   }
 
   async handleMapsToCheck(products: MapProductResDto[]) {
