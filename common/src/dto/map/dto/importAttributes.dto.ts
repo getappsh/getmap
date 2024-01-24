@@ -1,5 +1,5 @@
 import { CreateImportDto } from "@app/common/dto/map"
-import { Validators } from "./utils/validators"
+import { Validators } from "../utils/validators"
 import { Feature, Polygon, bbox, bboxPolygon, polygon } from "@turf/turf"
 import { MapEntity } from "@app/common/database/entities"
 
@@ -48,7 +48,6 @@ export class ImportAttributes {
     } else {
       throw new Error("Points box values are invalid.");
     }
-    // this._BoundingBox = bBox
   }
 
   setBBoxString(bBox: string) {
