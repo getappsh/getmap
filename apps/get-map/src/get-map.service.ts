@@ -148,7 +148,7 @@ export class GetMapService implements OnApplicationBootstrap {
     this.repo.updateLastCheckForMaps(maps)
 
     const deviceUpdates = InventoryDeviceUpdatesDto.fromInventoryUpdatesReq(inventoryDto, maps)
-    this.deviceClient.emit(DeviceTopicsEmit.MAP_INVENTORY, deviceUpdates)
+    this.deviceClient.emit(DeviceTopicsEmit.REGISTER_MAP_INVENTORY, deviceUpdates)
     return res
   }
 
