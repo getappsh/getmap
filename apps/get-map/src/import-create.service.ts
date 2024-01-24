@@ -83,11 +83,11 @@ export class ImportCreateService {
 
     for (let i = 0; i < products.length; i++) {
 
-      // if contains the full polygon return it
-      if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(products[i].footprint))) {
-        selectedProduct = products[i]
-        break
-      }
+      // // if contains the full polygon return it
+      // if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(products[i].footprint))) {
+      //   selectedProduct = products[i]
+      //   break
+      // }
 
       // if it partial inclusion return the biggest inclusion if it more then @MIN_INCLUSION or the most recent
       if ((availPoly = Validators.isBBoxIntersectFootprint(attrs.Polygon, JSON.parse(products[i].footprint)))) {
