@@ -180,7 +180,7 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.maxMapSizeInMeter = 405573000
     defaults.maxMapSizeInMB = 500
     defaults.maxParallelDownloads = 1
-    defaults.minAvailableSpaceBytes = 500000000
+    defaults.minAvailableSpaceMB = 1000
     defaults.periodicInventoryIntervalMins = 1440
     defaults.periodicConfIntervalMins = 1440
     defaults.periodicMatomoIntervalMins = 1440
