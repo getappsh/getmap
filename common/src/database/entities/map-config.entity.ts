@@ -31,8 +31,8 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "matomo_periodic_mins", nullable: true })
   periodicMatomoIntervalMins: number
 
-  @Column({ name: "min_space_byte", nullable: true })
-  minAvailableSpaceBytes: number
+  @Column({ name: "min_space_mb", nullable: true })
+  minAvailableSpaceMB: number
 
   @Column({ name: "matomo_url", nullable: true })
   matomoUrl: string
