@@ -174,7 +174,7 @@ export class GetMapService implements OnApplicationBootstrap {
     const eCong = await this.repo.getMapConfig()
 
     const defaults = new MapConfigDto()
-    defaults.deliveryTimeoutMins = 35
+    defaults.deliveryTimeoutMins = 30
     defaults.downloadRetryTime = 3
     defaults.downloadTimeoutMins = 30
     defaults.MaxMapAreaSqKm = 100
