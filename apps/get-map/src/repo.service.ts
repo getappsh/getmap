@@ -230,7 +230,7 @@ export class RepoService {
 
   async setMapConfig(config: MapConfigDto) {
     // eConfig === exits config
-    this.logger.debug(`Find exits config and update it`)
+    this.logger.debug(`Find exits config and update it or create it`)
     let eConfig = await this.getMapConfig()
     if (!eConfig) {
       eConfig = this.configRepo.create()
