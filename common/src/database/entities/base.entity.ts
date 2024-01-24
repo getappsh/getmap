@@ -9,6 +9,6 @@ export abstract class BaseEntity {
   @CreateDateColumn()
   createdDate: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({type: 'timestamptz'})
   lastUpdatedDate: Date;
 }

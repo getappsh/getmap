@@ -7,8 +7,8 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "delivery_timeout_mins", nullable: true })
   deliveryTimeoutMins: number
 
-  @Column({ name: "max_map_size_meter", nullable: true })
-  maxMapSizeInMeter: number
+  @Column({ name: "max_map_area_sq_km", nullable: true })
+  MaxMapAreaSqKm: number
 
   @Column({ name: "max_map_size_MB", nullable: true })
   maxMapSizeInMB: number
@@ -31,8 +31,8 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "matomo_periodic_mins", nullable: true })
   periodicMatomoIntervalMins: number
 
-  @Column({ name: "min_space_byte", nullable: true })
-  minAvailableSpaceBytes: number
+  @Column({ name: "min_space_mb", nullable: true })
+  minAvailableSpaceMB: number
 
   @Column({ name: "matomo_url", nullable: true })
   matomoUrl: string

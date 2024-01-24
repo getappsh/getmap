@@ -12,7 +12,7 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  maxMapSizeInMeter: number
+  MaxMapAreaSqKm: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -52,7 +52,7 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  minAvailableSpaceBytes: number
+  minAvailableSpaceMB: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -73,10 +73,10 @@ export class MapConfigDto {
     config.deliveryTimeoutMins = cE.deliveryTimeoutMins
     config.downloadRetryTime = cE.downloadRetryTime
     config.downloadTimeoutMins = cE.downloadTimeoutMins
-    config.maxMapSizeInMeter = cE.maxMapSizeInMeter
+    config.MaxMapAreaSqKm = cE.MaxMapAreaSqKm
     config.maxMapSizeInMB = cE.maxMapSizeInMB
     config.maxParallelDownloads = cE.maxParallelDownloads
-    config.minAvailableSpaceBytes = cE.minAvailableSpaceBytes
+    config.minAvailableSpaceMB = cE.minAvailableSpaceMB
     config.periodicInventoryIntervalMins = cE.periodicInventoryIntervalMins
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
