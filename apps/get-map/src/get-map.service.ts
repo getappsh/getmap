@@ -60,7 +60,7 @@ export class GetMapService implements OnApplicationBootstrap {
     let existsMap: MapEntity;
     try {
 
-      this.create.isValidBbox(importAttrs)
+      await this.create.isValidBbox(importAttrs)
 
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
