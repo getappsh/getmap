@@ -32,11 +32,10 @@ export class ImportCreateService {
   async isValidBbox(attrs: ImportAttributes) {
     this.logger.debug("checked if area size is valid")
 
-    const { maxMapSizeInMeter } = await this.repo.getMapConfig()
+    const { MaxMapAreaSqKm } = await this.repo.getMapConfig()
 
     if ((attrs.pattern === "bbox" && !Validators.isBBoxAreaValid(attrs.BBox as number[])) ||
-      attrs.pattern === "polygon" && !Validators.isPolygonAreaValid(attrs.Polygon, maxMapSizeInMeter)) {
-      // const mes = "אזור גדול מדי להפצה, הקטן את הבקשה ונסה שנית"
+      attrs.pattern === "polygon" && !Validators.isPolygonAreaValid(attrs.Polygon, MaxMapAreaSqKm)) {
       const mes = "Area too large to distribute, reduce request and try again"
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_AREA_TOO_LARGE, mes)

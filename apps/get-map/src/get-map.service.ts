@@ -177,7 +177,7 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.deliveryTimeoutMins = 35
     defaults.downloadRetryTime = 3
     defaults.downloadTimeoutMins = 30
-    defaults.maxMapSizeInMeter = 405573000
+    defaults.MaxMapAreaSqKm = 100
     defaults.maxMapSizeInMB = 500
     defaults.maxParallelDownloads = 1
     defaults.minAvailableSpaceMB = 1000
