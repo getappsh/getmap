@@ -184,7 +184,7 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.periodicInventoryIntervalMins = 1440
     defaults.periodicConfIntervalMins = 1440
     defaults.periodicMatomoIntervalMins = 1440
-    defaults.mapMinInclusionInPercentages = 600
+    defaults.mapMinInclusionInPercentages = 60
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
