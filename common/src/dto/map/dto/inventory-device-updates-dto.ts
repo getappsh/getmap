@@ -10,6 +10,7 @@ export class InventoryDeviceUpdatesDto extends InventoryUpdatesReqDto {
     deviceUpdates.deviceId = req.deviceId
     deviceUpdates.inventory = req.inventory
     deviceUpdates.maps = maps
+    return deviceUpdates
   }
 
   toString(): string {
