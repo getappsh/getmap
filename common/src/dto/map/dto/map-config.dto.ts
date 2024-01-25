@@ -54,15 +54,26 @@ export class MapConfigDto {
   @IsNumber()
   minAvailableSpaceMB: number
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  matomoUrl: string
-
+  
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   mapMinInclusionInPercentages: number
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoUrl: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoGoalId: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoSiteId: string
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -80,8 +91,10 @@ export class MapConfigDto {
     config.periodicInventoryIntervalMins = cE.periodicInventoryIntervalMins
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
-    config.matomoUrl = cE.matomoUrl
     config.mapMinInclusionInPercentages = cE.mapMinInclusionInPercentages
+    config.matomoUrl = cE.matomoUrl
+    config.matomoGoalId = cE.matomoGoalId
+    config.matomoSiteId = cE.matomoSiteId
     config.lastUpdate = cE.lastUpdatedDate
 
     return config
