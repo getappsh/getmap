@@ -100,7 +100,7 @@ export class MapUpdatesService {
 
       try {
         const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
-        const selectedProd = this.create.extractMostCompatibleProduct(allProd, mapAttrs);
+        const selectedProd = await this.create.extractMostCompatibleProduct(allProd, mapAttrs);
         if (maps[i]?.mapProduct?.ingestionDate.toISOString() !== selectedProd.ingestionDate.toISOString()) {   
           this.logger.debug(`map with catalogID ${maps[i].catalogId} is obsolete`)
           const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);

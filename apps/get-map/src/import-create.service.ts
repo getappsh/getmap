@@ -17,9 +17,6 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ImportCreateService {
 
-  private MIN_INCLUSION = Number(this.env.get("MIN_INCLUSION_FOR_MAP") ?? 60)
-
-
   private readonly logger = new Logger(ImportCreateService.name);
 
   constructor(
@@ -59,7 +56,7 @@ export class ImportCreateService {
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_BBOX_INVALID, mes)
     }
-    selectedProduct = this.extractMostCompatibleProduct(availableProducts, importAttrs)
+    selectedProduct = await this.extractMostCompatibleProduct(availableProducts, importAttrs)
 
     if (!selectedProduct) {
       const mes = `The requested bbox ${importAttrs.Points} is not contained in any polygon`
@@ -70,16 +67,19 @@ export class ImportCreateService {
     return selectedProduct
   }
 
-  extractMostCompatibleProduct(products: MapProductResDto[], attrs: ImportAttributes): MapProductResDto {
+  async extractMostCompatibleProduct(products: MapProductResDto[], attrs: ImportAttributes): Promise<MapProductResDto> {
     this.logger.log(`select product according inclusion size`)
     this.logger.verbose(`Check footprint ${attrs.Points}`)
 
+    const { mapMinInclusionInPercentages } = await this.repo.getMapConfig()
     let selectedProduct: MapProductResDto;
     let recentAvailProduct: MapProductResDto;
     let sumInclusion: number = 0
     let availPoly: Feature<Polygon | MultiPolygon> | null
 
     for (let i = 0; i < products.length; i++) {
+      console.log(products[i].productName);
+
 
       // // if contains the full polygon return it
       // if (Validators.isBBoxInFootprint(attrs.Polygon, JSON.parse(products[i].footprint))) {
@@ -95,10 +95,10 @@ export class ImportCreateService {
         }
 
         const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
-        if (cSumInclusion >= this.MIN_INCLUSION &&
-          Math.max(sumInclusion, cSumInclusion) === cSumInclusion) {
+
+        if (cSumInclusion >= mapMinInclusionInPercentages) {
           selectedProduct = products[i]
-          sumInclusion = cSumInclusion
+          break
         }
       }
     }
@@ -114,6 +114,7 @@ export class ImportCreateService {
     } else {
       this.logger.debug(`map there is no intersect with product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType}`)
     }
+
     return selectedProduct ? selectedProduct : recentAvailProduct
   }
 

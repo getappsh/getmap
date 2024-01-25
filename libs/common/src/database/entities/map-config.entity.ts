@@ -27,18 +27,24 @@ export class MapConfigEntity extends BaseEntity {
 
   @Column({ name: "map_conf_periodic_mins", nullable: true })
   periodicConfIntervalMins: number
-  
+
   @Column({ name: "matomo_periodic_mins", nullable: true })
   periodicMatomoIntervalMins: number
 
   @Column({ name: "min_space_mb", nullable: true })
   minAvailableSpaceMB: number
 
-  @Column({ name: "matomo_url", nullable: true })
-  matomoUrl: string
-  
   @Column({ name: "map_min_inclusion_in_percentages", nullable: true })
   mapMinInclusionInPercentages: number
+
+  @Column({ name: "matomo_url", nullable: true })
+  matomoUrl: string
+
+  @Column({ name: "matomo_goal_id", nullable: true })
+  matomoGoalId: string
+
+  @Column({ name: "matomo_site_id", nullable: true })
+  matomoSiteId: string
 
   toString() {
     return JSON.stringify(this)
