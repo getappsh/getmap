@@ -1,4 +1,3 @@
-import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { CreateImportDto, CreateImportResDto, ImportStatusResDto, InventoryUpdatesReqDto, InventoryUpdatesResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
@@ -14,9 +13,10 @@ import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/comm
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { MicroserviceClient, MicroserviceName } from '@app/common/microservice-client';
-import { DeviceTopics, DeviceTopicsEmit } from '@app/common/microservice-client/topics';
+import { DeviceTopicsEmit } from '@app/common/microservice-client/topics';
 import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
 import { InventoryDeviceUpdatesDto } from '@app/common/dto/map/dto/inventory-device-updates-dto';
+import { MapUpdatesService } from './map-updates.service';
 
 @Injectable()
 export class GetMapService implements OnApplicationBootstrap {
@@ -27,7 +27,8 @@ export class GetMapService implements OnApplicationBootstrap {
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
     private readonly repo: RepoService,
-    @Inject(MicroserviceName.DISCOVERY_SERVICE) private readonly deviceClient: MicroserviceClient
+    private readonly mapUpdates: MapUpdatesService,
+    @Inject(MicroserviceName.DISCOVERY_SERVICE) private readonly deviceClient: MicroserviceClient,
   ) { }
 
   // Import
@@ -75,8 +76,8 @@ export class GetMapService implements OnApplicationBootstrap {
         existsMap = await this.repo.saveMap(importAttrs, entityForMap)
         this.create.executeExport(importAttrs, existsMap)
       }
-      
-      if(!existsMap.isUpdated){
+
+      if (!existsMap.isUpdated) {
         existsMap = await this.repo.updateMapAsUpdate(existsMap)
       }
 
@@ -204,6 +205,10 @@ export class GetMapService implements OnApplicationBootstrap {
     } catch (error) {
       this.logger.error(error)
     }
+  }
+
+  startMapUpdatedCronJob() {
+    this.mapUpdates.checkMapsUpdates()
   }
 
   // Utils
