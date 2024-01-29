@@ -1,12 +1,18 @@
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
-@Entity({name: "map_updates_cron_job_time"})
-export class MapUpdatesJobEntity{
-  
+@Entity({ name: "cron_job_time_management" })
+@Unique("start_time_job_name_unique_constraint", ["startTime", "name"])
+export class JobsEntity {
+
   @PrimaryGeneratedColumn()
   id: number
-  
-  @Column({name: "start_time", precision: 0 })
-  @Unique(["start_time"])
-  time: Date
+
+  @Column({ name: "job_name"})
+  name: string
+
+  @Column({ name: "start_time", type: "timestamptz", precision: 0 })
+  startTime: Date
+
+  @Column({ name: "end_time", type: "timestamptz", precision: 0, nullable: true })
+  endTime: Date
 }
