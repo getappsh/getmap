@@ -74,6 +74,10 @@ export const GetMapTopics = {
     CHECK_HEALTH: `getapp-map.check-health${region}`
 } as const
 
+export const GetMapTopicsEmit = {
+    MAP_UPDATES_JOB_START: `getapp-device.map.job.updates.start${region}`,
+} as const
+
 export const DeviceTopics = {
     All_DEVICES: `getapp-device.all${region}`,
     DEVICE_MAPS: `getapp-device.device.maps${region}`,
