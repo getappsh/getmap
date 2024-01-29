@@ -42,18 +42,13 @@ export class RepoService {
   }
 
   async getUnUpdatedMapsCount(): Promise<number> {
-    const existMapCount = await this.mapRepo.count({
-      where: {
-        isUpdated: true
-      },
-    })
-    this.logger.debug(`there are ${existMapCount} no obsolete maps `)
+    const existMapCount = await this.mapRepo.count()
+    this.logger.debug(`there are ${existMapCount} maps `)
     return existMapCount
   }
 
-  async getUpdatedMaps(take?: number, skip?: number): Promise<MapEntity[]> {
+  async getMapsASC(take?: number, skip?: number): Promise<MapEntity[]> {
     const existMap = await this.mapRepo.find({
-      where: { isUpdated: true },
       relations: { mapProduct: true },
       order: { createDateTime: "ASC" },
       take,
@@ -75,11 +70,13 @@ export class RepoService {
   }
 
   async updateMapAsUnUpdate(map: MapEntity) {
+    this.logger.debug(`Save map ${map.catalogId} as obsolete`)
     map.isUpdated = false
     return await this.mapRepo.save(map)
   }
 
   async updateMapAsUpdate(map: MapEntity) {
+    this.logger.debug(`Save map ${map.catalogId} as updated`)
     map.isUpdated = true
     return await this.mapRepo.save(map)
   }
@@ -188,26 +185,36 @@ export class RepoService {
   }
 
   // Products
-  async getOrSaveProduct(product: MapProductResDto) {
+  async getOrCreateProduct(product: MapProductResDto) {
 
     const existProduct = await this.productRepo.findOneBy({ id: product.id })
 
     if (existProduct) {
       return existProduct
     }
-    return await this.saveProducts(product)
+    return await this.createAndSaveProducts(product)
   }
 
-  async saveProducts(newProd: MapProductResDto | MapProductResDto[], isCheckedAgainstMaps: boolean = false): Promise<ProductEntity | ProductEntity[]> {
-    const newProduct = this.productRepo.create(newProd)
-    if (isCheckedAgainstMaps) {
-      if (Array.isArray(newProduct)) {
-        newProduct.forEach(p => {
-          p.isCheckedAgainstMaps = new Date(Date.now())
-        });
-      } else {
-        newProduct.isCheckedAgainstMaps = new Date(Date.now())
-      }
+  // TODO interface for options parameter
+  async createAndSaveProducts(newProd: MapProductResDto | MapProductResDto[], options?: any): Promise<ProductEntity | ProductEntity[]> {
+    let products = Array.isArray(newProd) ? newProd : [newProd]
+    const newProduct = this.productRepo.create(products)
+    if (options?.isCheckedAgainstMaps) {
+      newProduct.forEach(p => {
+        p.isCheckedAgainstMaps = new Date(Date.now())
+      });
+    }
+    return await this.productRepo.save(newProduct)
+  }
+
+  // TODO interface for options parameter
+  async updateProducts(prod: MapProductResDto | MapProductResDto[], options?: any): Promise<ProductEntity[]> {
+    let products = Array.isArray(prod) ? prod : [prod]
+    const newProduct = await this.productRepo.find({ where: { id: In(products.map(p => p.id)) } })
+    if (options?.isCheckedAgainstMaps) {
+      newProduct.forEach(p => {
+        p.isCheckedAgainstMaps = new Date(Date.now())
+      });
     }
     return await this.productRepo.save(newProduct)
   }
