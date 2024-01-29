@@ -79,6 +79,11 @@ export class RepoService {
     return await this.mapRepo.save(map)
   }
 
+  async updateMapAsUpdate(map: MapEntity) {
+    map.isUpdated = true
+    return await this.mapRepo.save(map)
+  }
+
   async getMapsIsUpdated(inventory: string[]) {
     const isUpdateMaps = await this.mapRepo.find(
       {

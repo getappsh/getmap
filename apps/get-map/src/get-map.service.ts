@@ -75,6 +75,10 @@ export class GetMapService implements OnApplicationBootstrap {
         existsMap = await this.repo.saveMap(importAttrs, entityForMap)
         this.create.executeExport(importAttrs, existsMap)
       }
+      
+      if(!existsMap.isUpdated){
+        existsMap = await this.repo.updateMapAsUpdate(existsMap)
+      }
 
       const registerDto = new RegisterMapDto()
       registerDto.deviceId = importDto.deviceId
