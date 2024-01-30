@@ -4,7 +4,7 @@ export class UpdateJobTable1706540862016 implements MigrationInterface {
     name = 'UpdateJobTable1706540862016'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE "map_updates_cron_job_time" ALTER COLUMN "start_time" TYPE TIMESTAMP WITH TIME ZONE`);
+        await queryRunner.query(`ALTER TABLE "map_updates_cron_job_time" ALTER COLUMN "start_time" TYPE TIMESTAMP(0) WITH TIME ZONE`);
         await queryRunner.query(`ALTER TABLE "map_updates_cron_job_time" ALTER COLUMN "start_time" SET NOT NULL`);
         await queryRunner.query(`ALTER TABLE "map_updates_cron_job_time" ADD "job_name" character varying`);
         await queryRunner.query(`DELETE FROM "map_updates_cron_job_time" WHERE "job_name" IS NULL`);
