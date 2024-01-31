@@ -159,7 +159,7 @@ export class MapUpdatesService {
       // allProd.push(maps[i].mapProduct);
 
       try {
-        const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
+        const mapAttrs = ImportAttributes.fromFootprint(maps[i]);
         const selectedProd = await this.create.extractMostCompatibleProduct(products, mapAttrs);
 
         if (!selectedProd) {

@@ -67,9 +67,9 @@ export class ImportAttributes {
     return attr
   }
   
-  static fromMapEntity(mE: MapEntity): ImportAttributes {
+  static fromFootprint(mE: MapEntity): ImportAttributes {
     const attr = new ImportAttributes()
-    attr.Points = mE.boundingBox
+    attr.Points = mE.footprint
     return attr
   }
 }

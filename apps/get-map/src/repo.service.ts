@@ -45,13 +45,16 @@ export class RepoService {
   }
 
   async getUnUpdatedMapsCount(): Promise<number> {
-    const existMapCount = await this.mapRepo.count()
-    this.logger.debug(`there are ${existMapCount} maps `)
+    const existMapCount = await this.mapRepo.count({
+      where: { footprint: Not(IsNull()) }
+    })
+    this.logger.debug(`there are ${existMapCount} completed maps `)
     return existMapCount
   }
 
   async getMapsASC(take?: number, skip?: number): Promise<MapEntity[]> {
     const existMap = await this.mapRepo.find({
+      where: { footprint: Not(IsNull()) },
       relations: { mapProduct: true },
       order: { createDateTime: "ASC" },
       take,
@@ -154,7 +157,7 @@ export class RepoService {
               const mes = `download map json file failed - ${error.toString()}`
               this.logger.error(mes)
               existMap[i].status = MapImportStatusEnum.ERROR
-              existMap[i].errorReason = mes 
+              existMap[i].errorReason = mes
             }
           }
         }
