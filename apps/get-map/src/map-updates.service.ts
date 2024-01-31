@@ -41,7 +41,7 @@ export class MapUpdatesService {
         // const newProd = await this.getNewProduct()
         if (newProd && newProd.length > 0) {
           await this.handleMapsToCheck(newProd)
-          await this.saveNewProducts(newProd)
+          // await this.saveNewProducts(newProd)
         } else if (newProd) {
           this.logger.log(`there aren't new products`)
         }
@@ -187,9 +187,12 @@ export class MapUpdatesService {
   }
 
   async saveNewProducts(newProd: MapProductResDto[]) {
-    const updatedP = await this.repo.updateProducts(newProd, { isCheckedAgainstMaps: true })
-    const pToCreate = newProd.filter(nP => !updatedP.find(uP => uP.id === nP.id))
-    await this.repo.createAndSaveProducts(pToCreate, { isCheckedAgainstMaps: true })
+    // this.logger.log(`Update or create the checked products`)
+    // const updatedP = await this.repo.updateProducts(newProd, { isCheckedAgainstMaps: true })
+    // const pToCreate = newProd.filter(nP => !updatedP.find(uP => uP.id === nP.id))
+    // await this.repo.createAndSaveProducts(pToCreate, { isCheckedAgainstMaps: true })
+    
+    await this.repo.createAndSaveProducts(newProd, { isCheckedAgainstMaps: true })
   }
 
   async updateDevicesUnUpdate(mapUnUpdate: MapEntity[]) {

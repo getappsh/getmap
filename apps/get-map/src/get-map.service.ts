@@ -66,15 +66,17 @@ export class GetMapService implements OnApplicationBootstrap {
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
 
-      this.logger.debug("save or update map entity")
       existsMap = await this.repo.getMap(importAttrs)
 
       if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrCreateProduct(product)
         const entityForMap = Array.isArray(pEntity) ? pEntity[0] : pEntity
         // TODO in case of error or cancel needs to find the exist map
+        this.logger.debug("Save map entity")
         existsMap = await this.repo.saveMap(importAttrs, entityForMap)
         this.create.executeExport(importAttrs, existsMap)
+      } else {
+        this.logger.debug(`Return map ${existsMap.catalogId} from cache`)
       }
 
       if (!existsMap.isUpdated) {
@@ -163,7 +165,8 @@ export class GetMapService implements OnApplicationBootstrap {
     if (!configs) {
       this.logger.warn(`There is not exist maps configuration`)
     }
-    const configRes = MapConfigDto.fromMapConfig(configs)
+    const configRes = MapConfigDto.fromMapConfig(configs)    
+    configRes.lastCheckingMapUpdatesDate = await this.repo.getLastMapUpdatesChecking()
     return configRes
   }
 

@@ -6,9 +6,11 @@ import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
+import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 
 @Injectable()
 export class RepoService {
+
 
   private readonly logger = new Logger(RepoService.name);
 
@@ -17,7 +19,8 @@ export class RepoService {
     @InjectRepository(DeviceEntity) private readonly deviceRepo: Repository<DeviceEntity>,
     @InjectRepository(DeviceMapStateEntity) private readonly deviceMapRepo: Repository<DeviceMapStateEntity>,
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
-    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>
+    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
+    @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>
   ) { }
 
   // Maps
@@ -253,34 +256,8 @@ export class RepoService {
     await this.configRepo.save(eConfig)
   }
 
-  async registerMapToDevice(existsMap: MapEntity, deviceId: string) {
-    try {
-      let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
-      // let device = await this.deviceRepo.createQueryBuilder("device")
-      //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
-      //   .leftJoinAndSelect("device.maps", "dm")
-      //   .leftJoinAndSelect("dm.map", "map")
-      //   .where("device.ID = :deviceId", { deviceId })
-      //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
-      //   .getOne();
-
-      if (!device) {
-        const newDevice = this.deviceRepo.create()
-        newDevice.ID = deviceId
-        device = await this.deviceRepo.save(newDevice)
-      }
-
-      if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
-
-        let deviceMap = this.deviceMapRepo.create()
-        deviceMap.device = device
-        deviceMap.map = existsMap
-        deviceMap.state = DeviceMapStateEnum.IMPORT
-        this.deviceMapRepo.save(deviceMap)
-      }
-
-    } catch (error) {
-      this.logger.error(error.toString())
-    }
+  async getLastMapUpdatesChecking(): Promise<Date> {
+    const jobTime = await this.mapUpdatesRepo.findOne({ where: { name: "mapUpdates", endTime: Not(IsNull()) }, order: { startTime: "DESC" } })
+    return jobTime ? new Date(jobTime.endTime) : null
   }
 }
