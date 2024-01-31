@@ -51,7 +51,7 @@ export class MapEntity {
   @Column({ name: 'progress', type: 'int', nullable: true })
   progress: number
 
-  @Column({ name: 'size', type: 'int', nullable: true })
+  @Column({ name: 'size', type: 'bigint', nullable: true })
   size: number
 
   @Column({ name: 'export_start', type: 'timestamptz', nullable: true })
