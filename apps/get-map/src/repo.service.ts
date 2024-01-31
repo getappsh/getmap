@@ -16,8 +16,6 @@ export class RepoService {
 
   constructor(
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
-    @InjectRepository(DeviceEntity) private readonly deviceRepo: Repository<DeviceEntity>,
-    @InjectRepository(DeviceMapStateEntity) private readonly deviceMapRepo: Repository<DeviceMapStateEntity>,
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
     @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>
@@ -146,6 +144,7 @@ export class RepoService {
           if (art.type === ArtifactsLibotEnum.GPKG) {
             cMap.fileName = art.name
             cMap.packageUrl = art.url
+            cMap.size = art.size
           }
         })
         cMap.progress = 100
