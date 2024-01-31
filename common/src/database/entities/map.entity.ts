@@ -34,6 +34,9 @@ export class MapEntity {
   @Column({ name: 'bounding_box', nullable: true })
   boundingBox: string;
 
+  @Column({ name: 'foot_print', nullable: true })
+  footprint: string;
+
   @Column({ name: 'file_name', nullable: true })
   fileName: string;
 
