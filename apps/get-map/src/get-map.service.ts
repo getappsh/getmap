@@ -176,9 +176,10 @@ export class GetMapService implements OnApplicationBootstrap {
 
   async setMapConfig(config: MapConfigDto) {
     try {
-      await this.repo.setMapConfig(config)
+      return await this.repo.setMapConfig(config)
     } catch (error) {
       this.logger.error(error)
+      return error
     }
   }
 

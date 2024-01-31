@@ -264,7 +264,7 @@ export class RepoService {
     for (const key in config) {
       eConfig[key] = config[key]
     }
-    await this.configRepo.save(eConfig)
+    return await this.configRepo.save(eConfig)
   }
 
   async getLastMapUpdatesChecking(): Promise<Date> {
