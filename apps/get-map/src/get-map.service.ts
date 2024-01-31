@@ -120,8 +120,12 @@ export class GetMapService implements OnApplicationBootstrap {
 
         map = await this.create.handleGetMapStatus(map.jobId, map)
       }
-      importRes = ImportStatusResDto.fromMapEntity(map)
-      this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
+      if (map) {
+        importRes = ImportStatusResDto.fromMapEntity(map)
+        this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
+      } else {
+        throw new MapError(ErrorCode.MAP_OTHER, "unknown error occurs with export the map")
+      }
 
     } catch (error) {
       if (error instanceof MapError) {
@@ -165,7 +169,7 @@ export class GetMapService implements OnApplicationBootstrap {
     if (!configs) {
       this.logger.warn(`There is not exist maps configuration`)
     }
-    const configRes = MapConfigDto.fromMapConfig(configs)    
+    const configRes = MapConfigDto.fromMapConfig(configs)
     configRes.lastCheckingMapUpdatesDate = await this.repo.getLastMapUpdatesChecking()
     return configRes
   }

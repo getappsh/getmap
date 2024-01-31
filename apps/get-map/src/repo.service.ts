@@ -7,6 +7,7 @@ import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
+import { LibotHttpClientService } from './http-client.service';
 
 @Injectable()
 export class RepoService {
@@ -18,7 +19,8 @@ export class RepoService {
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
     @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
-    @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>
+    @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
+    private libotClient: LibotHttpClientService
   ) { }
 
   // Maps
@@ -120,39 +122,49 @@ export class RepoService {
       this.logger.error(mes)
     }
 
-    existMap.forEach(cMap => {
+    for (let i = 0; i < existMap.length; i++) {
 
       // TODO update the correct product
-      if (map && cMap.mapProduct?.id != resData.catalogRecordID) {
-        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${cMap?.mapProduct?.id} at the export req`)
+      if (map && existMap[i].mapProduct?.id != resData.catalogRecordID) {
+        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${existMap[i]?.mapProduct?.id} at the export req`)
       }
 
-      cMap.jobId = resData.id
-      cMap.status = this.mapStatus(resData.status)
+      existMap[i].jobId = resData.id
+      existMap[i].status = this.mapStatus(resData.status)
       if (resData.progress) {
-        cMap.progress = resData.progress
+        existMap[i].progress = resData.progress
       }
       if (resData.estimatedSize) {
-        cMap.size = resData.estimatedSize
+        existMap[i].size = resData.estimatedSize
       }
-      cMap.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
-      cMap.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
-      cMap.errorReason = resData.errorReason
+      existMap[i].exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
+      existMap[i].exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
+      existMap[i].errorReason = resData.errorReason
 
-      if (resData.status === LibotExportStatusEnum.COMPLETED) {
-        resData.artifacts?.forEach(art => {
-          if (art.type === ArtifactsLibotEnum.GPKG) {
-            cMap.fileName = art.name
-            cMap.packageUrl = art.url
-            cMap.size = art.size
+      if (resData.status === LibotExportStatusEnum.COMPLETED && resData.artifacts) {
+        for (let i = 0; i < resData?.artifacts.length; i++) {
+          if (resData.artifacts[i].type === ArtifactsLibotEnum.GPKG) {
+            existMap[i].fileName = resData.artifacts[i].name
+            existMap[i].packageUrl = resData.artifacts[i].url
+            existMap[i].size = resData.artifacts[i].size
+            try {
+              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[i].url), "download map json file")
+              existMap[i].footprint = mapActualPolygon.join(',')
+            } catch (error) {
+              const mes = `download map json file failed - ${error.toString()}`
+              this.logger.error(mes)
+              existMap[i].status = MapImportStatusEnum.ERROR
+              existMap[i].errorReason = mes 
+            }
           }
-        })
-        cMap.progress = 100
-        if (!cMap.packageUrl) {
-          cMap.status = MapImportStatusEnum.IN_PROGRESS
+        }
+
+        existMap[i].progress = 100
+        if (!existMap[i].packageUrl || !existMap[i].footprint) {
+          existMap[i].status = MapImportStatusEnum.IN_PROGRESS
         }
       }
-    })
+    }
 
     return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map?.catalogId)
 
