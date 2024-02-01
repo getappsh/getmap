@@ -145,27 +145,29 @@ export class RepoService {
       existMap[i].errorReason = resData.errorReason
 
       if (resData.status === LibotExportStatusEnum.COMPLETED && resData.artifacts) {
-        for (let i = 0; i < resData?.artifacts.length; i++) {
-          if (resData.artifacts[i].type === ArtifactsLibotEnum.GPKG) {
-            existMap[i].fileName = resData.artifacts[i].name
-            existMap[i].packageUrl = resData.artifacts[i].url
-            existMap[i].size = resData.artifacts[i].size
+        for (let j = 0; j < resData?.artifacts.length; j++) {
+          if (resData.artifacts[j].type === ArtifactsLibotEnum.GPKG) {
+            existMap[i].fileName = resData.artifacts[j].name
+            existMap[i].packageUrl = resData.artifacts[j].url
+            existMap[i].size = resData.artifacts[j].size
+          }
+          if (resData.artifacts[j].type === ArtifactsLibotEnum.METADATA) {
             try {
-              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[i].url), "download map json file")
+              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[j].url), "download map json file")
               existMap[i].footprint = mapActualPolygon.join(',')
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
-              this.logger.error(mes)
+              this.logger.error(mes)              
               existMap[i].status = MapImportStatusEnum.ERROR
               existMap[i].errorReason = mes
             }
           }
         }
-
         existMap[i].progress = 100
-        if (!existMap[i].packageUrl || !existMap[i].footprint) {
-          existMap[i].status = MapImportStatusEnum.IN_PROGRESS
-        }
+      }
+
+      if (!existMap[i].packageUrl || !existMap[i].footprint) {
+        existMap[i].status = MapImportStatusEnum.IN_PROGRESS
       }
     }
 

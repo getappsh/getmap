@@ -114,13 +114,12 @@ export class LibotHttpClientService {
 
   async getActualFootPrint(url: string): Promise<number[][]> {
     this.logger.log(`Extract the actual footprint from map json file`)
-    const jsonUrl = url.replace(".gpkg", ".json")
-    const res = await (await lastValueFrom(this.httpConfig.get(jsonUrl))).data    
+    const res = await (await lastValueFrom(this.httpConfig.get(url))).data
     return res.footprint.coordinates[0][0]
   }
 
   // Http requests helpers
-  
+
   getHeaders(cType: "json" | "xml") {
     const headers = {
       "Content-Type": `application/${cType}`
