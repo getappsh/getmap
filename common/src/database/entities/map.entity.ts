@@ -62,6 +62,9 @@ export class MapEntity {
 
   @Column({ name: 'export_end', type: 'timestamptz', nullable: true })
   exportEnd: Date
+  
+  @Column({ name: 'expired_date', type: 'timestamptz', nullable: true })
+  expiredDate : Date
 
   @Column({ name: 'job_id', type: "bigint", nullable: true })
   jobId: number
