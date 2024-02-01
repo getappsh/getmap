@@ -66,11 +66,12 @@ export class GetMapService implements OnApplicationBootstrap {
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
 
-      existsMap = await this.repo.getMap(importAttrs)
+      existsMap = await this.repo.getMapByImportAttrs(importAttrs)
 
       if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
         const pEntity = await this.repo.getOrCreateProduct(product)
         const entityForMap = Array.isArray(pEntity) ? pEntity[0] : pEntity
+
         // TODO in case of error or cancel needs to find the exist map
         this.logger.debug("Save map entity")
         existsMap = await this.repo.saveMap(importAttrs, entityForMap)

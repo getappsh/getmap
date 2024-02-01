@@ -1,13 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
-import { In, IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, LessThanOrEqual, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';
+import { log } from 'console';
 
 @Injectable()
 export class RepoService {
@@ -24,12 +25,12 @@ export class RepoService {
   ) { }
 
   // Maps
-  async getMap(importAttr: ImportAttributes): Promise<MapEntity> {
+  async getMapByImportAttrs(importAttr: ImportAttributes): Promise<MapEntity> {
     const existMap = await this.mapRepo.findOne({
       where: {
         mapProduct: { id: importAttr.productId },
         boundingBox: importAttr.Points,
-        // zoomLevel: importAttr.ZoomLevel
+        expiredDate: MoreThanOrEqual(new Date(new Date().getTime() + 1000 * 60 * 60 * 2))
       }
     })
     return existMap
@@ -141,7 +142,8 @@ export class RepoService {
         existMap[i].size = resData.estimatedSize
       }
       existMap[i].exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
-      existMap[i].exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
+      existMap[i].exportEnd = resData.finishedAt ? new Date(resData.finishedAt) : undefined
+      existMap[i].expiredDate = resData.expiredAt ? new Date(resData.expiredAt) : undefined
       existMap[i].errorReason = resData.errorReason
 
       if (resData.status === LibotExportStatusEnum.COMPLETED && resData.artifacts) {
@@ -157,7 +159,7 @@ export class RepoService {
               existMap[i].footprint = mapActualPolygon.join(',')
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
-              this.logger.error(mes)              
+              this.logger.error(mes)
               existMap[i].status = MapImportStatusEnum.ERROR
               existMap[i].errorReason = mes
             }
