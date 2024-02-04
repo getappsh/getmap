@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
-import { In, IsNull, MoreThan, Not, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
@@ -29,9 +29,11 @@ export class RepoService {
       where: {
         mapProduct: { id: importAttr.productId },
         boundingBox: importAttr.Points,
-        expiredDate: MoreThan(new Date(new Date().getTime()))
       }
     })
+    if(existMap.expiredDate <= new Date(new Date().getTime())){
+      existMap.status = MapImportStatusEnum.EXPIRED
+    }
     return existMap
   }
 
