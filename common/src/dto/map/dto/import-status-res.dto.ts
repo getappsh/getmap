@@ -2,9 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { MapMetadatatDto } from "./map-metadata.dto";
 import { ImportResDto } from "./import-res-dto";
 import { MapEntity, MapImportStatusEnum } from "@app/common/database/entities";
-import { MapProperties } from "./create-import-dto";
-import { MapError } from "../utils/map-error";
-import { ErrorCode, ErrorDto } from "../../error";
+import { ErrorDto } from "../../error";
 
 export class ImportStatusResDto extends ImportResDto {
 
