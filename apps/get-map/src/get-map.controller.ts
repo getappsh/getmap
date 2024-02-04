@@ -1,7 +1,7 @@
 import { Controller, Logger } from '@nestjs/common';
 import { GetMapService } from './get-map.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
-import { GetMapTopics } from '@app/common/microservice-client/topics';
+import { GetMapTopics, GetMapTopicsEmit } from '@app/common/microservice-client/topics';
 import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@app/common/dto/map';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
@@ -57,6 +57,12 @@ export class GetMapController {
   async setMapConfig(@Payload() config: MapConfigDto) {
     this.logger.log(`Set maps config`)
     return await this.getMapService.setMapConfig(config)
+  }
+  
+  @EventPattern(GetMapTopicsEmit.MAP_UPDATES_JOB_START)
+  async startMapUpdatedCronJob() {
+    this.logger.log(`Start 'map updates' job from api call`)
+    this.getMapService.startMapUpdatedCronJob()
   }
 
   // Utils

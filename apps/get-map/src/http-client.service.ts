@@ -29,16 +29,9 @@ export class LibotHttpClientService {
       ...this.httpConfig.axiosRef.defaults.headers,
       "X-API-KEY": this.env.get<string>("TOKEN_LIBOT"),
     } as any
-
   }
 
-  getHeaders(cType: "json" | "xml") {
-    const headers = {
-      "Content-Type": `application/${cType}`
-    }
-    return { headers }
-  }
-
+  // Http requests
   async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
 
     const url = this.env.get<string>("LIBOT_DISCOVERY_URL")
@@ -117,6 +110,21 @@ export class LibotHttpClientService {
       this.logger.error(`"Get map status" req failed! Got status code: ${error.status}, mes: ${mas}`)
       throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
     }
+  }
+
+  async getActualFootPrint(url: string): Promise<number[][]> {
+    this.logger.log(`Extract the actual footprint from map json file`)
+    const res = await (await lastValueFrom(this.httpConfig.get(url))).data
+    return res.footprint.coordinates[0][0]
+  }
+
+  // Http requests helpers
+
+  getHeaders(cType: "json" | "xml") {
+    const headers = {
+      "Content-Type": `application/${cType}`
+    }
+    return { headers }
   }
 
   isResSuccess(res: AxiosResponse<any, any>, reqName?: string): boolean {

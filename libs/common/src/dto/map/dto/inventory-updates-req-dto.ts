@@ -11,6 +11,7 @@ export class InventoryUpdatesReqDto {
 
 
   @ApiProperty({ type: "object", additionalProperties: { enum: Object.values(DeviceMapStateEnum), title: "map state" } })
+  @IsNotEmpty()
   inventory: Record<string, DeviceMapStateEnum>
 
   toString(): string {

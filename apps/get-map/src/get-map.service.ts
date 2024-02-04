@@ -1,4 +1,3 @@
-import { DiscoveryMapDto } from '@app/common/dto/discovery';
 import { CreateImportDto, CreateImportResDto, ImportStatusResDto, InventoryUpdatesReqDto, InventoryUpdatesResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
@@ -14,9 +13,10 @@ import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/comm
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { MicroserviceClient, MicroserviceName } from '@app/common/microservice-client';
-import { DeviceTopics, DeviceTopicsEmit } from '@app/common/microservice-client/topics';
+import { DeviceTopicsEmit } from '@app/common/microservice-client/topics';
 import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
 import { InventoryDeviceUpdatesDto } from '@app/common/dto/map/dto/inventory-device-updates-dto';
+import { MapUpdatesService } from './map-updates.service';
 
 @Injectable()
 export class GetMapService implements OnApplicationBootstrap {
@@ -27,7 +27,8 @@ export class GetMapService implements OnApplicationBootstrap {
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
     private readonly repo: RepoService,
-    @Inject(MicroserviceName.DISCOVERY_SERVICE) private readonly deviceClient: MicroserviceClient
+    private readonly mapUpdates: MapUpdatesService,
+    @Inject(MicroserviceName.DISCOVERY_SERVICE) private readonly deviceClient: MicroserviceClient,
   ) { }
 
   // Import
@@ -65,15 +66,22 @@ export class GetMapService implements OnApplicationBootstrap {
       const product = await this.create.selectProduct(importAttrs)
       this.create.completeAttrs(importAttrs, product)
 
-      this.logger.debug("save or update map entity")
-      existsMap = await this.repo.getMap(importAttrs)
+      existsMap = await this.repo.getMapByImportAttrs(importAttrs)
 
-      if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL) {
-        const pEntity = await this.repo.getOrSaveProduct(product)
+      if (!existsMap || existsMap.status === MapImportStatusEnum.ERROR || existsMap.status === MapImportStatusEnum.CANCEL || existsMap.status === MapImportStatusEnum.EXPIRED) {
+        const pEntity = await this.repo.getOrCreateProduct(product)
         const entityForMap = Array.isArray(pEntity) ? pEntity[0] : pEntity
+
         // TODO in case of error or cancel needs to find the exist map
+        this.logger.debug("Save map entity")
         existsMap = await this.repo.saveMap(importAttrs, entityForMap)
         this.create.executeExport(importAttrs, existsMap)
+      } else {
+        this.logger.debug(`Return map ${existsMap.catalogId} from cache`)
+      }
+
+      if (!existsMap.isUpdated) {
+        existsMap = await this.repo.updateMapAsUpdate(existsMap)
       }
 
       const registerDto = new RegisterMapDto()
@@ -113,8 +121,12 @@ export class GetMapService implements OnApplicationBootstrap {
 
         map = await this.create.handleGetMapStatus(map.jobId, map)
       }
-      importRes = ImportStatusResDto.fromMapEntity(map)
-      this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
+      if (map) {
+        importRes = ImportStatusResDto.fromMapEntity(map)
+        this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
+      } else {
+        throw new MapError(ErrorCode.MAP_OTHER, "unknown error occurs with export the map")
+      }
 
     } catch (error) {
       if (error instanceof MapError) {
@@ -159,14 +171,16 @@ export class GetMapService implements OnApplicationBootstrap {
       this.logger.warn(`There is not exist maps configuration`)
     }
     const configRes = MapConfigDto.fromMapConfig(configs)
+    configRes.lastCheckingMapUpdatesDate = await this.repo.getLastMapUpdatesChecking()
     return configRes
   }
 
   async setMapConfig(config: MapConfigDto) {
     try {
-      await this.repo.setMapConfig(config)
+      return await this.repo.setMapConfig(config)
     } catch (error) {
       this.logger.error(error)
+      return error
     }
   }
 
@@ -200,6 +214,10 @@ export class GetMapService implements OnApplicationBootstrap {
     } catch (error) {
       this.logger.error(error)
     }
+  }
+
+  startMapUpdatedCronJob() {
+    this.mapUpdates.checkMapsUpdates()
   }
 
   // Utils

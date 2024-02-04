@@ -1,34 +1,39 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeviceEntity, DeviceMapStateEntity, DeviceMapStateEnum, LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
+import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
+import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
+import { LibotHttpClientService } from './http-client.service';
 
 @Injectable()
 export class RepoService {
+
 
   private readonly logger = new Logger(RepoService.name);
 
   constructor(
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
-    @InjectRepository(DeviceEntity) private readonly deviceRepo: Repository<DeviceEntity>,
-    @InjectRepository(DeviceMapStateEntity) private readonly deviceMapRepo: Repository<DeviceMapStateEntity>,
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
-    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>
+    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
+    @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
+    private libotClient: LibotHttpClientService
   ) { }
 
   // Maps
-  async getMap(importAttr: ImportAttributes): Promise<MapEntity> {
+  async getMapByImportAttrs(importAttr: ImportAttributes): Promise<MapEntity> {
     const existMap = await this.mapRepo.findOne({
       where: {
         mapProduct: { id: importAttr.productId },
         boundingBox: importAttr.Points,
-        // zoomLevel: importAttr.ZoomLevel
       }
     })
+    if(existMap.expiredDate <= new Date(new Date().getTime())){
+      existMap.status = MapImportStatusEnum.EXPIRED
+    }
     return existMap
   }
 
@@ -43,17 +48,15 @@ export class RepoService {
 
   async getUnUpdatedMapsCount(): Promise<number> {
     const existMapCount = await this.mapRepo.count({
-      where: {
-        isUpdated: true
-      },
+      where: { footprint: Not(IsNull()) }
     })
-    this.logger.debug(`there are ${existMapCount} no obsolete maps `)
+    this.logger.debug(`there are ${existMapCount} completed maps `)
     return existMapCount
   }
 
-  async getUpdatedMaps(take?: number, skip?: number): Promise<MapEntity[]> {
+  async getMapsASC(take?: number, skip?: number): Promise<MapEntity[]> {
     const existMap = await this.mapRepo.find({
-      where: { isUpdated: true },
+      where: { footprint: Not(IsNull()) },
       relations: { mapProduct: true },
       order: { createDateTime: "ASC" },
       take,
@@ -75,7 +78,14 @@ export class RepoService {
   }
 
   async updateMapAsUnUpdate(map: MapEntity) {
+    this.logger.debug(`Save map ${map.catalogId} as obsolete`)
     map.isUpdated = false
+    return await this.mapRepo.save(map)
+  }
+
+  async updateMapAsUpdate(map: MapEntity) {
+    this.logger.debug(`Save map ${map.catalogId} as updated`)
+    map.isUpdated = true
     return await this.mapRepo.save(map)
   }
 
@@ -117,38 +127,52 @@ export class RepoService {
       this.logger.error(mes)
     }
 
-    existMap.forEach(cMap => {
+    for (let i = 0; i < existMap.length; i++) {
 
       // TODO update the correct product
-      if (map && cMap.mapProduct?.id != resData.catalogRecordID) {
-        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${cMap?.mapProduct?.id} at the export req`)
+      if (map && existMap[i].mapProduct?.id != resData.catalogRecordID) {
+        this.logger.warn(`The map was export from productID ${resData.catalogRecordID} and not from productId ${existMap[i]?.mapProduct?.id} at the export req`)
       }
 
-      cMap.jobId = resData.id
-      cMap.status = this.mapStatus(resData.status)
+      existMap[i].jobId = resData.id
+      existMap[i].status = this.mapStatus(resData.status)
       if (resData.progress) {
-        cMap.progress = resData.progress
+        existMap[i].progress = resData.progress
       }
       if (resData.estimatedSize) {
-        cMap.size = resData.estimatedSize
+        existMap[i].size = resData.estimatedSize
       }
-      cMap.exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
-      cMap.exportEnd = resData.finishedAt || resData.expiredAt ? new Date(resData.finishedAt ?? resData.expiredAt) : undefined
-      cMap.errorReason = resData.errorReason
+      existMap[i].exportStart = resData.createdAt ? new Date(resData.createdAt) : undefined
+      existMap[i].exportEnd = resData.finishedAt ? new Date(resData.finishedAt) : undefined
+      existMap[i].expiredDate = resData.expiredAt ? new Date(resData.expiredAt) : undefined
+      existMap[i].errorReason = resData.errorReason
 
-      if (resData.status === LibotExportStatusEnum.COMPLETED) {
-        resData.artifacts?.forEach(art => {
-          if (art.type === ArtifactsLibotEnum.GPKG) {
-            cMap.fileName = art.name
-            cMap.packageUrl = art.url
+      if (resData.status === LibotExportStatusEnum.COMPLETED && resData.artifacts) {
+        for (let j = 0; j < resData?.artifacts.length; j++) {
+          if (resData.artifacts[j].type === ArtifactsLibotEnum.GPKG) {
+            existMap[i].fileName = resData.artifacts[j].name
+            existMap[i].packageUrl = resData.artifacts[j].url
+            existMap[i].size = resData.artifacts[j].size
           }
-        })
-        cMap.progress = 100
-        if (!cMap.packageUrl) {
-          cMap.status = MapImportStatusEnum.IN_PROGRESS
+          if (resData.artifacts[j].type === ArtifactsLibotEnum.METADATA) {
+            try {
+              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[j].url), "download map json file")
+              existMap[i].footprint = mapActualPolygon.join(',')
+            } catch (error) {
+              const mes = `download map json file failed - ${error.toString()}`
+              this.logger.error(mes)
+              existMap[i].status = MapImportStatusEnum.ERROR
+              existMap[i].errorReason = mes
+            }
+          }
         }
+        existMap[i].progress = 100
       }
-    })
+
+      if (!existMap[i].packageUrl || !existMap[i].footprint) {
+        existMap[i].status = MapImportStatusEnum.IN_PROGRESS
+      }
+    }
 
     return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map?.catalogId)
 
@@ -183,26 +207,36 @@ export class RepoService {
   }
 
   // Products
-  async getOrSaveProduct(product: MapProductResDto) {
+  async getOrCreateProduct(product: MapProductResDto) {
 
     const existProduct = await this.productRepo.findOneBy({ id: product.id })
 
     if (existProduct) {
       return existProduct
     }
-    return await this.saveProducts(product)
+    return await this.createAndSaveProducts(product)
   }
 
-  async saveProducts(newProd: MapProductResDto | MapProductResDto[], isCheckedAgainstMaps: boolean = false): Promise<ProductEntity | ProductEntity[]> {
-    const newProduct = this.productRepo.create(newProd)
-    if (isCheckedAgainstMaps) {
-      if (Array.isArray(newProduct)) {
-        newProduct.forEach(p => {
-          p.isCheckedAgainstMaps = new Date(Date.now())
-        });
-      } else {
-        newProduct.isCheckedAgainstMaps = new Date(Date.now())
-      }
+  // TODO interface for options parameter
+  async createAndSaveProducts(newProd: MapProductResDto | MapProductResDto[], options?: any): Promise<ProductEntity | ProductEntity[]> {
+    let products = Array.isArray(newProd) ? newProd : [newProd]
+    const newProduct = this.productRepo.create(products)
+    if (options?.isCheckedAgainstMaps) {
+      newProduct.forEach(p => {
+        p.isCheckedAgainstMaps = new Date(Date.now())
+      });
+    }
+    return await this.productRepo.save(newProduct)
+  }
+
+  // TODO interface for options parameter
+  async updateProducts(prod: MapProductResDto | MapProductResDto[], options?: any): Promise<ProductEntity[]> {
+    let products = Array.isArray(prod) ? prod : [prod]
+    const newProduct = await this.productRepo.find({ where: { id: In(products.map(p => p.id)) } })
+    if (options?.isCheckedAgainstMaps) {
+      newProduct.forEach(p => {
+        p.isCheckedAgainstMaps = new Date(Date.now())
+      });
     }
     return await this.productRepo.save(newProduct)
   }
@@ -238,37 +272,11 @@ export class RepoService {
     for (const key in config) {
       eConfig[key] = config[key]
     }
-    await this.configRepo.save(eConfig)
+    return await this.configRepo.save(eConfig)
   }
 
-  async registerMapToDevice(existsMap: MapEntity, deviceId: string) {
-    try {
-      let device = await this.deviceRepo.findOne({ where: { ID: deviceId }, relations: { maps: { map: true } } })
-      // let device = await this.deviceRepo.createQueryBuilder("device")
-      //   // .leftJoin("device.maps", "dm").addSelect("dm.map")
-      //   .leftJoinAndSelect("device.maps", "dm")
-      //   .leftJoinAndSelect("dm.map", "map")
-      //   .where("device.ID = :deviceId", { deviceId })
-      //   .andWhere("map.catalogId = :mapId", { mapId: existsMap.boundingBox })
-      //   .getOne();
-
-      if (!device) {
-        const newDevice = this.deviceRepo.create()
-        newDevice.ID = deviceId
-        device = await this.deviceRepo.save(newDevice)
-      }
-
-      if (!device.maps || device.maps.length == 0 || !device.maps.find(map => map.map.catalogId == existsMap.catalogId)) {
-
-        let deviceMap = this.deviceMapRepo.create()
-        deviceMap.device = device
-        deviceMap.map = existsMap
-        deviceMap.state = DeviceMapStateEnum.IMPORT
-        this.deviceMapRepo.save(deviceMap)
-      }
-
-    } catch (error) {
-      this.logger.error(error.toString())
-    }
+  async getLastMapUpdatesChecking(): Promise<Date> {
+    const jobTime = await this.mapUpdatesRepo.findOne({ where: { name: "mapUpdates", endTime: Not(IsNull()) }, order: { startTime: "DESC" } })
+    return jobTime ? new Date(jobTime.endTime) : null
   }
 }

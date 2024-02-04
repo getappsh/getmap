@@ -40,8 +40,8 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "matomo_url", nullable: true })
   matomoUrl: string
 
-  @Column({ name: "matomo_goal_id", nullable: true })
-  matomoGoalId: string
+  @Column({ name: "matomo_dimension_id", nullable: true })
+  matomoDimensionId: string
 
   @Column({ name: "matomo_site_id", nullable: true })
   matomoSiteId: string

@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Cron, Timeout } from '@nestjs/schedule';
+import { Cron, CronExpression, Timeout } from '@nestjs/schedule';
 import { RepoService } from './repo.service';
 import { LibotHttpClientService } from './http-client.service';
 import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
@@ -10,51 +10,94 @@ import { ImportCreateService } from './import-create.service';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MapUpdatesJobEntity } from '@app/common/database/entities/map-updatesCronJob';
+import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 
 @Injectable()
 export class MapUpdatesService {
 
   private readonly logger = new Logger(MapUpdatesService.name);
+  JOB_NAME = "mapUpdates"
 
   constructor(
     private readonly env: ConfigService,
     private readonly repo: RepoService,
     private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
-    @InjectRepository(MapUpdatesJobEntity) private readonly mapUpdatesRepo: Repository<MapUpdatesJobEntity>
+    @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>
   ) { }
 
-  @Cron(process.env.UPDATE_GOB_TIME ?? '0 0 */6 * * *')
+  @Cron(process.env.UPDATE_GOB_TIME ?? CronExpression.EVERY_6_HOURS, {
+    name: "mapUpdates"
+  })
   async checkMapsUpdates() {
 
     this.logger.log(`Start cron gob to check if there updates for exists maps`)
 
+    let jE: JobsEntity
     try {
-      await this.tryToSaveJobStartTime()
-      const newProd = await this.getNewProduct()
-      if (newProd && newProd.length > 0) {
-        const mapUnUpdate = await this.handleMapsToCheck(newProd)
-        await this.saveNewProducts(newProd)
-        this.updateDevicesUnUpdate(mapUnUpdate)
-      } else if(newProd) {
-        this.logger.log(`there aren't new products`)
+      jE = await this.tryToSaveJobStartTime()
+      if (jE) {
+        const newProd = await this.getProducts()
+        // const newProd = await this.getNewProduct()
+        if (newProd && newProd.length > 0) {
+          await this.handleMapsToCheck(newProd)
+          // await this.saveNewProducts(newProd)
+        } else if (newProd) {
+          this.logger.log(`there aren't new products`)
+        }
       }
     } catch (error) {
-      if (error.code === '23505') {
-        this.logger.log("Maps is obsolete cron job failed, because it started by another service")
-      } else {
-        this.logger.error(`Job - maps are not obsolete - failed`, error)
-      }
+      this.logger.error(`Job - maps are not obsolete - failed`, error)
+    } finally {
+      await this.saveJobEndTime(jE)
     }
 
   }
 
   async tryToSaveJobStartTime() {
-    this.logger.log(`try to save cron job start time`)
-    const time = this.mapUpdatesRepo.create()
-    time.time = new Date(Date.now())
-    await this.mapUpdatesRepo.save(time)
+    const isImMiddleAJob = await this.checkIsAJobInMiddle()
+
+    if (!isImMiddleAJob) {
+      this.logger.log(`try to save cron job start time`)
+      const jE = this.mapUpdatesRepo.create()
+      jE.name = this.JOB_NAME
+      jE.startTime = new Date(Date.now())
+      try {
+        return await this.mapUpdatesRepo.save(jE)
+      } catch (error) {
+        if (error.code === '23505') {
+          this.logger.log("Maps is obsolete cron job failed, because it started by another service")
+        } else {
+          throw error
+        }
+      }
+    }
+  }
+
+  async checkIsAJobInMiddle() {
+    this.logger.log(`Checks if a 'map updates' job is still working`)
+    const lastJob = await this.mapUpdatesRepo.findOne({ where: { name: this.JOB_NAME }, order: { startTime: "DESC" } })
+    if (!lastJob) {
+      return false
+    }
+    if (lastJob && (lastJob.endTime || Date.now() - new Date(lastJob.startTime).getTime() > (5 * 60 * 1000))) {
+      return false
+    } else {
+      this.logger.log(`The 'map updates' job is still working, cannot be restarted`)
+      return true
+    }
+  }
+
+  async saveJobEndTime(jobE: JobsEntity) {
+    if (jobE) {
+      this.logger.log(`save cron job end time`)
+      try {
+        jobE.endTime = new Date(Date.now())
+        await this.mapUpdatesRepo.save(jobE)
+      } catch (error) {
+        this.logger.error(error)
+      }
+    }
   }
 
   async getNewProduct(): Promise<MapProductResDto[]> {
@@ -78,33 +121,64 @@ export class MapUpdatesService {
     }
   }
 
+  async getProducts(): Promise<MapProductResDto[]> {
+
+    this.logger.log(`Get From libot all offered products`)
+
+    const discoveryAttrs = new DiscoveryAttributes()
+    const records = await this.libot.reqAndRetry(async () => await this.libot.getRecords(discoveryAttrs), "Get records", true)
+
+    let products = []
+    if (records && records.length > 0) {
+      this.logger.debug("Convert records to products")
+      products = records.map(record => MapProductResDto.fromRecordsRes(record))
+    }
+    return products
+
+  }
+
   async handleMapsToCheck(products: MapProductResDto[]) {
-    const mapUnUpdate: MapEntity[] = []
     const take = Number(this.env.get("UPDATE_JOB_MAP_TAKE") ?? 25) // defined the limitation of maps on every iterator
     let skip = 0 // defined the offset map from where to state select
     const mapCount = await this.repo.getUnUpdatedMapsCount()
     while (skip < mapCount) {
-      const maps = await this.repo.getUpdatedMaps(take, skip)
-      await this.checkUpdatesByGivenMaps(maps, products, mapUnUpdate)
+      const mapObsoleted: MapEntity[] = []
+      const mapsUpdated: MapEntity[] = []
+      const maps = await this.repo.getMapsASC(take, skip)
+      await this.checkUpdatesByGivenMaps(maps, products, mapObsoleted, mapsUpdated)
+      this.updateDevicesUnUpdate(mapObsoleted)
       skip = skip + take
     }
-    return mapUnUpdate
   }
 
-  async checkUpdatesByGivenMaps(maps: MapEntity[], products: MapProductResDto[], mapUnUpdate: MapEntity[]) {
+  async checkUpdatesByGivenMaps(maps: MapEntity[], products: MapProductResDto[], mapObsoleted: MapEntity[], mapsUpdated: MapEntity[]) {
 
     for (let i = 0; i < maps.length; i++) {
 
-      const allProd = [...products];
-      allProd.push(maps[i].mapProduct);
+      // const allProd = [...products];
+      // allProd.push(maps[i].mapProduct);
 
       try {
-        const mapAttrs = ImportAttributes.fromMapEntity(maps[i]);
-        const selectedProd = await this.create.extractMostCompatibleProduct(allProd, mapAttrs);
-        if (maps[i]?.mapProduct?.ingestionDate.toISOString() !== selectedProd.ingestionDate.toISOString()) {   
+        const mapAttrs = ImportAttributes.fromFootprint(maps[i]);
+        const selectedProd = await this.create.extractMostCompatibleProduct(products, mapAttrs);
+
+        if (!selectedProd) {
+          this.logger.warn(`Map ${maps[i].catalogId} is not valid for any product`)
+        }
+
+        if (maps[i]?.mapProduct?.ingestionDate.toISOString() !== selectedProd?.ingestionDate.toISOString()) {
           this.logger.debug(`map with catalogID ${maps[i].catalogId} is obsolete`)
-          const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);
-          mapUnUpdate.push(savedMap);
+          if (maps[i].isUpdated) {
+            const savedMap = await this.repo.updateMapAsUnUpdate(maps[i]);
+            mapObsoleted.push(savedMap);
+          }
+        }
+        else {
+          this.logger.debug(`map with catalogID ${maps[i].catalogId} is updated`)
+          if (!maps[i].isUpdated) {
+            const savedMap = await this.repo.updateMapAsUpdate(maps[i]);
+            mapsUpdated.push(savedMap);
+          }
         }
       } catch (error) {
         this.logger.error(error);
@@ -113,7 +187,12 @@ export class MapUpdatesService {
   }
 
   async saveNewProducts(newProd: MapProductResDto[]) {
-    return await this.repo.saveProducts(newProd, true)
+    // this.logger.log(`Update or create the checked products`)
+    // const updatedP = await this.repo.updateProducts(newProd, { isCheckedAgainstMaps: true })
+    // const pToCreate = newProd.filter(nP => !updatedP.find(uP => uP.id === nP.id))
+    // await this.repo.createAndSaveProducts(pToCreate, { isCheckedAgainstMaps: true })
+    
+    await this.repo.createAndSaveProducts(newProd, { isCheckedAgainstMaps: true })
   }
 
   async updateDevicesUnUpdate(mapUnUpdate: MapEntity[]) {
