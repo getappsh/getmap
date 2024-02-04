@@ -1,4 +1,3 @@
-import { Validators } from "./utils/validators";
 import { ImportAttributes } from "./importAttributes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { Feature } from '@turf/turf';
@@ -95,7 +94,7 @@ export class ImportPayload {
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}}] resolution: ${attrs.targetResolution}`
+    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}] resolution: ${attrs.targetResolution}`
     return importPayload
   }
 
