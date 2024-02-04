@@ -67,7 +67,7 @@ export class ImportPayload {
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}}] resolution: ${attrs.targetResolution}`
+    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}] resolution: ${attrs.targetResolution}`
     return importPayload
   }
 

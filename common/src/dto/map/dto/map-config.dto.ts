@@ -68,7 +68,7 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  matomoGoalId: string
+  matomoDimensionId: string
   
   @ApiProperty({ required: false })
   @IsOptional()
@@ -77,7 +77,11 @@ export class MapConfigDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  lastUpdate: Date
+  lastCheckingMapUpdatesDate: Date
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  lastConfigUpdateDate: Date
 
   static fromMapConfig(cE: MapConfigEntity) {
     const config = new MapConfigDto()
@@ -93,9 +97,9 @@ export class MapConfigDto {
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
     config.mapMinInclusionInPercentages = cE.mapMinInclusionInPercentages
     config.matomoUrl = cE.matomoUrl
-    config.matomoGoalId = cE.matomoGoalId
+    config.matomoDimensionId = cE.matomoDimensionId
     config.matomoSiteId = cE.matomoSiteId
-    config.lastUpdate = cE.lastUpdatedDate
+    config.lastConfigUpdateDate = cE.lastUpdatedDate
 
     return config
   }
