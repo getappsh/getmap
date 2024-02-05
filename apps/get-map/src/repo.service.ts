@@ -8,6 +8,7 @@ import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/impo
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class RepoService {
@@ -20,7 +21,8 @@ export class RepoService {
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
     @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
-    private libotClient: LibotHttpClientService
+    private libotClient: LibotHttpClientService,
+    private readonly env: ConfigService,
   ) { }
 
   // Maps
@@ -31,7 +33,7 @@ export class RepoService {
         boundingBox: importAttr.Points,
       }
     })
-    if(existMap.expiredDate <= new Date(new Date().getTime())){
+    if (existMap.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
     }
     return existMap
@@ -151,12 +153,15 @@ export class RepoService {
         for (let j = 0; j < resData?.artifacts.length; j++) {
           if (resData.artifacts[j].type === ArtifactsLibotEnum.GPKG) {
             existMap[i].fileName = resData.artifacts[j].name
-            existMap[i].packageUrl = resData.artifacts[j].url
+            existMap[i].packageUrl = this.getCorrectPackageUrl(resData.artifacts[j].url)
             existMap[i].size = resData.artifacts[j].size
           }
           if (resData.artifacts[j].type === ArtifactsLibotEnum.METADATA) {
             try {
-              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[j].url), "download map json file")
+              const mapActualPolygon = await this.libotClient.reqAndRetry(
+                async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
+                "download map json file"
+              )
               existMap[i].footprint = mapActualPolygon.join(',')
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
@@ -176,6 +181,24 @@ export class RepoService {
 
     return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map?.catalogId)
 
+  }
+
+  getCorrectPackageUrl(originalUrl: string) {
+    const correctBaseUrl = this.env.get("PROXY_DOWNLOAD_BASE_URL")
+
+    if (correctBaseUrl) {
+      const regex = /^(https?:\/\/[^\/]+)\//;
+      const match = originalUrl.match(regex);
+
+      if (match && match[1]) {
+        // Replace the base URL with the new base URL
+        return originalUrl.replace(match[1], correctBaseUrl);
+      } else {
+        // If the base URL couldn't be extracted, return the original URL
+        return originalUrl;
+      }
+    }
+    return originalUrl
   }
 
   async setErrorStatus(map: MapEntity, errMes: string) {
