@@ -33,7 +33,7 @@ export class RepoService {
         boundingBox: importAttr.Points,
       }
     })
-    if (existMap.expiredDate <= new Date(new Date().getTime())) {
+    if (existMap?.status != MapImportStatusEnum.IN_PROGRESS && existMap?.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
     }
     return existMap
