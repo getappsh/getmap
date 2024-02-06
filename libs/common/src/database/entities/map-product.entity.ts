@@ -1,11 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("map_product")
-@Index("map_id_product_id_unique", ["id", "productId"], { unique: true })
+@Index("id_type_ingestion_date_unique", ["id", "productType", "ingestionDate"], { unique: true })
 export class ProductEntity {
   
-  @PrimaryColumn({ name: 'id' })
-  id: string;
+  @PrimaryGeneratedColumn({name: "pk_id"})
+  PK_Id: string;
   
   @CreateDateColumn({name: 'create_date'})
   createDateTime: Date;
@@ -13,6 +13,9 @@ export class ProductEntity {
   @UpdateDateColumn()
   lastUpdatedDate: Date;
 
+  @Column({name: 'id'})
+  id: string;
+  
   @Column({name: 'product_id'})
   productId: string;
 

@@ -48,6 +48,7 @@ export class ImportCreateService {
 
     const records = await this.libot.reqAndRetry<MCRasterRecordDto[]>(async () => await this.libot.getRecords(discoverAttrs), "Get records")
     const availableProducts = records.map(record => MapProductResDto.fromRecordsRes(record))
+    this.logger.verbose(`Received products - ${JSON.stringify(availableProducts)}`)
 
     let selectedProduct: MapProductResDto;
 
@@ -93,7 +94,8 @@ export class ImportCreateService {
         }
 
         const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
-
+        this.logger.verbose(`Checking map against product info - ${JSON.stringify({cSumInclusion, product: products[i]})}`)
+        
         if (cSumInclusion >= mapMinInclusionInPercentages) {
           selectedProduct = products[i]
           sumInclusion = cSumInclusion
@@ -104,12 +106,12 @@ export class ImportCreateService {
 
     if (selectedProduct) {
       if (!sumInclusion) {
-        this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType} with full inclusion`)
+        this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType}, ingestion Date - ${selectedProduct.ingestionDate} with full inclusion`)
       } else {
-        this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType} with ${sumInclusion} inclusion`)
+        this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType}, ingestion Date - ${selectedProduct.ingestionDate} with ${sumInclusion} inclusion`)
       }
     } else if (recentAvailProduct) {
-      this.logger.debug(`select most updated product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType} with any inclusion`)
+      this.logger.debug(`select most updated product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType}, ingestion Date - ${selectedProduct.ingestionDate} with any inclusion`)
     } else {
       this.logger.warn(`map there is no intersect with any product`)
     }
@@ -145,7 +147,7 @@ export class ImportCreateService {
 
     this.logger.debug("completing attributes for import create req")
 
-    importAttrs.productId = product.id
+    importAttrs.product = product
     importAttrs.targetResolution = Math.max(product.maxResolutionDeg, Number(this.env.get("MC_MAX_RESOLUTION_DEG")))
     importAttrs.minResolutionDeg = Number(this.env.get("MC_MIN_RESOLUTION_DEG"))
     this.completeResolution(importAttrs)

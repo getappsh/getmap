@@ -29,10 +29,14 @@ export class RepoService {
   async getMapByImportAttrs(importAttr: ImportAttributes): Promise<MapEntity> {
     const existMap = await this.mapRepo.findOne({
       where: {
-        mapProduct: { id: importAttr.productId },
+        mapProduct: {
+          id: importAttr.product.id,
+          productType: importAttr.product.productType,
+          ingestionDate: importAttr.product.ingestionDate
+        },
         boundingBox: importAttr.Points,
       }
-    })
+    })    
     if (existMap?.status != MapImportStatusEnum.IN_PROGRESS && existMap?.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
     }
@@ -232,7 +236,11 @@ export class RepoService {
   // Products
   async getOrCreateProduct(product: MapProductResDto) {
 
-    const existProduct = await this.productRepo.findOneBy({ id: product.id })
+    const existProduct = await this.productRepo.findOneBy({
+      id: product.id,
+      productType: product.productType,
+      ingestionDate: product.ingestionDate
+    })
 
     if (existProduct) {
       return existProduct
