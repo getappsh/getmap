@@ -43,9 +43,9 @@ export class DeviceDto {
     device.lastUpdatedDate = deviceE.lastUpdatedDate
     device.OS = deviceE.OS
     device.availableStorage = deviceE.availableStorage;
-    device.power = discoveryE.situationalDevice.power;
-    device.bandwidth = discoveryE.situationalDevice.bandwidth;
-    device.operativeState = discoveryE.situationalDevice.operativeState;
+    device.power = discoveryE?.situationalDevice.power;
+    device.bandwidth = discoveryE?.situationalDevice.bandwidth;
+    device.operativeState = discoveryE?.situationalDevice.operativeState;
 
     return device
   }
