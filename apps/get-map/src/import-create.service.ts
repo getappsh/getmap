@@ -111,7 +111,7 @@ export class ImportCreateService {
         this.logger.debug(`select product ${selectedProduct.productName}, type - ${selectedProduct.productType}, ingestion Date - ${selectedProduct.ingestionDate} with ${sumInclusion} inclusion`)
       }
     } else if (recentAvailProduct) {
-      this.logger.debug(`select most updated product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType}, ingestion Date - ${selectedProduct.ingestionDate} with any inclusion`)
+      this.logger.debug(`select most updated product ${recentAvailProduct.productName}, type - ${recentAvailProduct.productType}, ingestion Date - ${recentAvailProduct.ingestionDate} with any inclusion`)
     } else {
       this.logger.warn(`map there is no intersect with any product`)
     }
