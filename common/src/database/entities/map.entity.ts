@@ -15,10 +15,10 @@ export class MapEntity {
     this.catalogId = nanoid();
   }
 
-  @CreateDateColumn({ name: 'create_date' })
+  @CreateDateColumn({ name: 'create_date', type: 'timestamptz' })
   createDateTime: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({name: 'last_update_date', type: 'timestamptz'})
   lastUpdatedDate: Date;
 
   @ManyToOne(() => ProductEntity)
