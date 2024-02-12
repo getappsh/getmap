@@ -1,12 +1,13 @@
 import { DeviceEntity } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class DevicePutDto {
 
   deviceId: string
 
   @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   name: string
 
