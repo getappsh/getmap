@@ -7,6 +7,11 @@ export class MapProperties {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  name: string;
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
   productName: string;
 
   @ApiProperty({ required: false })
