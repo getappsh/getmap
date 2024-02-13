@@ -15,10 +15,13 @@ export class MapEntity {
     this.catalogId = nanoid();
   }
 
+  @Column({ nullable: true })
+  name: string;
+
   @CreateDateColumn({ name: 'create_date', type: 'timestamptz' })
   createDateTime: Date;
 
-  @UpdateDateColumn({name: 'last_update_date', type: 'timestamptz'})
+  @UpdateDateColumn({ name: 'last_update_date', type: 'timestamptz' })
   lastUpdatedDate: Date;
 
   @ManyToOne(() => ProductEntity)
@@ -62,9 +65,9 @@ export class MapEntity {
 
   @Column({ name: 'export_end', type: 'timestamptz', nullable: true })
   exportEnd: Date
-  
+
   @Column({ name: 'expired_date', type: 'timestamptz', nullable: true })
-  expiredDate : Date
+  expiredDate: Date
 
   @Column({ name: 'job_id', type: "bigint", nullable: true })
   jobId: number
