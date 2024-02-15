@@ -65,6 +65,8 @@ export const GetMapTopics = {
     // Config
     GET_MAP_CONFIG: `getapp-map.config.get${region}`,
     SET_MAP_CONFIG: `getapp-map.config.set${region}`,
+    // admin
+    MAP_PUT: `getapp-map.put${region}`,
     // Device
     REGISTER_MAP: `getapp-device.map.register${region}`,
     DISCOVERY_MAP: `getapp-device.discover.map${region}`,
