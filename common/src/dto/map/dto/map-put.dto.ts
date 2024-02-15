@@ -15,7 +15,7 @@ export class MapPutDto {
     return JSON.stringify(this);
   }
 
-  static fromDeviceEntity(mE:MapEntity){
+  static fromMapEntity(mE:MapEntity){
     const map = new MapPutDto()
     map.catalogId = mE.catalogId
     map.name = mE.name
