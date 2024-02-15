@@ -121,7 +121,7 @@ export class ImportCreateService {
 
   async executeExport(importAttrs: ImportAttributes, map: MapEntity) {
     try {
-      const resData = await this.libot.reqAndRetry<ImportResPayload>(async () => await this.libot.exportStampMap(importAttrs), "Export map")
+      const resData = await this.libot.reqAndRetry<ImportResPayload>(async () => await this.libot.exportStampMap(importAttrs), "Export map", true)
 
       try {
         await this.repo.saveExportRes(resData, map)

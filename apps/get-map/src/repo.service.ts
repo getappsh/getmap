@@ -36,7 +36,7 @@ export class RepoService {
         },
         boundingBox: importAttr.Points,
       }
-    })    
+    })
     if (existMap?.status != MapImportStatusEnum.IN_PROGRESS && existMap?.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
     }
@@ -110,10 +110,17 @@ export class RepoService {
     newMap.boundingBox = importAttr.Points
     newMap.zoomLevel = importAttr.zoomLevel
     newMap.mapProduct = product
+    newMap.name = this.generateMapName(importAttr)
 
     const savedMap = await this.mapRepo.save(newMap)
 
     return savedMap
+  }
+
+  generateMapName(importAttr: ImportAttributes): string {
+    const date = Date.now().toString()
+    const name = `${importAttr.product.productName}_${date.substring(date.length - 4)}`
+    return name
   }
 
   async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
