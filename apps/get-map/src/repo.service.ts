@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
@@ -9,10 +9,10 @@ import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';
 import { ConfigService } from '@nestjs/config';
+import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 
 @Injectable()
 export class RepoService {
-
 
   private readonly logger = new Logger(RepoService.name);
 
@@ -122,6 +122,23 @@ export class RepoService {
     const name = `${importAttr.product.productName}_${date.substring(date.length - 4)}`
     return name
   }
+
+  async setMapProps(p: MapPutDto) {
+   
+    const map = await this.mapRepo.findOne({ where: { catalogId: p.catalogId } })
+
+    if (!map) {
+      const mes = `Map with '${p.catalogId}' not exist`
+      this.logger.error(mes)
+      throw new BadRequestException(mes)
+    }
+    this.logger.log(`Save props for map ${map.catalogId}`)
+    map.name = p.name
+    const savedDevice = await this.mapRepo.save(map)
+    return MapPutDto.fromMapEntity(savedDevice)
+  }
+
+
 
   async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
 

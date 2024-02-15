@@ -17,6 +17,7 @@ import { DeviceTopicsEmit } from '@app/common/microservice-client/topics';
 import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
 import { InventoryDeviceUpdatesDto } from '@app/common/dto/map/dto/inventory-device-updates-dto';
 import { MapUpdatesService } from './map-updates.service';
+import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 
 @Injectable()
 export class GetMapService implements OnApplicationBootstrap {
@@ -218,6 +219,12 @@ export class GetMapService implements OnApplicationBootstrap {
 
   startMapUpdatedCronJob() {
     this.mapUpdates.checkMapsUpdates()
+  }
+
+  async putMapProperties(p: MapPutDto): Promise<MapPutDto> {
+    this.logger.log(`Put props for map ${p.catalogId}`);
+    return await this.repo.setMapProps(p)
+  
   }
 
   // Utils

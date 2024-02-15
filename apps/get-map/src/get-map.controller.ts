@@ -5,6 +5,7 @@ import { GetMapTopics, GetMapTopicsEmit } from '@app/common/microservice-client/
 import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@app/common/dto/map';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
+import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 
 @Controller()
 export class GetMapController {
@@ -58,16 +59,21 @@ export class GetMapController {
     this.logger.log(`Set maps config`)
     return await this.getMapService.setMapConfig(config)
   }
-  
+
   @EventPattern(GetMapTopicsEmit.MAP_UPDATES_JOB_START)
   async startMapUpdatedCronJob() {
     this.logger.log(`Start 'map updates' job from api call`)
     this.getMapService.startMapUpdatedCronJob()
   }
 
+  @MessagePattern(GetMapTopics.MAP_PUT)
+  putDeviceProperties(@Payload() p: MapPutDto): Promise<MapPutDto> {
+    return this.getMapService.putMapProperties(p)
+  }
+
   // Utils
   @MessagePattern(GetMapTopics.CHECK_HEALTH)
-  healthCheckSuccess(){
+  healthCheckSuccess() {
     return "Get map service is success"
   }
 
