@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
@@ -8,10 +8,12 @@ import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/impo
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';
+import { ConfigService } from '@nestjs/config';
+import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
+import { area } from '@turf/turf';
 
 @Injectable()
 export class RepoService {
-
 
   private readonly logger = new Logger(RepoService.name);
 
@@ -20,18 +22,23 @@ export class RepoService {
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
     @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
-    private libotClient: LibotHttpClientService
+    private libotClient: LibotHttpClientService,
+    private readonly env: ConfigService,
   ) { }
 
   // Maps
   async getMapByImportAttrs(importAttr: ImportAttributes): Promise<MapEntity> {
     const existMap = await this.mapRepo.findOne({
       where: {
-        mapProduct: { id: importAttr.productId },
+        mapProduct: {
+          id: importAttr.product.id,
+          productType: importAttr.product.productType,
+          ingestionDate: importAttr.product.ingestionDate
+        },
         boundingBox: importAttr.Points,
       }
     })
-    if(existMap.expiredDate <= new Date(new Date().getTime())){
+    if (existMap?.status != MapImportStatusEnum.IN_PROGRESS && existMap?.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
     }
     return existMap
@@ -104,11 +111,36 @@ export class RepoService {
     newMap.boundingBox = importAttr.Points
     newMap.zoomLevel = importAttr.zoomLevel
     newMap.mapProduct = product
+    newMap.name = this.generateMapName(importAttr)
+    newMap.area =  importAttr.Area
 
     const savedMap = await this.mapRepo.save(newMap)
 
     return savedMap
   }
+
+  generateMapName(importAttr: ImportAttributes): string {
+    const date = Date.now().toString()
+    const name = `${importAttr.product.productName}_${date.substring(date.length - 4)}`
+    return name
+  }
+
+  async setMapProps(p: MapPutDto) {
+   
+    const map = await this.mapRepo.findOne({ where: { catalogId: p.catalogId } })
+
+    if (!map) {
+      const mes = `Map with '${p.catalogId}' not exist`
+      this.logger.error(mes)
+      throw new BadRequestException(mes)
+    }
+    this.logger.log(`Save props for map ${map.catalogId}`)
+    map.name = p.name
+    const savedDevice = await this.mapRepo.save(map)
+    return MapPutDto.fromMapEntity(savedDevice)
+  }
+
+
 
   async saveExportRes(resData: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
 
@@ -151,13 +183,17 @@ export class RepoService {
         for (let j = 0; j < resData?.artifacts.length; j++) {
           if (resData.artifacts[j].type === ArtifactsLibotEnum.GPKG) {
             existMap[i].fileName = resData.artifacts[j].name
-            existMap[i].packageUrl = resData.artifacts[j].url
+            existMap[i].packageUrl = this.getCorrectPackageUrl(resData.artifacts[j].url)
             existMap[i].size = resData.artifacts[j].size
           }
           if (resData.artifacts[j].type === ArtifactsLibotEnum.METADATA) {
             try {
-              const mapActualPolygon = await this.libotClient.reqAndRetry(async () => await this.libotClient.getActualFootPrint(resData.artifacts[j].url), "download map json file")
-              existMap[i].footprint = mapActualPolygon.join(',')
+              const mapActualPolygon = await this.libotClient.reqAndRetry(
+                async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
+                "download map json file"
+              )              
+              existMap[i].footprint = mapActualPolygon.coordinates[0][0].join(',')
+              existMap[i].area = parseInt(area(mapActualPolygon).toFixed())
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
               this.logger.error(mes)
@@ -176,6 +212,24 @@ export class RepoService {
 
     return (await this.mapRepo.save(existMap)).find(cMap => cMap.catalogId === map?.catalogId)
 
+  }
+
+  getCorrectPackageUrl(originalUrl: string) {
+    const correctBaseUrl = this.env.get("PROXY_DOWNLOAD_BASE_URL")
+
+    if (correctBaseUrl) {
+      const regex = /^(https?:\/\/[^\/]+)\//;
+      const match = originalUrl.match(regex);
+
+      if (match && match[1]) {
+        // Replace the base URL with the new base URL
+        return originalUrl.replace(match[1], correctBaseUrl);
+      } else {
+        // If the base URL couldn't be extracted, return the original URL
+        return originalUrl;
+      }
+    }
+    return originalUrl
   }
 
   async setErrorStatus(map: MapEntity, errMes: string) {
@@ -209,7 +263,11 @@ export class RepoService {
   // Products
   async getOrCreateProduct(product: MapProductResDto) {
 
-    const existProduct = await this.productRepo.findOneBy({ id: product.id })
+    const existProduct = await this.productRepo.findOneBy({
+      id: product.id,
+      productType: product.productType,
+      ingestionDate: product.ingestionDate
+    })
 
     if (existProduct) {
       return existProduct

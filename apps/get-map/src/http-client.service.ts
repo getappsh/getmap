@@ -11,6 +11,7 @@ import { ImportResPayload } from "@app/common/dto/libot/import-res-payload";
 import { MapError } from "@app/common/dto/map/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 import { ConfigService } from "@nestjs/config";
+import { Feature, Geometry, MultiPolygon } from "@turf/turf";
 
 
 @Injectable()
@@ -112,10 +113,10 @@ export class LibotHttpClientService {
     }
   }
 
-  async getActualFootPrint(url: string): Promise<number[][]> {
+  async getActualFootPrint(url: string): Promise<Geometry> {
     this.logger.log(`Extract the actual footprint from map json file`)
     const res = await (await lastValueFrom(this.httpConfig.get(url))).data
-    return res.footprint.coordinates[0][0]
+    return res.footprint
   }
 
   // Http requests helpers
