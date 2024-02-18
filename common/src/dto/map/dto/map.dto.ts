@@ -19,6 +19,15 @@ export class MapDto {
 
   @ApiProperty({ required: false })
   boundingBox: string;
+  
+  @ApiProperty({ required: false })
+  footprint: string;
+
+  @ApiProperty({ required: false })
+  size: number;
+  
+  @ApiProperty({ required: false })
+  area: number;
 
   @ApiProperty({ required: false })
   status: string;
@@ -28,9 +37,6 @@ export class MapDto {
 
   @ApiProperty({ required: false })
   packageUrl: string;
-
-  @ApiProperty({ required: false })
-  size: number;
 
   @ApiProperty({ required: false })
   isUpdate: boolean;
@@ -45,10 +51,12 @@ export class MapDto {
     map.createDate = mapEntity.createDateTime;
     map.exportEndDate = mapEntity.exportEnd;
     map.boundingBox = mapEntity.boundingBox;
+    map.footprint = mapEntity.footprint
+    map.size = mapEntity.size
+    map.area = mapEntity.area
     map.status = mapEntity.status;
     map.fileName = mapEntity.fileName;
     map.packageUrl = mapEntity.packageUrl;
-    map.size = mapEntity.size
     map.isUpdate = mapEntity.isUpdated
     map.product = mapEntity.mapProduct
 
