@@ -1,61 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { DeviceEntity, DeviceMapStateEntity, MapConfigEntity, MapEntity, ProductEntity } from '@app/common/database/entities';
-import { LibotHttpClientService } from './http-client.service';
-import { ImportCreateService } from './import-create.service';
-import { RepoService } from './repo.service';
-import { ConfigService } from '@nestjs/config';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { TestingModule } from '@nestjs/testing';
+import { ImportCreateService } from '../src/import-create.service';
 import { productDtoStub } from '@app/common/dto/map/stubs/product.dto.stub';
 import { importAttrsStubNoProduct, importAttrsStubNorthGazaMoreThen60Pres, importAttrsStubNorthGazaRecentMoreThen60Pres as importAttrsStubNorthGazaRecentMoreThen60Perc } from '@app/common/dto/map/stubs/importAttrs.dto.stub';
 import { Validators } from '@app/common/dto/map/utils/validators';
+import { getTestModule } from './get-map-spec.module';
 
 describe('ImportCreateService', () => {
   let importCreateService: ImportCreateService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ImportCreateService,
-        RepoService,
-        ConfigService,
-        {
-          provide: LibotHttpClientService,
-          useValue: {},
-        },
-        {
-          provide: getRepositoryToken(MapEntity),
-          useValue: {}
-        },
-        {
-          provide: getRepositoryToken(DeviceEntity),
-          useValue: {}
-        },
-        {
-          provide: getRepositoryToken(DeviceMapStateEntity),
-          useValue: {}
-        },
-        {
-          provide: getRepositoryToken(ProductEntity),
-          useValue: {}
-        },
-        {
-          provide: getRepositoryToken(MapConfigEntity),
-          useValue: {}
-        },
-
-      ],
-    }).compile();
+  beforeAll(async () => {
+    const module: TestingModule = await getTestModule().compile();
 
     importCreateService = module.get<ImportCreateService>(ImportCreateService);
-
-    jest.clearAllMocks();
-
   });
 
+  beforeEach(async () => {
+    jest.clearAllMocks();
+  });
+  
   describe('extract the most compatible product', () => {
     let getIntersectPercentage: jest.SpyInstance; // To check how much map inclusion the product has
     let isBBoxIntersectFootprint: jest.SpyInstance; // A way to check how many iterators it went through
-
+    
     beforeEach(() => {
       getIntersectPercentage = jest.spyOn(Validators, "getIntersectPercentage")
       isBBoxIntersectFootprint = jest.spyOn(Validators, "isBBoxIntersectFootprint")
@@ -85,7 +51,7 @@ describe('ImportCreateService', () => {
       expect(selectedProduct).toEqual(productDto[0])
     });
 
-    it('should return the north Gaza product from the list ', async () => {
+    it('should return the north Gaza product from the list', async () => {
       const productDto = productDtoStub()
       const importAttrs = importAttrsStubNorthGazaMoreThen60Pres()
 
