@@ -10,6 +10,7 @@ import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';
 import { ConfigService } from '@nestjs/config';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
+import { area } from '@turf/turf';
 
 @Injectable()
 export class RepoService {
@@ -111,6 +112,7 @@ export class RepoService {
     newMap.zoomLevel = importAttr.zoomLevel
     newMap.mapProduct = product
     newMap.name = this.generateMapName(importAttr)
+    newMap.area =  importAttr.Area
 
     const savedMap = await this.mapRepo.save(newMap)
 
@@ -189,8 +191,9 @@ export class RepoService {
               const mapActualPolygon = await this.libotClient.reqAndRetry(
                 async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
                 "download map json file"
-              )
-              existMap[i].footprint = mapActualPolygon.join(',')
+              )              
+              existMap[i].footprint = mapActualPolygon.coordinates[0][0].join(',')
+              existMap[i].area = parseInt(area(mapActualPolygon).toFixed())
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
               this.logger.error(mes)
