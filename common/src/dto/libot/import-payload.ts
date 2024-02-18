@@ -47,7 +47,7 @@ export class ImportPayload {
 
   static fromImportAttrs(attrs: ImportAttributes): ImportPayload {
     const importPayload = new ImportPayload()
-    importPayload.catalogRecordID = attrs.productId
+    importPayload.catalogRecordID = attrs.product.id
     importPayload.webhook = [
       {
         events: ["TASK_COMPLETED", "TASK_FAILED"],
@@ -67,7 +67,7 @@ export class ImportPayload {
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}] resolution: ${attrs.targetResolution}`
+    importPayload.description = `Export request for prodID: ${attrs.product.id} points: [${attrs.Points}] resolution: ${attrs.targetResolution}`
     return importPayload
   }
 
