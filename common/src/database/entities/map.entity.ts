@@ -39,6 +39,9 @@ export class MapEntity {
 
   @Column({ name: 'foot_print', nullable: true })
   footprint: string;
+  
+  @Column({ name: 'area', nullable: true })
+  area: number;
 
   @Column({ name: 'file_name', nullable: true })
   fileName: string;
