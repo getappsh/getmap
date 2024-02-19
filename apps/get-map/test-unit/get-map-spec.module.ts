@@ -9,6 +9,7 @@ import { JobsEntity } from "@app/common/database/entities/map-updatesCronJob";
 import { mockMapConfigRepo } from "@app/common/database/test/support/__mocks__/map-config.repo.mock";
 import { GetMapService } from "../src/get-map.service";
 import { MapUpdatesService } from "../src/map-updates.service";
+import { mockMapRepo } from "@app/common/database/test/support/__mocks__";
 
 const mockDiscoveryMicroClient = {
   send: jest.fn().mockResolvedValue({}),
@@ -20,6 +21,7 @@ export const getTestModule = () => {
     providers: [
       GetMapService,
       ImportCreateService,
+      MapUpdatesService,
       RepoService,
       ConfigService,
       {
@@ -31,16 +33,12 @@ export const getTestModule = () => {
         useValue: {},
       },
       {
-        provide: MapUpdatesService,
-        useValue: {},
-      },
-      {
         provide: LibotHttpClientService,
         useValue: {},
       },
       {
         provide: getRepositoryToken(MapEntity),
-        useValue: {}
+        useValue: mockMapRepo()
       },
       {
         provide: getRepositoryToken(DeviceEntity),
