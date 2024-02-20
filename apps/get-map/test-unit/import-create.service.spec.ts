@@ -3,7 +3,7 @@ import { ImportCreateService } from '../src/import-create.service';
 import { productDtoStub } from '@app/common/dto/map/stubs/product.dto.stub';
 import { importAttrsStubNoProduct, importAttrsStubNorthGazaMoreThen60Pres, importAttrsStubNorthGazaRecentMoreThen60Pres as importAttrsStubNorthGazaRecentMoreThen60Perc } from '@app/common/dto/map/stubs/importAttrs.dto.stub';
 import { Validators } from '@app/common/dto/map/utils/validators';
-import { getTestModule } from './get-map-spec.module';
+import { getTestModule } from './mocks/get-map.module.mock';
 
 describe('ImportCreateService', () => {
   let importCreateService: ImportCreateService;

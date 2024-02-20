@@ -1,5 +1,5 @@
 import { TestingModule } from '@nestjs/testing';
-import { getTestModule } from './get-map-spec.module';
+import { getTestModule } from './mocks/get-map.module.mock';
 import { MapUpdatesService } from '../src/map-updates.service';
 import { productDtoStub } from '@app/common/dto/map/stubs/product.dto.stub';
 import { MapEntity } from '@app/common/database/entities';
@@ -15,7 +15,6 @@ describe('MapUpdatesService', () => {
   });
 
   beforeEach(async () => {
-    console.count("each")
     jest.clearAllMocks();
   });
 

@@ -1,6 +1,6 @@
 import { TestingModule } from '@nestjs/testing';
 import { GetMapService } from '../src/get-map.service';
-import { getTestModule } from './get-map-spec.module';
+import { getTestModule } from './mocks/get-map.module.mock';
 
 describe('GetMapService', () => {
   let getMapService: GetMapService;
