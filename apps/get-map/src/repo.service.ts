@@ -205,7 +205,7 @@ export class RepoService {
         existMap[i].progress = 100
       }
 
-      if (!existMap[i].packageUrl || !existMap[i].footprint) {
+      if ((!existMap[i].packageUrl || !existMap[i].footprint) && existMap[i].status === MapImportStatusEnum.DONE) {
         existMap[i].status = MapImportStatusEnum.IN_PROGRESS
       }
     }
