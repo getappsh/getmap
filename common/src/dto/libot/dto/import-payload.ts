@@ -1,4 +1,4 @@
-import { ImportAttributes } from "../map/dto/importAttributes.dto";
+import { ImportAttributes } from "../../map/dto/importAttributes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { Feature } from '@turf/turf';
 
