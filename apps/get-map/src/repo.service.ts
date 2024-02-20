@@ -4,7 +4,7 @@ import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum,
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
-import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { ArtifactsLibotEnum, ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LibotHttpClientService } from './http-client.service';

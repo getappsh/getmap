@@ -3,11 +3,11 @@ import { Injectable, Logger } from "@nestjs/common";
 import { DiscoveryAttributes } from "@app/common/dto/map/dto/discoveryAttributes.dto";
 import { lastValueFrom } from "rxjs";
 import { XMLParser } from "fast-xml-parser"
-import { MCRasterRecordDto, RecordsResDto } from "@app/common/dto/libot/recordsRes.dto";
+import { MCRasterRecordDto, RecordsResDto } from "@app/common/dto/libot/dto/recordsRes.dto";
 import { AxiosResponse } from "axios";
 import { ImportAttributes } from "@app/common/dto/map/dto/importAttributes.dto";
-import { ImportPayload } from "@app/common/dto/libot/import-payload";
-import { ImportResPayload } from "@app/common/dto/libot/import-res-payload";
+import { ImportPayload } from "@app/common/dto/libot/dto/import-payload";
+import { ImportResPayload } from "@app/common/dto/libot/dto/import-res-payload";
 import { MapError } from "@app/common/dto/map/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 import { ConfigService } from "@nestjs/config";

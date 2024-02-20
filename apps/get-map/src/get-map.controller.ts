@@ -3,7 +3,7 @@ import { GetMapService } from './get-map.service';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { GetMapTopics, GetMapTopicsEmit } from '@app/common/microservice-client/topics';
 import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@app/common/dto/map';
-import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 

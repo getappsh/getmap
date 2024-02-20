@@ -10,7 +10,7 @@ import { MapError } from '@app/common/dto/map/utils/map-error';
 import { RepoService } from './repo.service';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
-import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
+import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 import { MicroserviceClient, MicroserviceName } from '@app/common/microservice-client';
 import { DeviceTopicsEmit } from '@app/common/microservice-client/topics';

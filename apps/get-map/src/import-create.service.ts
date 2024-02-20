@@ -9,8 +9,8 @@ import { ResolutionMapper } from '@app/common/dto/map/utils/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
-import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
-import { MCRasterRecordDto } from '@app/common/dto/libot/recordsRes.dto';
+import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
+import { MCRasterRecordDto } from '@app/common/dto/libot/dto/recordsRes.dto';
 import { Feature, Polygon, MultiPolygon } from '@turf/turf';
 import { ConfigService } from '@nestjs/config';
 
