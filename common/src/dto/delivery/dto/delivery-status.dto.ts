@@ -6,11 +6,11 @@ import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validato
 export class DeliveryStatusDto {
 
 
-  @ApiProperty({required: false})
+  @ApiProperty()
   @IsNotEmpty()
   deviceId: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   catalogId: string;
@@ -50,7 +50,7 @@ export class DeliveryStatusDto {
   @IsOptional()
   downloadEstimateTime: number;
 
-  @ApiProperty({required: false})
+  @ApiProperty()
   @IsOptional()    
   @Type(() => Date)
   @IsDate()
