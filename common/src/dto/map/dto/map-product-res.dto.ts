@@ -15,13 +15,13 @@ export class MapProductResDto {
   productName: string;
 
   @ApiProperty({ required: false })
-  productVersion: string;
+  productVersion: number;
 
   @ApiProperty({ required: false })
   productType: string;
 
   @ApiProperty({ required: false })
-  productSubType: string;
+  productSubType: number;
 
   @ApiProperty({ required: false })
   description: string;

@@ -34,9 +34,9 @@ export class MCRasterRecordDto {
   'mc:minHorizontalAccuracyCE90': string
   'mc:producerName': string
   'mc:productBBox': string
-  'mc:productSubType': string
+  'mc:productSubType': number
   'mc:productType': string
-  'mc:productVersion': string
+  'mc:productVersion': number
   'mc:region': string
   'mc:sensors': string
   'mc:imagingTimeEndUTC': string
