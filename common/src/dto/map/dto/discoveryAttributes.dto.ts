@@ -1,5 +1,4 @@
-import { ResolutionMapper } from "./utils/resolutionMapper"
-import { Validators } from "./utils/validators"
+import { ResolutionMapper } from "../utils/resolutionMapper"
 
 export class DiscoveryAttributes {
 
@@ -42,15 +41,5 @@ export class DiscoveryAttributes {
   toString() {
     return JSON.stringify(this);
   }
-
-  // static fromDiscoverMapDto(dMapDto: DiscoveryMapDto): DiscoveryAttributes {
-  //   const attr = new DiscoveryAttributes()
-  //   attr.BoundingBox = dMapDto.boundingBox
-
-  //   // attr.Identifier = discoverMap.productId
-  //   // attr.Type = discoverMap.productType    
-
-  //   return attr
-  // }
 }
 

@@ -4,14 +4,14 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export enum ArtifactsLibotEnum {
   GPKG = "GPKG",
-  LEGEN = "LEGEND",
-  METADAT = "METADATA",
+  LEGEND = "LEGEND",
+  METADATA = "METADATA",
   THUMBNAILS_SMALL = "THUMBNAILS_SMALL",
   THUMBNAILS_MEDIUM = "THUMBNAILS_MEDIUM",
-  THUMBNAILS_LARG = "THUMBNAILS_LARGE"
+  THUMBNAILS_LARGE = "THUMBNAILS_LARGE"
 }
 
-class Artifact {
+export class Artifact {
 
   @ApiProperty({ required: false, enum: ArtifactsLibotEnum })
   type: ArtifactsLibotEnum
