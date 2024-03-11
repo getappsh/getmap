@@ -79,3 +79,13 @@ jobs:
           tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
           # build on feature branches, push only on main branch
           push: true
+  triger_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate new tag
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        id: set_tag        
+        run: |
+          curl --request POST --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+          "https://gitlab.getapp.sh/api/v4/projects/51/pipeline" --form "ref=master"
