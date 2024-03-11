@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm';
 import { DeliveryEntity, UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity } from '../entities';
 import { join } from 'path';
 import { readFileSync } from 'fs'
-import { MapUpdatesJobEntity } from '../entities/map-updatesCronJob';
+import { JobsEntity } from '../entities/map-updatesCronJob';
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
 let migrationsRun: boolean = true
@@ -17,6 +17,8 @@ const ormConfig = new DataSource({
   port: Number(process.env.POSTGRES_PORT),
   database: `${process.env.POSTGRES_DB}${region}`,
   username: process.env.POSTGRES_USER,
+  connectTimeoutMS: 5000,
+  
 
   ...getDBAuthParams(),
   entities: [
@@ -39,7 +41,7 @@ const ormConfig = new DataSource({
     DeviceMapStateEntity,
     DeliveryEntity,
     MapConfigEntity,
-    MapUpdatesJobEntity
+    JobsEntity
   ],
   migrations: [join(__dirname, '../migration/*.{js,ts}')],
   logging: false,

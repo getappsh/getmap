@@ -65,6 +65,8 @@ export const GetMapTopics = {
     // Config
     GET_MAP_CONFIG: `getapp-map.config.get${region}`,
     SET_MAP_CONFIG: `getapp-map.config.set${region}`,
+    // admin
+    MAP_PUT: `getapp-map.put${region}`,
     // Device
     REGISTER_MAP: `getapp-device.map.register${region}`,
     DISCOVERY_MAP: `getapp-device.discover.map${region}`,
@@ -74,8 +76,13 @@ export const GetMapTopics = {
     CHECK_HEALTH: `getapp-map.check-health${region}`
 } as const
 
+export const GetMapTopicsEmit = {
+    MAP_UPDATES_JOB_START: `getapp-device.map.job.updates.start${region}`,
+} as const
+
 export const DeviceTopics = {
     All_DEVICES: `getapp-device.all${region}`,
+    DEVICES_PUT: `getapp-device.put${region}`,
     DEVICE_MAPS: `getapp-device.device.maps${region}`,
     All_MAPS: `getapp-map.maps${region}`,
     GET_MAP: `getapp-map.map.id${region}`,
@@ -88,6 +95,8 @@ export const DeviceTopics = {
 
 export const DeviceTopicsEmit = {
     REGISTER_MAP_TO_DEVICE: `getapp-device.map.register-to-device${region}`,
+    REGISTER_MAP_INVENTORY: `getapp-device.map.register-inventory${region}`,
+    MAP_UPDATES_JOB_START: `getapp-device.map.job.updates.start${region}`,
     UPDATE_TLS_STATUS: `getapp-device.update.tls.status${region}`,
     IM_PUSH_DISCOVERY: `getapp-device.im.push.discovery${region}`,
 } as const

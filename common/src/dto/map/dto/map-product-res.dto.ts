@@ -1,5 +1,5 @@
 import { ProductEntity } from "@app/common/database/entities";
-import { MCRasterRecordDto } from "@app/common/dto/libot/recordsRes.dto";
+import { MCRasterRecordDto } from "@app/common/dto/libot/dto/recordsRes.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsString } from "class-validator";
 
