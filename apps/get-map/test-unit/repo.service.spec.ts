@@ -2,15 +2,18 @@ import { TestingModule } from '@nestjs/testing';
 import { getTestModule } from './mocks/get-map.module.mock';
 import { RepoService } from '../src/repo.service';
 import { importAttrsStubNorthGazaRecentFull } from '@app/common/dto/map/stubs/importAttrs.dto.stub';
-import { mockMapRepoProps } from '@app/common/database/test/support/__mocks__';
+import { mockMapRepo, mockMapRepoProps } from '@app/common/database/test/support/__mocks__';
 import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { resPayloadOnyWithMateData, resPayloadOnlyWithPackageUrl, resPayloadFullComplete } from '@app/common/dto/libot/stubs/import-res-payload.stub';
 import { mapEntityStub } from '@app/common/database/test/support/stubs/map.stub';
 import { mockHttpClient, mockHttpClientProps } from './mocks/http-client.service.mock';
 import { LibotHttpClientService } from '../src/http-client.service';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('RepoService', () => {
   let repoService: RepoService;
+  let mapRepo: Repository<MapEntity>;
   let libotService: LibotHttpClientService;
   let module: TestingModule
 
@@ -18,6 +21,7 @@ describe('RepoService', () => {
     module = await getTestModule().compile();
     repoService = module.get<RepoService>(RepoService);
     libotService = module.get<LibotHttpClientService>(LibotHttpClientService);
+    mapRepo = module.get<Repository<MapEntity>>(getRepositoryToken(MapEntity))
   });
 
   beforeEach(async () => {
@@ -26,8 +30,8 @@ describe('RepoService', () => {
 
   describe('Checks get map from cache', () => {
     it('Should return map as expired', async () => {
-      const mockMapRepo = (repoService as any)['mapRepo'] as mockMapRepoProps;
-      jest.spyOn(mockMapRepo, 'findOne').mockImplementation(mockMapRepo.findOneByImportAttrsAndReturnExpiredMap);
+      // const mockMapRepo = (repoService as any)['mapRepo'] as mockMapRepoProps;
+      jest.spyOn(mapRepo, 'findOne').mockImplementation(mockMapRepo().findOneByImportAttrsAndReturnExpiredMap);
 
       const map = await repoService.getMapByImportAttrs(importAttrsStubNorthGazaRecentFull())
       expect(map.status).toBe(MapImportStatusEnum.EXPIRED)
