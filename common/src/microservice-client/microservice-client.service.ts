@@ -6,6 +6,7 @@ import { MSType, getClientConfig } from "./clients";
 import { ConfigService } from "@nestjs/config";
 import { ClassConstructor, plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
+import { ClsService } from "nestjs-cls";
 
 
 @Injectable()
@@ -15,7 +16,8 @@ export class MicroserviceClient {
 
   constructor(
     private readonly options: MicroserviceModuleOptions,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private readonly cls: ClsService
     ){
       const dplEnv = MSType[configService.get<string>('MICRO_SERVICE_TYPE')]
       const clientConfig = getClientConfig(options, dplEnv)
@@ -25,14 +27,14 @@ export class MicroserviceClient {
 
   
   emit<TResult = any, TInput = any>(pattern: any, data: TInput): Observable<TResult>{
-    return this.client.emit(pattern, data);
+    return this.client.emit(pattern, this.formatData(data));
   }
 
   send<TResult = any, TInput = any>(pattern: any, data: TInput, waitTime?: number): Observable<TResult>{
     waitTime = (waitTime) ? waitTime : parseInt(this.configService.get("MICROSERVICE_RESPONSE_WAIT_TIME"));
     return this.client.send(
       pattern, 
-      data
+      this.formatData(data)
     ).pipe(
       timeout(waitTime)
     );
@@ -42,7 +44,7 @@ export class MicroserviceClient {
     waitTime = (waitTime) ? waitTime : parseInt(this.configService.get("MICROSERVICE_RESPONSE_WAIT_TIME"))
     return this.client.send(
         topic,
-        data
+        this.formatData(data)
     ).pipe(
         timeout(waitTime),
         map(async res => {
@@ -57,6 +59,12 @@ export class MicroserviceClient {
             return res;
         })
     )
+  }
+
+  private formatData(data: any){
+    return {headers: {
+      "traceId": this.cls.getId()
+    }, ...data}
   }
 
   isKafka(){
