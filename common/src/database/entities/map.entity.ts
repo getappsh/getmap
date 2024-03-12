@@ -3,6 +3,7 @@ import { MapImportStatusEnum } from "./enums.entity";
 import { ProductEntity, } from "./map-product.entity";
 import { DeviceMapStateEntity } from "./device-map-state.entity";
 import { nanoid } from "nanoid";
+import { StringNumberTransformer } from "./transformers/string-number.transformer";
 
 @Entity("map")
 export class MapEntity {
@@ -15,10 +16,13 @@ export class MapEntity {
     this.catalogId = nanoid();
   }
 
-  @CreateDateColumn({ name: 'create_date' })
+  @Column({ nullable: true })
+  name: string;
+
+  @CreateDateColumn({ name: 'create_date', type: 'timestamptz' })
   createDateTime: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'last_update_date', type: 'timestamptz' })
   lastUpdatedDate: Date;
 
   @ManyToOne(() => ProductEntity)
@@ -33,6 +37,12 @@ export class MapEntity {
 
   @Column({ name: 'bounding_box', nullable: true })
   boundingBox: string;
+
+  @Column({ name: 'foot_print', nullable: true })
+  footprint: string;
+
+  @Column({ name: 'area', nullable: true })
+  area: number;
 
   @Column({ name: 'file_name', nullable: true })
   fileName: string;
@@ -51,7 +61,12 @@ export class MapEntity {
   @Column({ name: 'progress', type: 'int', nullable: true })
   progress: number
 
-  @Column({ name: 'size', type: 'int', nullable: true })
+  @Column({
+    name: 'size',
+    type: 'bigint',
+    nullable: true,
+    transformer: new StringNumberTransformer()
+  })
   size: number
 
   @Column({ name: 'export_start', type: 'timestamptz', nullable: true })
@@ -60,7 +75,15 @@ export class MapEntity {
   @Column({ name: 'export_end', type: 'timestamptz', nullable: true })
   exportEnd: Date
 
-  @Column({ name: 'job_id', type: "bigint", nullable: true })
+  @Column({ name: 'expired_date', type: 'timestamptz', nullable: true })
+  expiredDate: Date
+
+  @Column({
+    name: 'job_id',
+    type: "bigint",
+    nullable: true,
+    transformer: new StringNumberTransformer()
+  })
   jobId: number
 
   @Column({ name: 'error_reason', nullable: true })
