@@ -32,7 +32,7 @@ export class RegexValidation implements ValidatorConstraintInterface {
         this.regexPattern = new RegExp(/^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/)
         break;
       case RegexPatternFor.B_BOX:
-        this.regexPattern = new RegExp(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?$/)
+        this.regexPattern = new RegExp(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?(?:,-?\d+(\.\d+)?){0,},-?\d+(\.\d+)?$/)
         break;
 
       default:

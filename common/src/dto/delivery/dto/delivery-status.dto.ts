@@ -46,7 +46,7 @@ export class DeliveryStatusDto {
   @IsOptional()    
   downloadData: number;
   
-  @ApiProperty({required: false})
+  @ApiProperty({required: false, type: "integer", format: "int64"})
   @IsOptional()
   downloadEstimateTime: number;
 
