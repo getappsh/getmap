@@ -87,6 +87,9 @@ function createPinoLogger(name: string): DynamicModule{
   return LoggerModule.forRoot({
     pinoHttp: {
       name: name,
+      quietReqLogger: true,
+      autoLogging: false,
+      genReqId: () => undefined,
       base: {name: undefined},
       timestamp: pino.stdTimeFunctions.isoTime,
       // transport: {
