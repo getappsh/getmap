@@ -62,6 +62,9 @@ export class MicroserviceClient {
   }
 
   private formatData(data: any){
+    if (typeof data === 'string'){
+      data = {stringValue: data}
+    }
     return {headers: {
       "traceId": this.cls.getId()
     }, ...data}
