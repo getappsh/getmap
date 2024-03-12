@@ -6,9 +6,9 @@ export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({type: 'timestamptz'})
   createdDate: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({type: 'timestamptz'})
   lastUpdatedDate: Date;
 }

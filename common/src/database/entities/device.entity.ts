@@ -9,11 +9,17 @@ export class DeviceEntity {
   @PrimaryColumn({ name: 'ID' })
   ID: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({name: 'create_date', type: "timestamptz"})
   createdDate: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({name: 'last_update_date', type: "timestamptz"})
   lastUpdatedDate: Date;
+  
+  @Column({name: 'last_connection_date', type: "timestamptz", nullable: true})
+  lastConnectionDate: Date;
+  
+  @Column({nullable: true})
+  name: string
 
   @Column({ name: 'MAC', nullable: true })
   MAC: string;

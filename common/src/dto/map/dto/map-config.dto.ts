@@ -12,7 +12,7 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  maxMapSizeInMeter: number
+  MaxMapAreaSqKm: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -52,37 +52,54 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
-  minAvailableSpaceBytes: number
+  minAvailableSpaceMB: number
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  matomoUrl: string
-
+  
   @ApiProperty({ required: false })
   @IsOptional()
   @IsNumber()
   mapMinInclusionInPercentages: number
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoUrl: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoDimensionId: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  matomoSiteId: string
 
   @ApiProperty({ required: false })
   @IsOptional()
-  lastUpdate: Date
+  lastCheckingMapUpdatesDate: Date
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  lastConfigUpdateDate: Date
 
   static fromMapConfig(cE: MapConfigEntity) {
     const config = new MapConfigDto()
     config.deliveryTimeoutMins = cE.deliveryTimeoutMins
     config.downloadRetryTime = cE.downloadRetryTime
     config.downloadTimeoutMins = cE.downloadTimeoutMins
-    config.maxMapSizeInMeter = cE.maxMapSizeInMeter
+    config.MaxMapAreaSqKm = cE.MaxMapAreaSqKm
     config.maxMapSizeInMB = cE.maxMapSizeInMB
     config.maxParallelDownloads = cE.maxParallelDownloads
-    config.minAvailableSpaceBytes = cE.minAvailableSpaceBytes
+    config.minAvailableSpaceMB = cE.minAvailableSpaceMB
     config.periodicInventoryIntervalMins = cE.periodicInventoryIntervalMins
     config.periodicConfIntervalMins = cE.periodicConfIntervalMins
     config.periodicMatomoIntervalMins = cE.periodicMatomoIntervalMins
-    config.matomoUrl = cE.matomoUrl
     config.mapMinInclusionInPercentages = cE.mapMinInclusionInPercentages
-    config.lastUpdate = cE.lastUpdatedDate
+    config.matomoUrl = cE.matomoUrl
+    config.matomoDimensionId = cE.matomoDimensionId
+    config.matomoSiteId = cE.matomoSiteId
+    config.lastConfigUpdateDate = cE.lastUpdatedDate
 
     return config
   }
