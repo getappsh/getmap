@@ -2,6 +2,7 @@ import { DynamicModule, Global, Module } from "@nestjs/common";
 import { MicroserviceClient } from "./microservice-client.service";
 import { MicroserviceModuleOptions } from "./microservice-client.interface";
 import {ConfigService } from "@nestjs/config";
+import { ClsService } from "nestjs-cls";
 
 
 @Global()
@@ -13,10 +14,10 @@ export class MicroserviceModule{
       providers: [
        {
         provide: options.name,
-        useFactory: (cnf: ConfigService) => {
-          return new MicroserviceClient(options, cnf)
+        useFactory: (cnf: ConfigService, cls: ClsService) => {
+          return new MicroserviceClient(options, cnf, cls)
         },
-        inject: [ConfigService]
+        inject: [ConfigService, ClsService]
        }
       ],
       exports: [options.name]
