@@ -29,7 +29,7 @@ export class GetMapController {
 
 
   @MessagePattern(GetMapTopics.GET_IMPORT_STATUS)
-  getImportStatus(@Payload() reqId: string) {
+  getImportStatus(@Payload('stringValue') reqId: string) {
     this.logger.log("Get import create status")
     return this.getMapService.getImportStatus(reqId)
   }
