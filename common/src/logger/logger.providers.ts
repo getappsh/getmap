@@ -86,6 +86,7 @@ export function createProviders(options: LoggerModuleOptions): Provider[]{
 function createPinoLogger(name: string): DynamicModule{
   return LoggerModule.forRoot({
     pinoHttp: {
+      level: 'trace',
       name: name,
       quietReqLogger: true,
       autoLogging: false,
