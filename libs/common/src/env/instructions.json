@@ -2,7 +2,8 @@
   "api": [
     "general.env",
     "micro-service.env",
-    "key-cloak.env"
+    "key-cloak.env",
+    "apm.env"
   ],
   "discovery": [
     "general.env",
