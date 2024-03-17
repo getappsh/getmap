@@ -13,10 +13,12 @@ import { MapUpdatesService } from './map-updates.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/common/microservice-client';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
+import { LoggerModule } from '@app/common/logger/logger.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    LoggerModule.forRoot({httpCls: false, jsonLogger: process.env.LOGGER_FORMAT === 'JSON', name: "Get-map"}),
     HttpModule,
     DatabaseModule,
     TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, JobsEntity]),
