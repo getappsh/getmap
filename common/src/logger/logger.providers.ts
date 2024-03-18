@@ -1,6 +1,6 @@
 import { LoggerModule } from "nestjs-pino";
 import { LoggerModuleOptions } from "./logger.interfaces";
-import { ConsoleLogger, DynamicModule, Provider } from "@nestjs/common";
+import { ConsoleLogger, DynamicModule, LogLevel, Provider } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { AsyncContextMsInterceptor } from "@app/common/logger/async-context-ms.interceptor";
 import { GET_APP_LOGGER } from "./logger.module";
@@ -71,10 +71,27 @@ export function createProviders(options: LoggerModuleOptions): Provider[]{
       }
     )
   }else{
+    const logLevels: LogLevel[] = []
+    switch (process.env.LOG_LEVEL) {
+      default:
+        logLevels.push('verbose');
+      case 'debug':
+        logLevels.push('debug');
+      case 'log':
+        logLevels.push('log');
+      case 'warn':
+        logLevels.push('warn')
+      case 'error':
+        logLevels.push('error')
+    }
+
+    const cLogger = new ConsoleLogger()
+    cLogger.setLogLevels(logLevels)
+    
     providers.push(
       {
         provide: GET_APP_LOGGER,
-        useClass: ConsoleLogger
+        useValue: cLogger
       }
     )
   }
@@ -86,7 +103,7 @@ export function createProviders(options: LoggerModuleOptions): Provider[]{
 function createPinoLogger(name: string): DynamicModule{
   return LoggerModule.forRoot({
     pinoHttp: {
-      level: 'trace',
+      level: process.env.LOG_LEVEL || 'trace',
       name: name,
       quietReqLogger: true,
       autoLogging: false,
