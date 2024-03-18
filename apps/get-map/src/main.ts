@@ -11,12 +11,14 @@ require('dotenv').config()
 async function bootstrap() {  
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     GetMapModule,
-    getClientConfig(
+    {...getClientConfig(
       {
         type: MicroserviceType.GET_MAP, 
         name: MicroserviceName.GET_MAP_SERVICE
       }, 
-      MSType[process.env.MICRO_SERVICE_TYPE])
+      MSType[process.env.MICRO_SERVICE_TYPE]),
+      bufferLogs: true
+    }
   );
   app.useLogger(app.get(GET_APP_LOGGER))
   app.useGlobalFilters(new CustomRpcExceptionFilter())
