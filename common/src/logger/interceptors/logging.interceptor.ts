@@ -33,7 +33,7 @@ export class LoggingInterceptor implements NestInterceptor {
       topic = msgContext.getPattern()
     }
 
-    this.logger.debug(JSON.stringify({topic, req: data}));
+    this.logger.verbose(JSON.stringify({topic, req: data}));
 
     const now = Date.now();
     return next.handle().pipe(
