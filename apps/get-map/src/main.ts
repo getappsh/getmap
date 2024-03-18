@@ -3,6 +3,8 @@ import { MicroserviceOptions } from '@nestjs/microservices';
 import { GetMapModule } from './get-map.module';
 import { MSType, MicroserviceName, MicroserviceType, getClientConfig } from '@app/common/microservice-client';
 import { CustomRpcExceptionFilter } from './rpc-exception.filter';
+import { GET_APP_LOGGER } from '@app/common/logger/logger.module';
+
 require('dotenv').config()
 
 
@@ -16,6 +18,7 @@ async function bootstrap() {
       }, 
       MSType[process.env.MICRO_SERVICE_TYPE])
   );
+  app.useLogger(app.get(GET_APP_LOGGER))
   app.useGlobalFilters(new CustomRpcExceptionFilter())
   app.listen()
 }
