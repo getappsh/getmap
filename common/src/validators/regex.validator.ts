@@ -1,5 +1,4 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments, registerDecorator, ValidationOptions } from 'class-validator';
-import { BBox } from './../../../../../discovery/apps/discovery/src/tilematrix/dto/box.dto';
 
 enum RegexPatternFor {
   VERSION = "version",
