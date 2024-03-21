@@ -45,35 +45,39 @@ export class LibotHttpClientService {
 
       const body = this.constructXmlBody(dAttrs, startPos)
 
-      const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
+      try {
 
+        const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
 
-      if (this.isResSuccess(res, "getRecords")) {
+        if (this.isResSuccess(res, "getRecords")) {
 
-        let results: RecordsResDto = this.xmlToJson(res.data) ?? []
-        const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"] ?? []
+          let results: RecordsResDto = this.xmlToJson(res.data) ?? []
+          const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"] ?? []
 
-        if (Array.isArray(records)) {
-          productsRes = [...productsRes, ...records]
+          if (Array.isArray(records)) {
+            productsRes = [...productsRes, ...records]
+          } else {
+            productsRes.push(records)
+          }
+          startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
         } else {
-          productsRes.push(records)
+          if (this.isThereErrorMes(res)) {
+            const error = this.errorFromRes(res.data)
+            this.logger.error(`Error occurs in getRecord req`, error)
+            throw new Error(error)
+          } else {
+            throw new Error(`Error occurs in getRecord req! HTTP StatusCode: ${res.status}, Message: ${res.data}`)
+          }
         }
-        startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
-      } else {
-        if (this.isThereErrorMes) {
-          const error = this.errorFromRes(res.data)
-          this.logger.error(`Error occurs in getRecord req`, error)
-          throw new Error(error)
-        } else {
-          throw new Error(`Error occurs in getRecord req! HTTP StatusCode: ${res.status}, Message: ${res.data}`)
-        }
+      } catch (error) {
+        const mas = `Error occurs in getRecord req! HTTP StatusCode: ${error.code}, Message: ${error.message}`
+        this.logger.error(`Export map failed! Got status code: ${error.code}, mes: ${error.message}`)
+        throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
       }
-
     }
 
     this.logger.debug(`received ${productsRes.length} records from libot `)
     return productsRes
-
   }
 
   async exportStampMap(imAttrs: ImportAttributes) {

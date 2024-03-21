@@ -47,9 +47,12 @@ export class GetMapService implements OnApplicationBootstrap {
       mapRes.products = records.map(record => MapProductResDto.fromRecordsRes(record))
     } catch (error) {
       mapRes.status = MapOfferingStatus.ERROR
-      mapRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
+      if (error instanceof MapError) {
+        mapRes.error = this.throwErrorDto(error.errorCode, error.message)
+      } else {
+        mapRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)
+      }
     }
-
     return mapRes
   }
 
@@ -224,7 +227,7 @@ export class GetMapService implements OnApplicationBootstrap {
   async putMapProperties(p: MapPutDto): Promise<MapPutDto> {
     this.logger.log(`Put props for map ${p.catalogId}`);
     return await this.repo.setMapProps(p)
-  
+
   }
 
   // Utils
@@ -234,7 +237,7 @@ export class GetMapService implements OnApplicationBootstrap {
     dto.status = entity.status
   }
 
-  throwErrorDto(code: ErrorCode, mes: string) {
+  throwErrorDto(code: ErrorCode, mes: string): ErrorDto {
     const error = new ErrorDto()
     error.errorCode = code
     error.message = mes.toString()
