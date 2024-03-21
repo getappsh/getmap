@@ -1,7 +1,4 @@
-import { ConsoleLogger, DynamicModule, Module, Provider } from "@nestjs/common";
-import { LoggerService } from "./logger.service";
-import { APP_INTERCEPTOR } from "@nestjs/core";
-import { AsyncContextMsInterceptor } from "@app/common/logger/async-context-ms.interceptor";
+import { DynamicModule, Module } from "@nestjs/common";
 import { createIMports, createProviders } from "./logger.providers";
 import { LoggerModuleOptions } from "./logger.interfaces";
 
