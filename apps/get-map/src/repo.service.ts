@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { LibotHttpClientService } from './http-client/http-client.service';
 import { ConfigService } from '@nestjs/config';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 import { area } from '@turf/turf';
+import { L_HttpClientService } from './http-client/http-client.module';
 
 @Injectable()
 export class RepoService {
@@ -22,7 +23,7 @@ export class RepoService {
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
     @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
-    private libotClient: LibotHttpClientService,
+    @Inject(L_HttpClientService) private readonly libotClient: LibotHttpClientService,
     private readonly env: ConfigService,
   ) { }
 

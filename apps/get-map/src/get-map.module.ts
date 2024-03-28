@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { GetMapController } from './get-map.controller';
 import { GetMapService } from './get-map.service';
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule, HttpService } from '@nestjs/axios';
-import { LibotHttpClientService } from './http-client/http-client.service';
+import { HttpModule } from '@nestjs/axios';
 import { ImportCreateService } from './import-create.service';
 import { RepoService } from './repo.service';
 import { DatabaseModule } from '@app/common';
@@ -28,7 +27,7 @@ import { HttpClientModule } from './http-client/http-client.module';
       name: MicroserviceName.DISCOVERY_SERVICE,
       type: MicroserviceType.DISCOVERY,
     }),
-    HttpClientModule
+    HttpClientModule.forRoot({isEmulator: false})
   ],
   controllers: [GetMapController],
   providers: [GetMapService, ImportCreateService, RepoService, MapUpdatesService],

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression, Timeout } from '@nestjs/schedule';
 import { RepoService } from './repo.service';
 import { LibotHttpClientService } from './http-client/http-client.service';
@@ -11,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
+import { L_HttpClientService } from './http-client/http-client.module';
 
 @Injectable()
 export class MapUpdatesService {
@@ -21,7 +22,7 @@ export class MapUpdatesService {
   constructor(
     private readonly env: ConfigService,
     private readonly repo: RepoService,
-    private readonly libot: LibotHttpClientService,
+    @Inject(L_HttpClientService) private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>
   ) { }

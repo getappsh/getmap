@@ -7,12 +7,13 @@ import { ErrorCode } from '@app/common/dto/error';
 import { Validators } from '@app/common/dto/map/utils/validators';
 import { ResolutionMapper } from '@app/common/dto/map/utils/resolutionMapper';
 import { RepoService } from './repo.service';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
 import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MCRasterRecordDto } from '@app/common/dto/libot/dto/recordsRes.dto';
 import { Feature, Polygon, MultiPolygon } from '@turf/turf';
 import { ConfigService } from '@nestjs/config';
+import { L_HttpClientService } from './http-client/http-client.module';
 
 @Injectable()
 export class ImportCreateService {
@@ -21,7 +22,7 @@ export class ImportCreateService {
 
   constructor(
     private readonly env: ConfigService,
-    private readonly libot: LibotHttpClientService,
+    @Inject(L_HttpClientService) private readonly libot: LibotHttpClientService,
     private readonly repo: RepoService,
   ) { }
 

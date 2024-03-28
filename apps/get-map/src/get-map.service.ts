@@ -2,6 +2,7 @@ import { CreateImportDto, CreateImportResDto, ImportStatusResDto, InventoryUpdat
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client/http-client.service';
+import { L_HttpClientService } from './http-client/http-client.module';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { ImportCreateService } from './import-create.service';
@@ -25,7 +26,7 @@ export class GetMapService implements OnApplicationBootstrap {
   private readonly logger = new Logger(GetMapService.name);
 
   constructor(
-    private readonly libot: LibotHttpClientService,
+    @Inject(L_HttpClientService) private readonly libot: LibotHttpClientService,
     private readonly create: ImportCreateService,
     private readonly repo: RepoService,
     private readonly mapUpdates: MapUpdatesService,
