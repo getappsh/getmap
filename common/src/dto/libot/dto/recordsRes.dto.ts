@@ -29,9 +29,9 @@ export class MCRasterRecordDto {
   'mc:ingestionDate': string
   'mc:insertDate': string
   'mc:links': [any]
-  'mc:maxResolutionDeg': string
-  'mc:maxResolutionMeter': string
-  'mc:minHorizontalAccuracyCE90': string
+  'mc:maxResolutionDeg': number
+  'mc:maxResolutionMeter': number
+  'mc:minHorizontalAccuracyCE90': number
   'mc:producerName': string
   'mc:productBBox': string
   'mc:productSubType': number
