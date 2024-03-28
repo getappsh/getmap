@@ -22,6 +22,9 @@
     "postgres-DB.env",
     "get-map.env"
   ],
+  "libot-emu": [
+   "libot-emu.env"
+  ],
   "offering": [
     "general.env",
     "micro-service.env",
