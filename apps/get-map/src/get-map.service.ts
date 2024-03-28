@@ -1,7 +1,7 @@
 import { CreateImportDto, CreateImportResDto, ImportStatusResDto, InventoryUpdatesReqDto, InventoryUpdatesResDto } from '@app/common/dto/map';
 import { MapOfferingStatus, OfferingMapResDto } from '@app/common/dto/offering';
 import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
-import { LibotHttpClientService } from './http-client.service';
+import { LibotHttpClientService } from './http-client/http-client.service';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { ImportCreateService } from './import-create.service';

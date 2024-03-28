@@ -2,7 +2,7 @@ import { MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfig
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { getRepositoryToken } from "@nestjs/typeorm";
-import { LibotHttpClientService } from "../../src/http-client.service";
+import { LibotHttpClientService } from "../../src/http-client/http-client.service";
 import { ImportCreateService } from "../../src/import-create.service";
 import { RepoService } from "../../src/repo.service";
 import { JobsEntity } from "@app/common/database/entities/map-updatesCronJob";

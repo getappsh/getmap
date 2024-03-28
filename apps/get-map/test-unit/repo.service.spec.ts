@@ -7,7 +7,7 @@ import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { resPayloadOnyWithMateData, resPayloadOnlyWithPackageUrl, resPayloadFullComplete } from '@app/common/dto/libot/stubs/import-res-payload.stub';
 import { mapEntityStub } from '@app/common/database/test/support/stubs/map.stub';
 import { mockHttpClient, mockHttpClientProps } from './mocks/http-client.service.mock';
-import { LibotHttpClientService } from '../src/http-client.service';
+import { LibotHttpClientService } from '../src/http-client/http-client.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 

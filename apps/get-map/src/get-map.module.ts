@@ -3,7 +3,7 @@ import { GetMapController } from './get-map.controller';
 import { GetMapService } from './get-map.service';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule, HttpService } from '@nestjs/axios';
-import { LibotHttpClientService } from './http-client.service';
+import { LibotHttpClientService } from './http-client/http-client.service';
 import { ImportCreateService } from './import-create.service';
 import { RepoService } from './repo.service';
 import { DatabaseModule } from '@app/common';
@@ -14,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/common/microservice-client';
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LoggerModule } from '@app/common/logger/logger.module';
+import { HttpClientModule } from './http-client/http-client.module';
 
 @Module({
   imports: [
@@ -26,9 +27,10 @@ import { LoggerModule } from '@app/common/logger/logger.module';
     MicroserviceModule.register({
       name: MicroserviceName.DISCOVERY_SERVICE,
       type: MicroserviceType.DISCOVERY,
-    })
+    }),
+    HttpClientModule
   ],
   controllers: [GetMapController],
-  providers: [GetMapService, LibotHttpClientService, ImportCreateService, RepoService, MapUpdatesService],
+  providers: [GetMapService, ImportCreateService, RepoService, MapUpdatesService],
 })
 export class GetMapModule { }

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression, Timeout } from '@nestjs/schedule';
 import { RepoService } from './repo.service';
-import { LibotHttpClientService } from './http-client.service';
+import { LibotHttpClientService } from './http-client/http-client.service';
 import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
 import { MapEntity } from '@app/common/database/entities';
