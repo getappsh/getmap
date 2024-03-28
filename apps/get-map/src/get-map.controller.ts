@@ -35,7 +35,8 @@ export class GetMapController {
   }
 
   @EventPattern(GetMapTopics.EXPORT_NOTIFICATION)
-  exportNotify(@Payload() payload: ImportResPayload) {
+  exportNotify(@Payload() payloadRaw: any) {
+    const payload = ImportResPayload.fromImportRes(payloadRaw)
     this.logger.log(`got notification from libot for job id ${payload.id} with status ${payload.status}`)
     return this.getMapService.handleNotification(payload)
   }

@@ -113,7 +113,7 @@ export class RepoService {
     newMap.zoomLevel = importAttr.zoomLevel
     newMap.mapProduct = product
     newMap.name = this.generateMapName(importAttr)
-    newMap.area =  importAttr.Area
+    newMap.area = importAttr.Area
 
     const savedMap = await this.mapRepo.save(newMap)
 
@@ -127,7 +127,7 @@ export class RepoService {
   }
 
   async setMapProps(p: MapPutDto) {
-   
+
     const map = await this.mapRepo.findOne({ where: { catalogId: p.catalogId } })
 
     if (!map) {
@@ -192,7 +192,7 @@ export class RepoService {
               const mapActualPolygon = await this.libotClient.reqAndRetry(
                 async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
                 "download map json file"
-              )              
+              )
               existMap[i].footprint = mapActualPolygon.coordinates[0][0].join(',')
               existMap[i].area = parseInt(area(mapActualPolygon).toFixed())
             } catch (error) {

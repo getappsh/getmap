@@ -18,7 +18,7 @@ import { HttpClientModule } from './http-client/http-client.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    LoggerModule.forRoot({httpCls: false, jsonLogger: process.env.LOGGER_FORMAT === 'JSON', name: "Get-map"}),
+    LoggerModule.forRoot({ httpCls: false, jsonLogger: process.env.LOGGER_FORMAT === 'JSON', name: "Get-map" }),
     HttpModule,
     DatabaseModule,
     TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, JobsEntity]),
@@ -27,7 +27,7 @@ import { HttpClientModule } from './http-client/http-client.module';
       name: MicroserviceName.DISCOVERY_SERVICE,
       type: MicroserviceType.DISCOVERY,
     }),
-    HttpClientModule.forRoot({isEmulator: false})
+    HttpClientModule.forRoot({ isEmulator: Boolean(process.env.LIBOT_EMULATOR ?? false) })
   ],
   controllers: [GetMapController],
   providers: [GetMapService, ImportCreateService, RepoService, MapUpdatesService],
