@@ -11,6 +11,7 @@ import { GetMapService } from "../../src/get-map.service";
 import { MapUpdatesService } from "../../src/map-updates.service";
 import { mockMapRepo } from "@app/common/database/test/support/__mocks__";
 import { mockHttpClient } from "./http-client.service.mock";
+import { HttpClientModule } from "../../src/http-client/http-client.module";
 
 const mockDiscoveryMicroClient = {
   send: jest.fn().mockResolvedValue({}),
@@ -19,6 +20,7 @@ const mockDiscoveryMicroClient = {
 
 export const getTestModule = () => {
   return Test.createTestingModule({
+    imports:[HttpClientModule.forRoot({isEmulator: false})],
     providers: [
       GetMapService,
       ImportCreateService,

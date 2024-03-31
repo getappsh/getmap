@@ -10,6 +10,7 @@ import { mockHttpClient, mockHttpClientProps } from './mocks/http-client.service
 import { LibotHttpClientService } from '../src/http-client/http-client.service';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { L_HttpClientService } from '../src/http-client/http-client.module';
 
 describe('RepoService', () => {
   let repoService: RepoService;
@@ -20,7 +21,7 @@ describe('RepoService', () => {
   beforeAll(async () => {
     module = await getTestModule().compile();
     repoService = module.get<RepoService>(RepoService);
-    libotService = module.get<LibotHttpClientService>(LibotHttpClientService);
+    libotService = module.get<LibotHttpClientService>(L_HttpClientService);
     mapRepo = module.get<Repository<MapEntity>>(getRepositoryToken(MapEntity))
   });
 
