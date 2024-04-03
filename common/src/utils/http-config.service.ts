@@ -18,7 +18,7 @@ export class ProxyHttpConfigService {
   private baseUrl: string;
 
   private username: string;
-  private password: string;
+  private password: string; 
 
   private token: string;
   private tokenExpiredTime: Date;
