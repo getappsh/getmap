@@ -9,15 +9,16 @@ import { TokensDto } from "../dto/login/dto/tokens.dto";
 
 
 @Injectable()
-export class HttpConfigService {
+export class ProxyHttpConfigService {
 
-  private readonly logger = new Logger(HttpConfigService.name);
+  private readonly logger = new Logger(ProxyHttpConfigService.name);
 
+  private isProxy: boolean
   private isDistSecure: boolean
   private baseUrl: string;
 
   private username: string;
-  private password: string; 
+  private password: string;
 
   private token: string;
   private tokenExpiredTime: Date;
@@ -26,37 +27,41 @@ export class HttpConfigService {
     public readonly httpService: HttpService,
     private configService: ConfigService,
   ) {
+    this.isProxy = this.configService.get("IS_PROXY") === "true"
 
-    this.baseUrl = `${this.configService.get("GETAPP_URL")}/${API}`
-    this.isDistSecure = this.configService.get("DIST_HTTP_PROTOCOL") === "true"
+    if (this.isProxy) {
+      this.baseUrl = `${this.configService.get("GETAPP_URL")}/${API}`
+      this.isDistSecure = this.configService.get("DIST_HTTP_PROTOCOL") === "true"
 
-    this.httpService.axiosRef.defaults.baseURL = this.baseUrl;
+      this.httpService.axiosRef.defaults.baseURL = this.baseUrl;
 
-    if (this.isDistSecure) {
+      if (this.isDistSecure) {
 
-      this.logger.log(`Destination server run in "secure" mode`)
+        this.logger.log(`Destination server run in "secure" mode`)
 
-      const httpsAgent = new https.Agent({
-        ca: fs.readFileSync(process.env.CA_CERT_PATH),
-        cert: fs.readFileSync(process.env.CLIENT_CERT_PATH),
-        key: fs.readFileSync(process.env.CLIENT_KEY_PATH),
-        // rejectUnauthorized: false
-      })
+        const httpsAgent = new https.Agent({
+          ca: fs.readFileSync(process.env.CA_CERT_PATH),
+          cert: fs.readFileSync(process.env.CLIENT_CERT_PATH),
+          key: fs.readFileSync(process.env.CLIENT_KEY_PATH),
+          // rejectUnauthorized: false
+        })
 
-      this.httpService.axiosRef.defaults.httpsAgent = httpsAgent
-      this.httpService.axiosRef.defaults.headers = { ...this.httpService.axiosRef.defaults.headers, "auth_type": "CC" } as any
+        this.httpService.axiosRef.defaults.httpsAgent = httpsAgent
+        this.httpService.axiosRef.defaults.headers = { ...this.httpService.axiosRef.defaults.headers, "auth_type": "CC" } as any
 
-    } else {
+      } else {
 
-      this.logger.log(`Destination server run in "unsecure" mode`)
+        this.logger.log(`Destination server run in "unsecure" mode`)
 
-      this.username = this.configService.get('GETAPP_USERNAME');
-      this.password = this.configService.get('GETAPP_PASSWORD');
+        this.username = this.configService.get('GETAPP_USERNAME');
+        this.password = this.configService.get('GETAPP_PASSWORD');
 
-      this.setToken()
-      this.setInspectors();
+        this.setToken()
+        this.setInspectors();
+      }
     }
   }
+
   setToken() {
     this.apiLogin()
   }
