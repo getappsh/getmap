@@ -30,49 +30,49 @@ export function getSocketClientConfig(type: MicroserviceType): ClientProvider {
 const socketDeliveryConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3001 }
+    options: { port: Number(process.env.DELIVERY_PORT?? 3001) }
   }
 }
 
 const socketDeployConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3002 }
+    options: { port: Number(process.env.DEPLOY_PORT?? 3002) }
   }
 }
 
 const socketDiscoveryConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3003 }
+    options: { port: Number(process.env.DISCOVERY_PORT?? 3003) }
   }
 }
 
 const socketOfferingConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3004 }
+    options: { port: Number(process.env.OFFERING_PORT?? 3004) }
   }
 }
 
 const socketProjectManagementConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3005 }
+    options: { port: Number(process.env.PROJECT_PORT?? 3005) }
   }
 }
 
 const socketUploadConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3006 }
+    options: { port: Number(process.env.UPLOAD_PORT?? 3006) }
   }
 }
 
 const socketGetMapConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: 3007 }
+    options: { port: Number(process.env.GETMAP_PORT?? 3007) }
   }
 }
 

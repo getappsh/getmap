@@ -17,7 +17,7 @@ export class HttpConfigService {
   private baseUrl: string;
 
   private username: string;
-  private password: string;
+  private password: string; 
 
   private token: string;
   private tokenExpiredTime: Date;
@@ -28,7 +28,7 @@ export class HttpConfigService {
   ) {
 
     this.baseUrl = `${this.configService.get("GETAPP_URL")}/${API}`
-    this.isDistSecure = this.configService.get<boolean>("DIST_HTTP_PROTOCOL")
+    this.isDistSecure = this.configService.get("DIST_HTTP_PROTOCOL") === "true"
 
     this.httpService.axiosRef.defaults.baseURL = this.baseUrl;
 
@@ -38,8 +38,8 @@ export class HttpConfigService {
 
       const httpsAgent = new https.Agent({
         ca: fs.readFileSync(process.env.CA_CERT_PATH),
-        cert: fs.readFileSync(process.env.SERVER_CERT_PATH),
-        key: fs.readFileSync(process.env.SERVER_KEY_PATH),
+        cert: fs.readFileSync(process.env.CLIENT_CERT_PATH),
+        key: fs.readFileSync(process.env.CLIENT_KEY_PATH),
         // rejectUnauthorized: false
       })
 
