@@ -17,7 +17,7 @@ export function getKafkaConnection(clientId?: string): KafkaConfig {
 function getConfigCTS(clientId?: string): KafkaConfig {
   return {
     clientId: clientId,
-    brokers: [process.env.KAFKA_BROKER_URL],
+    brokers: process.env.KAFKA_BROKER_URL.split(','),
     ssl: {
       rejectUnauthorized: false,
       ca: [readFileSync(process.env.KAFKA_PEM_PATH)],
