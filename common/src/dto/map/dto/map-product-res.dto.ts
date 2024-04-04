@@ -85,7 +85,7 @@ export class MapProductResDto {
   static fromRecordsRes(records: MCRasterRecordDto): MapProductResDto {    
     const product = new MapProductResDto()
     product.id = records["mc:id"]
-    product.productId = records["mc:productName"]
+    product.productId = records["mc:productId"]
     product.productName = records["mc:productName"]
     product.productVersion = Number(records["mc:productVersion"])
     product.productType = records["mc:productType"]
