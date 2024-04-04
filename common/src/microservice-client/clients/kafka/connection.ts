@@ -31,6 +31,6 @@ function getConfigCTS(clientId?: string): KafkaConfig {
 function getConfigDefault(clientId: string): KafkaConfig {
   return {
     clientId: clientId,
-    brokers: [process.env.KAFKA_BROKER_URL]
+    brokers: process.env.KAFKA_BROKER_URL.split(','),
   }
 }
