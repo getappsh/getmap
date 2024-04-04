@@ -10,6 +10,8 @@ export const OFFERING = "offering";
 export const DISCOVERY = "discovery";
 export const PROJECT_MANAGEMENT = "projectManagement";
 export const DEVICE = "device";
+export const DEVICE_GROUP = "group";
+
 export const GET_MAP = "map";
 
 
