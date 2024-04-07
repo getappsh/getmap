@@ -47,14 +47,7 @@ export class LibotHttpClientService {
 
       try {
 
-        const startTime = performance.now();
-
         const res = await lastValueFrom(this.httpConfig.post(url, body, this.getHeaders("xml")))
-
-        const endTime = performance.now();
-        const elapsedTime = endTime - startTime;
-        this.logger.log('Time taken to receive get-exports response:', elapsedTime, 'milliseconds');
-
         if (this.isResSuccess(res, "getRecords")) {
 
           let results: RecordsResDto = this.xmlToJson(res.data) ?? []
@@ -94,13 +87,7 @@ export class LibotHttpClientService {
 
     const payload = ImportPayload.fromImportAttrs(imAttrs)
     try {
-      const startTime = performance.now();
-
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
-
-      const endTime = performance.now();
-      const elapsedTime = endTime - startTime;
-      this.logger.log('Time taken to receive map-export response:', elapsedTime, 'milliseconds');
 
       const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`export map with bbox ${imAttrs.Points} sent successfully, job id - ${resPayload.id}`)
@@ -119,14 +106,9 @@ export class LibotHttpClientService {
     const url = this.env.get<string>("LIBOT_EXPORT_URL") + "/" + reqId
 
     try {
-      const startTime = performance.now();
 
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")));
-
-      const endTime = performance.now();
-      const elapsedTime = endTime - startTime;
-      this.logger.log('Time taken to receive map-status response:', elapsedTime, 'milliseconds');
-
+      
       const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
       return resPayload
