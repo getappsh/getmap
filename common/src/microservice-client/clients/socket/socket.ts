@@ -30,49 +30,70 @@ export function getSocketClientConfig(type: MicroserviceType): ClientProvider {
 const socketDeliveryConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.DELIVERY_PORT?? 3001) }
+    options: { 
+      host: process.env.DELIVERY_HOST?? "localhost",
+      port: Number(process.env.DELIVERY_PORT?? 3001) 
+    }
   }
 }
 
 const socketDeployConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.DEPLOY_PORT?? 3002) }
+    options: { 
+      host: process.env.DEPLOY_HOST?? "localhost",
+      port: Number(process.env.DEPLOY_PORT?? 3002)
+     }
   }
 }
 
 const socketDiscoveryConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.DISCOVERY_PORT?? 3003) }
+    options: { 
+      host: process.env.DISCOVERY_HOST?? "localhost",
+      port: Number(process.env.DISCOVERY_PORT?? 3003) 
+    }
   }
 }
 
 const socketOfferingConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.OFFERING_PORT?? 3004) }
+    options: { 
+      host: process.env.OFFERING_HOST?? "localhost",
+      port: Number(process.env.OFFERING_PORT?? 3004)
+     }
   }
 }
 
 const socketProjectManagementConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.PROJECT_PORT?? 3005) }
+    options: { 
+      host: process.env.PROJECT_HOST?? "localhost",
+      port: Number(process.env.PROJECT_PORT?? 3005) 
+    }
   }
 }
 
 const socketUploadConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.UPLOAD_PORT?? 3006) }
+    options: { 
+      host: process.env.UPLOAD_HOST?? "localhost",
+      port: Number(process.env.UPLOAD_PORT?? 3006) 
+    }
   }
 }
 
 const socketGetMapConfig = (): ClientProvider => {
   return {
     transport: Transport.TCP,
-    options: { port: Number(process.env.GETMAP_PORT?? 3007) }
+    options: { 
+      host: process.env.GETMAP_HOST?? "localhost",
+      port: Number(process.env.GETMAP_PORT?? 3007) 
+    }
   }
 }
 
