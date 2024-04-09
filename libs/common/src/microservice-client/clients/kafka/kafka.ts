@@ -120,9 +120,6 @@ const kafkaGetMapConfig = (): ClientProvider => {
         client: getKafkaConnection(KAFKA_GET_MAP_CLIENT_ID),
         consumer: {
             groupId: KAFKA_GET_MAP_GROUP_ID
-        },
-        run: {
-          autoCommitInterval: 500
         }
     }
   }
