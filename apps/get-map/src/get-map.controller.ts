@@ -6,7 +6,6 @@ import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@ap
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
 
-let counter = 0;
 
 @Controller()
 export class GetMapController {
@@ -18,12 +17,8 @@ export class GetMapController {
   // Import
   @MessagePattern(GetMapTopics.DISCOVERY_MAP)
   async getOffering() {
-    counter += 1 
-    this.logger.log(`currently process ${counter} messages`)
     this.logger.log("Get products offering")
-    let res = await this.getMapService.getOffering()
-    counter -= 1
-    return res
+    return this.getMapService.getOffering()
   }
 
   @MessagePattern(GetMapTopics.CREATE_IMPORT)
