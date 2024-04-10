@@ -13,6 +13,14 @@ export class DeviceDto {
   @ApiProperty({ required: false })
   @IsDate()
   lastUpdatedDate: Date
+ 
+  @ApiProperty({ required: false })
+  @IsDate()
+  lastConnectionDate: Date
+ 
+  @ApiProperty({ required: false })
+  @IsString()
+  name: string
 
   @ApiProperty({ required: false })
   @IsString()
@@ -41,11 +49,13 @@ export class DeviceDto {
     let device = new DeviceDto()
     device.id = deviceE.ID;
     device.lastUpdatedDate = deviceE.lastUpdatedDate
+    device.lastConnectionDate = deviceE.lastConnectionDate
+    device.name = deviceE.name
     device.OS = deviceE.OS
     device.availableStorage = deviceE.availableStorage;
-    device.power = discoveryE.situationalDevice.power;
-    device.bandwidth = discoveryE.situationalDevice.bandwidth;
-    device.operativeState = discoveryE.situationalDevice.operativeState;
+    device.power = discoveryE?.situationalDevice.power;
+    device.bandwidth = discoveryE?.situationalDevice.bandwidth;
+    device.operativeState = discoveryE?.situationalDevice.operativeState;
 
     return device
   }
