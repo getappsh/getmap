@@ -2,63 +2,78 @@ import { OS } from "@app/common/database/entities";
 import { IsValidStringFor } from "@app/common/validators";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsBoolean, IsDate, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min, ValidateNested } from "class-validator";
+import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
 
 export class PersonalDiscoveryDto {
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   name: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   idNumber: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   personalNumber: string
 }
 
 
-export class GeoLocationDto{
+export class GeoLocationDto {
 
-  @ApiProperty({required: false})
+  @ApiProperty()
   @IsString()
   lat: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty()
   @IsString()
   long: string;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsString()
   alt: string;
 }
 
 export class SituationalDiscoveryDto {
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsNumber()
   weather: number;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsNumber()
   bandwidth: number;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsDateString()
   time: Date;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @IsBoolean()
   operativeState: boolean;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
   @Min(0)
   @Max(100)
   power: number;
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  availableStorage: string
+
+  @ApiProperty({ required: false })
+  @IsOptional()
   @ValidateNested()
   @Type(() => GeoLocationDto)
   location: GeoLocationDto;
@@ -68,34 +83,41 @@ export class SituationalDiscoveryDto {
 export class PhysicalDiscoveryDto {
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @IsValidStringFor("MAC")
   MAC: string;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @IsValidStringFor("IP")
   IP: string;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   ID: string;
 
-  @ApiProperty({enum: OS})
+  @ApiProperty({ enum: OS, required: false })
+  @IsOptional()
   @IsNotEmpty()
   @IsEnum(OS)
   OS: OS;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsString()
   serialNumber: string;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsString()
   possibleBandwidth: string;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsString()
   availableStorage: string
 
@@ -105,19 +127,21 @@ export class PhysicalDiscoveryDto {
 export class GeneralDiscoveryDto {
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => PersonalDiscoveryDto)
   personalDevice: PersonalDiscoveryDto;
 
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => SituationalDiscoveryDto)
   situationalDevice: SituationalDiscoveryDto;
 
-
   @ApiProperty({required: false})
+  @IsOptional()
   @IsNotEmpty()
   @ValidateNested()
   @Type(() => PhysicalDiscoveryDto)
