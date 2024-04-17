@@ -20,8 +20,7 @@ async function bootstrap() {
       bufferLogs: true
     }
   );
-  app.useLogger(app.get(GET_APP_LOGGER));
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useLogger(app.get(GET_APP_LOGGER))
   app.useGlobalFilters(new CustomRpcExceptionFilter())
   app.listen()
 }
