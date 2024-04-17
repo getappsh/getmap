@@ -7,6 +7,7 @@ export enum ErrorCode {
   MAP_NOT_FOUND = 'MAP.notFound',
   MAP_BBOX_INVALID = 'MAP.bBoxIsInvalid',
   MAP_BBOX_NOT_IN_POLYGON = 'MAP.bBoxNotInAnyPolygon',
+  GET_RECORDS_FAILED = 'MAP.getRecordsFailed',
   MAP_EXPORT_FAILED = 'MAP.exportMapFailed',
   MAP_REQUESTED_IN_PROCESSING = 'MAP.requestInProgress',
   MAP_AREA_TOO_LARGE = "MAP.areaTooLarge",
@@ -21,6 +22,7 @@ export class ErrorDto {
       "`MAP.notFound`: No found the map with given id <br /> " +
       "`MAP.bBoxIsInvalid`: BBox is probably invalid <br /> " +
       "`MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> " +
+      "`MAP.getRecordsFailed`: Some error occurs when req for records <br /> " +
       "`MAP.exportMapFailed`: Some error occurs when import map <br /> " +
       "`MAP.requestInProgress`: Delivery was already requested and in processing! <br /> " +
       "`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again <br /> " +
