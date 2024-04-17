@@ -199,6 +199,8 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.periodicConfIntervalMins = 1440
     defaults.periodicMatomoIntervalMins = 1440
     defaults.mapMinInclusionInPercentages = 60
+    defaults.useSDCard = true
+    defaults.relativeStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
