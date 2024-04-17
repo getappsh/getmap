@@ -27,7 +27,7 @@ import { HttpClientModule } from './http-client/http-client.module';
       name: MicroserviceName.DISCOVERY_SERVICE,
       type: MicroserviceType.DISCOVERY,
     }),
-    HttpClientModule.forRoot({ isEmulator: Boolean(process.env.LIBOT_EMULATOR ?? false) })
+    HttpClientModule.forRoot({ isEmulator: process.env.LIBOT_EMULATOR == "true" ?? false })
   ],
   controllers: [GetMapController],
   providers: [GetMapService, ImportCreateService, RepoService, MapUpdatesService],

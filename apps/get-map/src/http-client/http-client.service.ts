@@ -60,18 +60,30 @@ export class LibotHttpClientService {
           }
           startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
         } else {
-          if (this.isThereErrorMes(res)) {
-            const error = this.errorFromRes(res.data)
-            this.logger.error(`Error occurs in getRecord req`, error)
-            throw new Error(error)
+          const mes = `Error occurs in getRecord req!`
+          let extMes = mes
+          if (this.isThereErrorMes(res?.data)) {
+            extMes = `${extMes} - mes: ${this.errorFromRes(res?.data)}`
           } else {
-            throw new Error(`Error occurs in getRecord req! HTTP StatusCode: ${res.status}, Message: ${res.data}`)
+            extMes = `${extMes} - mes: ${JSON.stringify(res?.data)}`
           }
+          this.logger.error(extMes)
+          throw new MapError(ErrorCode.GET_RECORDS_FAILED, mes)
         }
       } catch (error) {
-        const mas = `Error occurs in getRecord req! HTTP StatusCode: ${error.code}, Message: ${error.message}`
-        this.logger.error(`Export map failed! Got status code: ${error.code}, mes: ${error.message}`)
-        throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
+        if (error instanceof MapError) {
+          throw error
+        } else {
+          const mes = `Get record req failed! HTTP StatusCode: ${error?.response?.status ?? error.code}, mes: ${error.toString()}`
+          let extMes = mes;
+          if (this.isThereErrorMes(error.response.data)) {
+            extMes = `${extMes} -  ${this.errorFromRes(error.response.data)}`
+          } else {
+            extMes = `${extMes} - ${error?.response.data?.message ?? error?.response.data?.message}`
+          }
+          this.logger.error(extMes)
+          throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mes)
+        }
       }
     }
 
@@ -86,6 +98,7 @@ export class LibotHttpClientService {
     const url = this.env.get<string>("LIBOT_EXPORT_URL")
 
     const payload = ImportPayload.fromImportAttrs(imAttrs)
+
     try {
       const res = await lastValueFrom(this.httpConfig.post(url, payload, this.getHeaders("json")))
 
@@ -93,9 +106,10 @@ export class LibotHttpClientService {
       this.logger.debug(`export map with bbox ${imAttrs.Points} sent successfully, job id - ${resPayload.id}`)
       return resPayload
     } catch (error) {
-      const mas = error.toString()
-      this.logger.error(`Export map failed! Got status code: ${error.status}, mes: ${mas}`)
-      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
+      const mes = `Export map failed! HTTP StatusCode: ${error?.response?.status ?? error.code}, mes: ${error.toString()}`
+      const extMes = `${mes} - ${error?.response.data?.message ?? error?.response.data?.message}`
+      this.logger.error(extMes)
+      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mes)
     }
 
   }
@@ -108,14 +122,15 @@ export class LibotHttpClientService {
     try {
 
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")));
-      
+
       const resPayload = ImportResPayload.fromImportRes(res.data)
       this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
       return resPayload
     } catch (error) {
-      const mas = error.toString()
-      this.logger.error(`"Get map status" req failed! Got status code: ${error.status}, mes: ${mas}`)
-      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mas)
+      const mes = `"Get map status" req failed! HTTP StatusCode: ${error?.response?.status ?? error.code}, mes: ${error.toString()}`
+      const extMes = `${mes} - ${error?.response.data?.message ?? error?.response.data?.message}`
+      this.logger.error(extMes)
+      throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mes)
     }
   }
 
@@ -135,13 +150,12 @@ export class LibotHttpClientService {
   }
 
   isResSuccess(res: AxiosResponse<any, any>, reqName?: string): boolean {
-    const isSuccess = (res.status >= 200 && res.status < 300) && !this.isThereErrorMes(res)
+    const isSuccess = (res.status >= 200 && res.status < 300) && !this.isThereErrorMes(res.data)
     this.logger.log(`"${reqName}" req is ${isSuccess ? "success" : "finished with error"}`)
     return isSuccess
   }
 
-  isThereErrorMes(res: AxiosResponse): boolean {
-    const data: string = res.data
+  isThereErrorMes(data: any): boolean {
     return data.includes("ExceptionReport")
   }
 
@@ -157,7 +171,7 @@ export class LibotHttpClientService {
 
   errorFromRes(xml: string): string {
     const json = this.xmlToJson(xml)
-    const error = json?.["ows:ExceptionReport"]?.["ows:Exception"]
+    const error = json?.["ows:ExceptionReport"]?.["ows:Exception"] ?? json?.["ows20:ExceptionReport"]?.["ows20:Exception"]
     // const error = json?.["ows:ExceptionReport"]?.["ows:Exception"]?.["ows:ExceptionText"]
 
     if (error) {
