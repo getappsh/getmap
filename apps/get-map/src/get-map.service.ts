@@ -8,7 +8,7 @@ import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/libot/utils/map-error';
 import { RepoService } from './repo.service';
-import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
+import { MapEntity, MapImportStatusEnum, TargetStoragePolicy } from '@app/common/database/entities';
 import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
@@ -199,8 +199,9 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.periodicConfIntervalMins = 1440
     defaults.periodicMatomoIntervalMins = 1440
     defaults.mapMinInclusionInPercentages = 60
-    defaults.useSDCard = true
-    defaults.relativeStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
+    defaults.targetStoragePolicy = TargetStoragePolicy.SD_ONLY
+    defaults.sdStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
+    defaults.flashStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
