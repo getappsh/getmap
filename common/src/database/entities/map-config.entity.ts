@@ -1,5 +1,6 @@
 import { Column, Entity } from "typeorm";
 import { BaseEntity } from "./base.entity";
+import { TargetStoragePolicy } from "./enums.entity";
 
 @Entity("map_configs")
 export class MapConfigEntity extends BaseEntity {
@@ -51,6 +52,20 @@ export class MapConfigEntity extends BaseEntity {
   
   @Column({ name: "use_SD_card", nullable: true })
   useSDCard: boolean
+
+  @Column({ name: "sd_storage_path", nullable: true })
+  sdStoragePath: string
+
+  @Column({ name: "flash_storage_path", nullable: true })
+  flashStoragePath: string
+  
+  @Column({
+    name: 'target_storage_policy',
+    type: "enum",
+    enum: TargetStoragePolicy,
+    default: TargetStoragePolicy.SD_ONLY
+  })
+  targetStoragePolicy: TargetStoragePolicy
 
   toString() {
     return JSON.stringify(this)
