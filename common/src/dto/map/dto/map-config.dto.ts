@@ -1,6 +1,6 @@
-import { MapConfigEntity } from "@app/common/database/entities";
+import { MapConfigEntity, TargetStoragePolicy } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class MapConfigDto {
 
@@ -74,16 +74,6 @@ export class MapConfigDto {
   @IsOptional()
   @IsString()
   matomoSiteId: string
-  
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  relativeStoragePath: string
-  
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsBoolean()
-  useSDCard: boolean
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -110,8 +100,6 @@ export class MapConfigDto {
     config.matomoDimensionId = cE.matomoDimensionId
     config.matomoSiteId = cE.matomoSiteId
     config.lastConfigUpdateDate = cE.lastUpdatedDate
-    config.relativeStoragePath = cE.relativeStoragePath
-    config.useSDCard = cE.useSDCard
 
     return config
   }
