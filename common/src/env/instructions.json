@@ -1,9 +1,12 @@
 {
   "api": [
+    "api.env",
     "general.env",
     "micro-service.env",
     "key-cloak.env",
-    "apm.env"
+    "apm.env",
+    "proxy.env",
+    "secure.env"
   ],
   "discovery": [
     "general.env",
@@ -16,7 +19,9 @@
     "micro-service.env",
     "postgres-DB.env",
     "aws.env",
-    "apm.env"
+    "apm.env",
+    "proxy.env",
+    "secure.env"
   ],
   "get-map": [
     "general.env",
@@ -24,6 +29,9 @@
     "postgres-DB.env",
     "get-map.env",
     "apm.env"
+  ],
+  "libot-emu": [
+   "libot-emu.env"
   ],
   "offering": [
     "general.env",
