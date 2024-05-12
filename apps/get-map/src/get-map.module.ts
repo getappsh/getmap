@@ -14,11 +14,13 @@ import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/com
 import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LoggerModule } from '@app/common/logger/logger.module';
 import { HttpClientModule } from './http-client/http-client.module';
+import { ApmModule } from '@app/common/apm/apm.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot({ httpCls: false, jsonLogger: process.env.LOGGER_FORMAT === 'JSON', name: "Get-map" }),
+    ApmModule,
     HttpModule,
     DatabaseModule,
     TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, JobsEntity]),
