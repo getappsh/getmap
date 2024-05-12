@@ -1,11 +1,13 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+import apm from 'nestjs-elastic-apm';
+
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions } from '@nestjs/microservices';
 import { GetMapModule } from './get-map.module';
 import { MSType, MicroserviceName, MicroserviceType, getClientConfig } from '@app/common/microservice-client';
 import { CustomRpcExceptionFilter } from './rpc-exception.filter';
 import { GET_APP_LOGGER } from '@app/common/logger/logger.module';
-
-require('dotenv').config()
 
 
 async function bootstrap() {  
