@@ -1,6 +1,6 @@
-import { MapConfigEntity } from "@app/common/database/entities";
+import { MapConfigEntity, TargetStoragePolicy } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class MapConfigDto {
 
@@ -78,12 +78,17 @@ export class MapConfigDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
-  relativeStoragePath: string
-  
+  sdStoragePath: string
+
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsBoolean()
-  useSDCard: boolean
+  @IsString()
+  flashStoragePath: string
+  
+  @ApiProperty({enum: TargetStoragePolicy, required: false, default: TargetStoragePolicy.SD_ONLY})
+  @IsOptional()
+  @IsEnum(TargetStoragePolicy)
+  targetStoragePolicy: TargetStoragePolicy
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -110,8 +115,9 @@ export class MapConfigDto {
     config.matomoDimensionId = cE.matomoDimensionId
     config.matomoSiteId = cE.matomoSiteId
     config.lastConfigUpdateDate = cE.lastUpdatedDate
-    config.relativeStoragePath = cE.relativeStoragePath
-    config.useSDCard = cE.useSDCard
+    config.sdStoragePath = cE.sdStoragePath
+    config.flashStoragePath = cE.flashStoragePath
+    config.targetStoragePolicy = cE.targetStoragePolicy
 
     return config
   }
