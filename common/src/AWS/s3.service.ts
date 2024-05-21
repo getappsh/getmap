@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Progress, Upload } from "@aws-sdk/lib-storage";
-import { S3, PutObjectCommand, GetObjectCommand, PutObjectRequest,  } from "@aws-sdk/client-s3";
+import { S3, PutObjectCommand, GetObjectCommand, PutObjectRequest, } from "@aws-sdk/client-s3";
 import { ConfigService } from '@nestjs/config';
 import { createReadStream, existsSync } from 'fs';
 import stream from 'stream';
@@ -35,8 +35,9 @@ export class S3Service {
     return signedUrl;
   }
 
-  async generatePresignedUrlForDownload(fileUrl: string):Promise<string>{
-    if (!fileUrl){
+  async generatePresignedUrlForDownload(fileUrl: string): Promise<string> {
+
+    if (!fileUrl) {
       return ''
     }
     const command = new GetObjectCommand({
@@ -44,18 +45,18 @@ export class S3Service {
       Key: fileUrl
     })
 
-    if(fileUrl.includes("cache-public")){
-        return `https://${this.bucketName}.s3.amazonaws.com/${fileUrl}`
+    if (fileUrl.includes("cache-public")) {
+      return `https://${this.bucketName}.s3.amazonaws.com/${fileUrl}`
     }
 
     const signedUrl = await getSignedUrl(this.s3, command, {
       expiresIn: this.configService.get('DOWNLOAD_URL_EXPIRE'),
-    }) 
+    })
 
     return signedUrl;
   }
 
-  uploadFile(filePath: string, objectKey: string){  
+  uploadFile(filePath: string, objectKey: string) {
     const params = {
       Bucket: this.bucketName,
       Key: objectKey,
@@ -65,17 +66,17 @@ export class S3Service {
     return this.s3.putObject(params);
   }
 
-  uploadFileFromStream(stream: stream.Readable, objectKey: string): Observable<number> {      
+  uploadFileFromStream(stream: stream.Readable, objectKey: string): Observable<number> {
     const params: PutObjectRequest = {
       Bucket: this.bucketName,
       Key: objectKey,
       Body: stream,
     };
-      const fileUpload = new Upload({
+    const fileUpload = new Upload({
       client: this.s3,
       params: params,
     })
-  
+
     return new Observable(observer => {
       fileUpload.on("httpUploadProgress", (progress: Progress) => {
         observer.next(progress.loaded);
@@ -84,5 +85,5 @@ export class S3Service {
         .then(() => observer.complete())
         .catch(err => observer.error(err));
     })
-  }  
+  }
 }
