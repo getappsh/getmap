@@ -46,12 +46,6 @@ export class MapConfigEntity extends BaseEntity {
 
   @Column({ name: "matomo_site_id", nullable: true })
   matomoSiteId: string
-  
-  @Column({ name: "relative_storage_path", nullable: true })
-  relativeStoragePath: string
-  
-  @Column({ name: "use_SD_card", nullable: true })
-  useSDCard: boolean
 
   @Column({ name: "sd_storage_path", nullable: true })
   sdStoragePath: string
