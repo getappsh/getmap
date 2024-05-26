@@ -74,6 +74,32 @@ export class MapConfigDto {
   @IsOptional()
   @IsString()
   matomoSiteId: string
+  
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  sdStoragePath: string
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  flashStoragePath: string
+  
+  @ApiProperty({enum: TargetStoragePolicy, required: false, default: TargetStoragePolicy.SD_ONLY})
+  @IsOptional()
+  @IsEnum(TargetStoragePolicy)
+  targetStoragePolicy: TargetStoragePolicy
+
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  sdInventoryMaxSizeMB: number
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  flashInventoryMaxSizeMB: number
 
   @ApiProperty({ required: false })
   @IsOptional()
@@ -100,6 +126,11 @@ export class MapConfigDto {
     config.matomoDimensionId = cE.matomoDimensionId
     config.matomoSiteId = cE.matomoSiteId
     config.lastConfigUpdateDate = cE.lastUpdatedDate
+    config.sdStoragePath = cE.sdStoragePath
+    config.flashStoragePath = cE.flashStoragePath
+    config.targetStoragePolicy = cE.targetStoragePolicy
+    config.flashInventoryMaxSizeMB = cE.flashInventoryMaxSizeMB
+    config.sdInventoryMaxSizeMB = cE.sdInventoryMaxSizeMB
 
     return config
   }
