@@ -21,9 +21,9 @@ jobs:
         with:
           node-version: 14
 
-       - name: Calculate new tag
-          id: set_tag
-         run: |
+      - name: Calculate new tag
+        id: set_tag
+        run: |
            # Logic to calculate the new tag (modify accordingly)
             LAST_TAG=$(git describe --abbrev=0 --tags)
             export MAJOR=$(echo $LAST_TAG | awk -F'.' '{print $1}')
