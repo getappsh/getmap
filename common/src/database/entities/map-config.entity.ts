@@ -47,12 +47,6 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "matomo_site_id", nullable: true })
   matomoSiteId: string
   
-  @Column({ name: "relative_storage_path", nullable: true })
-  relativeStoragePath: string
-  
-  @Column({ name: "use_SD_card", nullable: true })
-  useSDCard: boolean
-
   @Column({ name: "sd_storage_path", nullable: true })
   sdStoragePath: string
 
@@ -66,6 +60,14 @@ export class MapConfigEntity extends BaseEntity {
     default: TargetStoragePolicy.SD_ONLY
   })
   targetStoragePolicy: TargetStoragePolicy
+
+
+  @Column({ name: "sd_inventory_max_size_mb", nullable: true })
+  sdInventoryMaxSizeMB: number
+
+  @Column({ name: "flash_inventory_max_size_mb", nullable: true })
+  flashInventoryMaxSizeMB: number
+
 
   toString() {
     return JSON.stringify(this)
