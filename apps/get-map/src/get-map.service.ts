@@ -202,6 +202,8 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.targetStoragePolicy = TargetStoragePolicy.SD_ONLY
     defaults.sdStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
     defaults.flashStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
+    defaults.flashInventoryMaxSizeMB = 2000
+    defaults.sdInventoryMaxSizeMB = 1000
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
