@@ -2,9 +2,14 @@ import 'dotenv/config';
 import { DataSource } from 'typeorm';
 import { join } from 'path';
 import { readFileSync } from 'fs'
-import { DeliveryEntity } from '../../database/entities/delivery.entity';
+import { DeliveryEntity, DeliveryItemEntity } from '../entities';
+
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
+let migrationsRun: boolean = true
+if (process.env.MIGRATION_RUN){
+  migrationsRun = process.env.MIGRATION_RUN === 'true'
+}
 
 const ormConfig = new DataSource({
   type: 'postgres',
@@ -15,12 +20,14 @@ const ormConfig = new DataSource({
 
   ...getDBAuthParams(),
   entities: [
-    DeliveryEntity
+    DeliveryEntity, 
+    DeliveryItemEntity
   ],
   migrations: [join(__dirname, '../migration/*.ts')],
   logging: false,
   synchronize: false,
-  migrationsTableName: "history",
+  migrationsRun: migrationsRun,
+  migrationsTableName: "migrations",
 });
 
 function getDBAuthParams() {
