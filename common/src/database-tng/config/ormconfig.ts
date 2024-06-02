@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { join } from 'path';
 import { readFileSync } from 'fs'
 import { DeliveryEntity, DeliveryItemEntity } from '../entities';
+import { CacheConfigEntity } from '../entities/cache-config.entity';
 
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
@@ -21,7 +22,8 @@ const ormConfig = new DataSource({
   ...getDBAuthParams(),
   entities: [
     DeliveryEntity, 
-    DeliveryItemEntity
+    DeliveryItemEntity,
+    CacheConfigEntity
   ],
   migrations: [join(__dirname, '../migration/*.ts')],
   logging: false,
