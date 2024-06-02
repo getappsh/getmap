@@ -10,6 +10,8 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class S3Service {
 
+  private readonly logger = new Logger(S3Service.name);
+
   private s3: S3;
   private bucketName: string;
 
@@ -85,5 +87,21 @@ export class S3Service {
         .then(() => observer.complete())
         .catch(err => observer.error(err));
     })
+  }
+
+  async deleteFile(objectKey: string) {
+    this.logger.log(`Delete file ${objectKey} from s3`);
+    const params = {
+      Bucket: this.bucketName,
+      Key: objectKey,
+    };
+    try {
+      const res = await this.s3.deleteObject(params);
+      this.logger.verbose(`Delete file ${objectKey} from s3 res: ${JSON.stringify(res)}`)
+      return
+    } catch (error) {
+      this.logger.error(`Error deleting file ${objectKey} from s3, ${error}`);
+      throw error
+    }
   }
 }
