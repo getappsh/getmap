@@ -9,8 +9,10 @@ export enum ErrorCode {
 
   // delivery
   DLV_OTHER = "DELIVERY.unknown",
+  DLV_DOWNLOAD = "DELIVERY.download",
   DLV_C_INVALID_PACKAGE = "DELIVERY.invalidPackage",
-  DLV_C_PACKAGE_TOO_LARGE = "DELIVERY.invalidPackage",
+  DLV_C_PACKAGE_TOO_LARGE = "DELIVERY.packageTooLarge",
+  DLV_C_CLEAR_ISSUE = "DELIVERY.unableClearCache",
 
   // map
   MAP_OTHER = 'MAP.unknown',
@@ -30,8 +32,10 @@ export class ErrorDto {
       "`APP.unknown`: General Error code not listed in the enum <br /> " +
 
       "`DELIVERY.unknown`: Error code not listed in the enum <br /> " +
-      "`DELIVERY.invalidPackage`: package of given catalog id is invalid, maybe expired or some else <br /> " +
-      "`DELIVERY.invalidPackage`:  package of given catalog id is too large, no space in cache<br /> " +
+      "`DELIVERY.download`: Download of delivery item failed <br /> " +
+      "`DELIVERY.invalidPackage`: Package of given catalog id is invalid, maybe expired or some else <br /> " +
+      "`DELIVERY.packageTooLarge`:  Package of given catalog id is too large, no space in cache<br /> " +
+      "`DELIVERY.unableClearCache`:  Some issue occurs when trying to clear cache <br /> " +
 
       "`MAP.unknown`: Error code not listed in the enum <br /> " +
       "`MAP.notFound`: No found the map with given id <br /> " +
