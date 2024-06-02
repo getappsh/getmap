@@ -25,6 +25,9 @@ export class DeliveryItemEntity extends BaseEntity {
   })
   status: PrepareStatusEnum;
 
+  @Column({ name: "err_code", nullable: true })
+  errCode: string;
+
   @Column({ name: "err_msg", nullable: true })
   errMsg: string;
 
