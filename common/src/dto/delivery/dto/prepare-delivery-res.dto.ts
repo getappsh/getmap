@@ -1,6 +1,8 @@
 import { PrepareStatusEnum } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
 import { DeliveryItemDto } from "./delivery-item.dto";
+import { IsOptional } from "class-validator";
+import { ErrorDto } from "../../error";
 
 
 export class PrepareDeliveryResDto {
@@ -34,6 +36,10 @@ export class PrepareDeliveryResDto {
       throw new Error('Artifacts contain non-unique keys');
     }
   }
+
+  @ApiProperty({required:false})
+  @IsOptional()
+  error: ErrorDto
 
   private hasUniqueKeys(array: DeliveryItemDto[], key: keyof DeliveryItemDto): boolean {
     const keys = array.map(item => item[key]);
