@@ -11,7 +11,7 @@ export enum ArtifactsLibotEnum {
   THUMBNAILS_LARGE = "THUMBNAILS_LARGE"
 }
 
-export class Artifact {
+class Artifact {
 
   @ApiProperty({ required: false, enum: ArtifactsLibotEnum })
   type: ArtifactsLibotEnum
