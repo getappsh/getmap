@@ -1,14 +1,15 @@
 import { CreateImportDto } from "@app/common/dto/map"
-import { Validators } from "./utils/validators"
-import { Feature, Polygon, bbox, bboxPolygon, polygon } from "@turf/turf"
+import { Validators } from "../utils/validators"
+import { Feature, Polygon, area, bbox, bboxPolygon, polygon } from "@turf/turf"
 import { MapEntity } from "@app/common/database/entities"
-import { MapProductResDto } from "../map/dto/map-product-res.dto"
+import { MapProductResDto } from "./map-product-res.dto"
 
 export class ImportAttributes {
   product: MapProductResDto
   pattern: "bbox" | "polygon"
   private _bBox: [number, number, number, number];
   private _polygon: Feature<Polygon>;
+  private _area: number
   private _pointsString: string
   zoomLevel: number
   targetResolution: number
@@ -32,6 +33,10 @@ export class ImportAttributes {
   public get Points() {
     return this._pointsString
   }
+  
+  public get Area() {
+    return this._area
+  }
 
   public set Points(bBox: string) {
     let poly: number[][] | false
@@ -39,17 +44,18 @@ export class ImportAttributes {
       this._pointsString = bBox
       this.setBBoxString(bBox)
       this._polygon = bboxPolygon(this._bBox)
+      this._area = parseInt(area(this._polygon).toFixed())
       this.pattern = "bbox"
     } else if ((poly = Validators.isValidStringForPolygon(bBox))) {
       this._pointsString = bBox
       const fePoly = polygon([poly])
       this._polygon = fePoly
+      this._area = parseInt(area(this._polygon).toFixed())
       this._bBox = bbox(fePoly) as [number, number, number, number]
       this.pattern = "polygon"
     } else {
       throw new Error("Points box values are invalid.");
     }
-    // this._BoundingBox = bBox
   }
 
   setBBoxString(bBox: string) {
