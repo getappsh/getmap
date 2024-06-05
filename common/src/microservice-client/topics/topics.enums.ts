@@ -65,8 +65,6 @@ export const GetMapTopics = {
     // Config
     GET_MAP_CONFIG: `getapp-map.config.get${region}`,
     SET_MAP_CONFIG: `getapp-map.config.set${region}`,
-    // admin
-    MAP_PUT: `getapp-map.put${region}`,
     // Device
     REGISTER_MAP: `getapp-device.map.register${region}`,
     DISCOVERY_MAP: `getapp-device.discover.map${region}`,
@@ -82,7 +80,6 @@ export const GetMapTopicsEmit = {
 
 export const DeviceTopics = {
     All_DEVICES: `getapp-device.all${region}`,
-    DEVICES_PUT: `getapp-device.put${region}`,
     DEVICE_MAPS: `getapp-device.device.maps${region}`,
     All_MAPS: `getapp-map.maps${region}`,
     GET_MAP: `getapp-map.map.id${region}`,
@@ -108,4 +105,9 @@ export const DevicesGroupTopics = {
     GET_GROUPS: `getapp-device.group.get-all${region}`,
     GET_GROUP_DEVICES: `getapp-device.group.get-devices${region}`,
     SET_GROUP_DEVICES: `getapp-device.group.set-devices${region}`,
+} as const
+
+export const DeviceBugReportTopics = {
+    NEW_BUG_REPORT: `getapp-device.bug-report.new${region}`,
+    GET_BUG_REPORT: `getapp-device.bug-report.get${region}`,
 } as const
