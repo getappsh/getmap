@@ -20,4 +20,9 @@ export class NewBugReportDto {
   @IsOptional()
   description: string
 
+
+  toString() {
+    return JSON.stringify(this)
+  }
+
 }
