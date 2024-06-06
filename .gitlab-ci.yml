@@ -13,12 +13,20 @@ increment_version:
         - git config user.email "cipipeline@example.com"
         - echo $CI_ACCESS_TOKEN
         - git remote set-url --push gitlab_origin https://oauth2:$CI_ACCESS_TOKEN@gitlab.getapp.sh/getapp/getapp/api-dev/libs-g/libs.git
+       # Read the current version from the file
         - current_version=$(< $VERSION_FILE)
         - echo $current_version
-        - IFS='.' read -r -a version_parts <<< "$current_version"
+        # Extract the numeric part and the suffix
+        - numeric_part=$(echo $current_version | grep -o '^[0-9]\+\.[0-9]\+\.[0-9]\+')
+        - suffix=${current_version#"$numeric_part"}
+        # Split the numeric part into an array
+        - IFS='.' read -r -a version_parts <<< "$numeric_part"
+        # Increment the last part of the version
         - last_part=${version_parts[2]}
         - new_last_part=$((last_part + 1))
-        - new_version="${version_parts[0]}.${version_parts[1]}.$new_last_part"
+        # Combine the incremented numeric part with the suffix
+        - new_version="${version_parts[0]}.${version_parts[1]}.$new_last_part$suffix"
+        # Output the new version
         - echo $new_version
         - echo $new_version > $VERSION_FILE
         - git add $VERSION_FILE
