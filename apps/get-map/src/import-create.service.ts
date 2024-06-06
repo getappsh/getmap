@@ -1,18 +1,18 @@
-import { DiscoveryAttributes } from '@app/common/dto/libot/discoveryAttributes.dto';
+import { DiscoveryAttributes } from '@app/common/dto/map/dto/discoveryAttributes.dto';
 import { LibotHttpClientService } from './http-client.service';
-import { ImportAttributes } from '@app/common/dto/libot/importAttributes.dto';
+import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
-import { MapError } from '@app/common/dto/libot/utils/map-error';
+import { MapError } from '@app/common/dto/map/utils/map-error';
 import { ErrorCode } from '@app/common/dto/error';
-import { Validators } from '@app/common/dto/libot/utils/validators';
-import { ResolutionMapper } from '@app/common/dto/libot/utils/resolutionMapper';
+import { Validators } from '@app/common/dto/map/utils/validators';
+import { ResolutionMapper } from '@app/common/dto/map/utils/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { MapEntity } from '@app/common/database/entities';
-import { ImportResPayload } from '@app/common/dto/libot/import-res-payload';
-import { MCRasterRecordDto } from '@app/common/dto/libot/recordsRes.dto';
 import { Feature, Polygon, MultiPolygon } from '@turf/turf';
 import { ConfigService } from '@nestjs/config';
+import { MCRasterRecordDto } from '@app/common/dto/libot/dto/recordsRes.dto';
+import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 
 @Injectable()
 export class ImportCreateService {
