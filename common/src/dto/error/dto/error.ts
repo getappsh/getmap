@@ -22,7 +22,6 @@ export class ErrorDto {
       "`MAP.notFound`: No found the map with given id <br /> " +
       "`MAP.bBoxIsInvalid`: BBox is probably invalid <br /> " +
       "`MAP.bBoxNotInAnyPolygon`: The given BBox in not contains in any polygon <br /> " +
-      "`MAP.getRecordsFailed`: Some error occurs when req for records <br /> " +
       "`MAP.exportMapFailed`: Some error occurs when import map <br /> " +
       "`MAP.requestInProgress`: Delivery was already requested and in processing! <br /> " +
       "`MAP.areaTooLarge`: Area too large to distribute, reduce request size and try again <br /> " +
