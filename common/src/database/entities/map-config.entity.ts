@@ -67,6 +67,14 @@ export class MapConfigEntity extends BaseEntity {
   })
   targetStoragePolicy: TargetStoragePolicy
 
+
+  @Column({ name: "sd_inventory_max_size_mb", nullable: true })
+  sdInventoryMaxSizeMB: number
+
+  @Column({ name: "flash_inventory_max_size_mb", nullable: true })
+  flashInventoryMaxSizeMB: number
+
+
   toString() {
     return JSON.stringify(this)
   }

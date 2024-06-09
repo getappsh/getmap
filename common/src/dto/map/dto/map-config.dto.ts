@@ -90,6 +90,17 @@ export class MapConfigDto {
   @IsEnum(TargetStoragePolicy)
   targetStoragePolicy: TargetStoragePolicy
 
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  sdInventoryMaxSizeMB: number
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsNumber()
+  flashInventoryMaxSizeMB: number
+
   @ApiProperty({ required: false })
   @IsOptional()
   lastCheckingMapUpdatesDate: Date
@@ -118,6 +129,8 @@ export class MapConfigDto {
     config.sdStoragePath = cE.sdStoragePath
     config.flashStoragePath = cE.flashStoragePath
     config.targetStoragePolicy = cE.targetStoragePolicy
+    config.flashInventoryMaxSizeMB = cE.flashInventoryMaxSizeMB
+    config.sdInventoryMaxSizeMB = cE.sdInventoryMaxSizeMB
 
     return config
   }
