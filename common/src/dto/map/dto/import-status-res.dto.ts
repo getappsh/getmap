@@ -2,9 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { MapMetadatatDto } from "./map-metadata.dto";
 import { ImportResDto } from "./import-res-dto";
 import { MapEntity, MapImportStatusEnum } from "@app/common/database/entities";
-import { MapProperties } from "./create-import-dto";
-import { MapError } from "../../libot/utils/map-error";
-import { ErrorCode, ErrorDto } from "../../error";
+import { ErrorDto } from "../../error";
 
 export class ImportStatusResDto extends ImportResDto {
 
@@ -19,14 +17,10 @@ export class ImportStatusResDto extends ImportResDto {
     const res = new ImportStatusResDto()
     res.importRequestId = mE.catalogId
     res.status = mE.status
-    if(mE.status === MapImportStatusEnum.ERROR){
+    if (mE.status === MapImportStatusEnum.ERROR) {
       res.error = {} as ErrorDto
       res.error.message = mE.errorReason
     }
-
-    res.properties = new MapProperties()
-    res.properties.boundingBox = mE.boundingBox
-    res.properties.zoomLevel = mE.zoomLevel
 
     res.metaData = new MapMetadatatDto()
     res.metaData.jobId = mE.jobId
@@ -36,6 +30,8 @@ export class ImportStatusResDto extends ImportResDto {
     res.metaData.fileName = mE.fileName
     res.metaData.packageUrl = mE.packageUrl
     res.metaData.size = mE.size
+    res.metaData.area = mE.area
+    res.metaData.footprint = mE.footprint
 
     return res
   }

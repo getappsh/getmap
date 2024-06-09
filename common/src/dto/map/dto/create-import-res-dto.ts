@@ -4,7 +4,7 @@ import { ImportResDto } from "./import-res-dto";
 
 export class CreateImportResDto extends ImportResDto {
 
-  @ApiProperty({type: MapProductResDto})
+  @ApiProperty({type: MapProductResDto, required: false})
   product: MapProductResDto
 
   toString() {
