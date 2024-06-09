@@ -109,3 +109,8 @@ export const DevicesGroupTopics = {
     GET_GROUP_DEVICES: `getapp-device.group.get-devices${region}`,
     SET_GROUP_DEVICES: `getapp-device.group.set-devices${region}`,
 } as const
+
+export const DeviceBugReportTopics = {
+    NEW_BUG_REPORT: `getapp-device.bug-report.new${region}`,
+    GET_BUG_REPORT: `getapp-device.bug-report.get${region}`,
+} as const
