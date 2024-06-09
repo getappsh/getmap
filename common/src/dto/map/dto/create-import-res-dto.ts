@@ -1,18 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MapImportStatusEnum } from "@app/common/database/entities";
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { MapProductResDto } from "./map-product-res.dto";
+import { ImportResDto } from "./import-res-dto";
 
-export class CreateImportResDto {
+export class CreateImportResDto extends ImportResDto {
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  importRequestId: string;
+  @ApiProperty({type: MapProductResDto, required: false})
+  product: MapProductResDto
 
-  @ApiProperty({enum: MapImportStatusEnum})
-  @IsEnum(MapImportStatusEnum)
-  status: MapImportStatusEnum;
- 
   toString() {
     return JSON.stringify(this);
   }

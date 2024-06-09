@@ -6,6 +6,12 @@ export const categoryEntityStub = (): CategoryEntity => {
   } as CategoryEntity
 };
 
+export const categoryInputStub = (): CategoryEntity => {
+  return {
+    name: 'tank'
+  } as CategoryEntity
+};
+
 export const formationEntityStub = (): FormationEntity => {
   return {
     name: 'yatush'
@@ -15,6 +21,12 @@ export const formationEntityStub = (): FormationEntity => {
 export const operationSystemEntityStub = (): OperationSystemEntity => {
   return {
     name: 'windows'
+  } as OperationSystemEntity
+};
+
+export const operationSystemInputStub = (): OperationSystemEntity => {
+  return {
+    name: 'linux'
   } as OperationSystemEntity
 };
 

@@ -1,55 +1,69 @@
 import { MapEntity } from "@app/common/database/entities";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsInt, Max, Min } from "class-validator";
+import { MapProductResDto } from "./map-product-res.dto";
 
 export class MapDto {
 
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
   catalogId: string;
 
-  @ApiProperty({required: false})
-  productId: string;
-  
-  @ApiProperty({required: false})
-  productName: string;
-  
-  @ApiProperty({required: false})
-  fileName: string;
-  
-  @ApiProperty({type: Number, minimum: 0, maximum: 18})
-  @IsInt()
-  @Min(0)
-  @Max(18)
-  zoomLevel: number
-  
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  name: string;
+
+  @ApiProperty({ required: false })
   createDate: Date;
-  
-  @ApiProperty({required: false})
+
+  @ApiProperty({ required: false })
+  exportEndDate: Date;
+
+  @ApiProperty({ required: false })
   boundingBox: string;
   
-  @ApiProperty({required: false})
-  status: string;
+  @ApiProperty({ required: false })
+  footprint: string;
+
+  @ApiProperty({ required: false })
+  size: number;
   
-  @ApiProperty({required: false})
+  @ApiProperty({ required: false })
+  area: number;
+
+  @ApiProperty({ required: false })
+  status: string;
+
+  @ApiProperty({ required: false })
+  fileName: string;
+
+  @ApiProperty({ required: false })
   packageUrl: string;
 
-  static fromMapEntity(mapEntity: MapEntity){
+  @ApiProperty({ required: false })
+  isUpdate: boolean;
+
+  @ApiProperty({ required: false })
+  product: MapProductResDto;
+
+  static fromMapEntity(mapEntity: MapEntity) {
     let map = new MapDto();
     map.catalogId = mapEntity.catalogId;
-    map.productId = mapEntity.productId;
-    map.productName = mapEntity.productName;
-    map.fileName = mapEntity.fileName;
-    map.zoomLevel = mapEntity.zoomLevel;
-    map.createDate = mapEntity.createDate;
+    map.name = mapEntity.name;
+    map.createDate = mapEntity.createDateTime;
+    map.exportEndDate = mapEntity.exportEnd;
     map.boundingBox = mapEntity.boundingBox;
-    map.packageUrl = mapEntity.packageUrl;
+    map.footprint = mapEntity.footprint
+    map.size = mapEntity.size
+    map.area = mapEntity.area
     map.status = mapEntity.status;
+    map.fileName = mapEntity.fileName;
+    map.packageUrl = mapEntity.packageUrl;
+    map.isUpdate = mapEntity.isUpdated
+    map.product = mapEntity.mapProduct
 
     return map
   }
 
-  toString(){
+  toString() {
     return JSON.stringify(this);
   }
 }

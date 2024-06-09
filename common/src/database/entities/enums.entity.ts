@@ -1,11 +1,11 @@
 export enum OS {
-    ANDROID ='android',
+    ANDROID = 'android',
     WINDOWS = 'windows',
     LINUX = 'linux',
 }
 
 export enum Components {
-    ANDROID ='android',
+    ANDROID = 'android',
     WINDOWS = 'windows',
     LINUX = 'linux',
 }
@@ -29,21 +29,22 @@ export enum RoleInProject {
 
 export enum DiscoveryType {
     GET_APP = 'get-app',
-    GET_MAP = 'get-map'
+    GET_MAP = 'get-map',
+    MTLS = 'mTls'
 }
 
 export enum UploadStatus {
     STARTED = 'started',
     DOWNLOADING_FROM_URL = 'downloading-from-url',
     FAIL_TO_DOWNLOAD = 'fail-to-download',
-    UPLOADING_TO_S3 ='uploading-to-s3',
+    UPLOADING_TO_S3 = 'uploading-to-s3',
     FAIL_TO_UPLOAD = 'fail-to-upload',
     IN_PROGRESS = 'in-progress',
     READY = 'ready',
     ERROR = 'error'
 }
 
-export enum DeliveryStatusEnum{
+export enum DeliveryStatusEnum {
     START = 'Start',
     DONE = 'Done',
     ERROR = 'Error',
@@ -51,17 +52,26 @@ export enum DeliveryStatusEnum{
     PAUSE = "Pause",
     CONTINUE = "Continue",
     DOWNLOAD = "Download",
+    DELETED = 'Deleted'
 
 }
 
-export enum DeployStatusEnum{
+export enum PrepareStatusEnum {
+    START = "start",
+    IN_PROGRESS = "inProgress",
+    DONE = "done",
+    ERROR = "error",
+  }
+  
+export enum DeployStatusEnum {
     START = 'Start',
     DONE = 'Done',
-    INSTALLING = "installing",
+    INSTALLING = "Installing",
     CONTINUE = "Continue",
     PAUSE = "Pause",
     CANCELLED = "Cancelled",
     ERROR = 'Error',
+    UNINSTALL = 'Uninstall'
 }
 
 export enum ItemTypeEnum {
@@ -75,7 +85,35 @@ export enum MapImportStatusEnum {
     IN_PROGRESS = 'InProgress',
     DONE = 'Done',
     CANCEL = 'Cancel',
+    PAUSED = 'Pause',
     ERROR = 'Error',
-  }
+    PENDING = 'Pending',
+    EXPIRED = 'Expired',
+    ARCHIVED = 'Archived',
+}
 
+export enum LibotExportStatusEnum {
+    PENDING = 'PENDING',
+    IN_PROGRESS = "IN_PROGRESS",
+    COMPLETED = "COMPLETED",
+    ABORTED = "ABORTED",
+    PAUSED = "PAUSED",
+    FAILED = "FAILED",
+    EXPIRED = "EXPIRED",
+    ARCHIVED = "ARCHIVED",
+}
+
+export enum DeviceMapStateEnum {
+    IMPORT = "import",
+    DELIVERY = "delivery",
+    INSTALLED = "installed",
+    UNINSTALLED = "uninstalled"
+}
+
+export enum TargetStoragePolicy {
+    SD_ONLY = "SDOnly",
+    FLASH_THEN_SD = "FlashThenSD",
+    SD_THEN_FLASH = "SDThenFlash",
+    FLASH_ONLY = "FlashOnly"
+}
 
