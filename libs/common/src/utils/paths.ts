@@ -13,6 +13,7 @@ export const DEVICE = "device";
 export const DEVICE_GROUP = "group";
 
 export const GET_MAP = "map";
+export const BUG_REPORT = "bug-report"
 
 
 // nested login paths
