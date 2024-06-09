@@ -1,7 +1,6 @@
-import { Validators } from "./utils/validators";
-import { ImportAttributes } from "./importAttributes.dto";
+import { ImportAttributes } from "../../map/dto/importAttributes.dto";
 import { ApiProperty } from "@nestjs/swagger";
-import { Feature } from '@turf/turf';
+import { Feature, FeatureCollection, Polygon } from '@turf/turf';
 
 
 export class Webhook {
@@ -12,33 +11,6 @@ export class Webhook {
   @ApiProperty({ required: false })
   url: string;
 }
-
-// export class Properties {
-//   @ApiProperty({ required: false })
-//   maxResolutionDeg: number;
-
-//   @ApiProperty({ required: false })
-//   minResolutionDeg: number;
-// }
-
-// export class Geometry {
-//   @ApiProperty({ required: false })
-//   type: "Polygon" | "MultiPolygon";
-
-//   @ApiProperty({ required: false })
-//   coordinates: Array<Array<number[]>>;
-// }
-
-// export class Feature {
-//   @ApiProperty({ required: false })
-//   type: string;
-
-//   @ApiProperty({ required: false })
-//   properties: Properties;
-
-//   @ApiProperty({ required: false })
-//   geometry: Geometry;
-// }
 
 export class Roi {
   @ApiProperty({ required: false })
@@ -62,7 +34,7 @@ export class ImportPayload {
   webhook: Webhook[];
 
   @ApiProperty({ required: false })
-  ROI: Roi;
+  ROI: FeatureCollection<Polygon>;
 
   @ApiProperty({ required: false , type: Roi})
   description: string;
@@ -75,7 +47,7 @@ export class ImportPayload {
 
   static fromImportAttrs(attrs: ImportAttributes): ImportPayload {
     const importPayload = new ImportPayload()
-    importPayload.catalogRecordID = attrs.productId
+    importPayload.catalogRecordID = attrs.product.id
     importPayload.webhook = [
       {
         events: ["TASK_COMPLETED", "TASK_FAILED"],
@@ -95,7 +67,7 @@ export class ImportPayload {
         }
       ]
     }
-    importPayload.description = `Export request for prodID: ${attrs.productId} points: [${attrs.Points}}] resolution: ${attrs.targetResolution}`
+    importPayload.description = `Export request for prodID: ${attrs.product.id} points: [${attrs.Points}] resolution: ${attrs.targetResolution}`
     return importPayload
   }
 

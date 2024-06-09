@@ -8,10 +8,10 @@ export class MapMetadatatDto{
   @IsString()
   jobId: number
 
-  @ApiProperty({required: false})
-  @IsOptional()
-  @IsString()
-  mapId: string
+  // @ApiProperty({required: false})
+  // @IsOptional()
+  // @IsString()
+  // mapId: string
 
   @ApiProperty({required: false})
   @IsOptional()
@@ -23,15 +23,23 @@ export class MapMetadatatDto{
   @IsDateString()
   exportEnd : Date
 
-  @ApiProperty({type: 'integer', default: 0})
+  @ApiProperty({required: false, type: 'integer', default: 0})
   @IsNumber()
   progress: number
   
-  @ApiProperty({type: 'integer', default: 0})
+  @ApiProperty({required: false, type: 'integer', default: 0})
   @IsNumber()
   size: number
+  
+  @ApiProperty({required: false, type: 'integer', default: 0})
+  @IsNumber()
+  area: number
+  
+  @ApiProperty({required: false})
+  @IsNumber()
+  footprint: string
 
-  @ApiProperty({type: 'integer', default: 1})
+  @ApiProperty({required: false, type: 'integer', default: 1})
   zoomLevel: number
 
   @ApiProperty({required: false})

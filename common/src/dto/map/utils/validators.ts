@@ -1,5 +1,4 @@
 import { Feature, MultiPolygon, Polygon, area, bbox, bboxPolygon, booleanWithin, intersect, multiPolygon, point, polygon } from "@turf/turf";
-import { Footprint, FootprintType } from "@app/common/dto/libot/footprint";
 
 export class Validators {
 
@@ -77,11 +76,9 @@ export class Validators {
   }
 
   static isPolygonAreaValid(poly: Feature, maxSize?: number): boolean {
-    const polyArea = area(poly)
-    const maxArea = maxSize ?? Number(process.env.MAX_POLYGON_SQUARE_METER) ?? 405573000    
+    const polyArea = area(poly) / 1000000
+    const maxArea = maxSize ?? 100
     return polyArea < 0 || polyArea <= maxArea
-
   }
-
-
+  
 }

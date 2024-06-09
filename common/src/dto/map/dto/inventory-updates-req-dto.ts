@@ -1,8 +1,8 @@
+import { DeviceMapStateEnum } from "@app/common/database/entities"
 import { ApiProperty } from "@nestjs/swagger"
-import { Type } from "class-transformer"
-import { IsArray, IsNotEmpty, IsString } from "class-validator"
+import { IsNotEmpty, IsString } from "class-validator"
 
-export class InventoryUpdatesReqDto{
+export class InventoryUpdatesReqDto {
 
   @ApiProperty()
   @IsString()
@@ -10,13 +10,17 @@ export class InventoryUpdatesReqDto{
   deviceId: string
 
 
-  @ApiProperty({type: [String]})
-  @IsArray()
-  @IsString({each: true})
-  @Type(() => String)
-  inventory: string[]
+  @ApiProperty({
+    type: "object", additionalProperties: {
+      enum: Object.values(DeviceMapStateEnum),
+      title: "map state",
+    },
+    example: { "mapId_1": DeviceMapStateEnum.DELIVERY, "mapId_2": DeviceMapStateEnum.IMPORT }
+  })
+  @IsNotEmpty()
+  inventory: Record<string, DeviceMapStateEnum>
 
-  toString(): string{
+  toString(): string {
     return JSON.stringify(this)
   }
 }
