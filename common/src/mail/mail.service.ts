@@ -80,8 +80,8 @@ export class MailService{
   `;
 
 
-    const subscribers = this.configService.get<string>('SMTP_BUG_REPORT_SUBSCRIBERS').split(',')
-    this.logger.verbose({subscribers})
+    const subscribers = this.configService.get<string>('SMTP_BUG_REPORT_SUBSCRIBERS')?.split(',')
+    this.logger.verbose(`subscribers: ${subscribers}`)
     try {
       let res = await this.mailerService.sendMail({
         to: subscribers,
