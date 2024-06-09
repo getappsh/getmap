@@ -81,14 +81,18 @@ export class MailService{
 
 
     const subscribers = this.configService.get<string>('SMTP_BUG_REPORT_SUBSCRIBERS').split(',')
-    this.logger.debug(subscribers)
-    let res = await this.mailerService.sendMail({
-      to: subscribers,
-      subject: 'Bug Report',
-      html: html
-    })
+    this.logger.verbose({subscribers})
+    try {
+      let res = await this.mailerService.sendMail({
+        to: subscribers,
+        subject: 'Bug Report',
+        html: html
+      });
+      this.logger.verbose(`Sending mail response: ${JSON.stringify(res)}`)
 
-    this.logger.verbose(`Sending mail res ${JSON.stringify(res)}`)
+    }catch (e){
+      this.logger.error(`Failed to send mail, error: ${e.message}`)
+    }
   }
 
 }
