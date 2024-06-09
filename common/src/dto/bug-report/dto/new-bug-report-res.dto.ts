@@ -15,4 +15,8 @@ export class NewBugReportResDto {
   @ApiProperty()
   uploadLogsUrl: string
 
+  toString() {
+    return JSON.stringify(this)
+  }
+
 }
