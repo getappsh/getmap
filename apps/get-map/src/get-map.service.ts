@@ -208,7 +208,7 @@ export class GetMapService implements OnApplicationBootstrap {
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
     for (const prop in defaults) {
-      if (defaults.hasOwnProperty(prop) && !defaultsToSave[prop]) {
+      if (defaults.hasOwnProperty(prop) && !defaultsToSave.hasOwnProperty(prop)) {
         defaultsToSave[prop] = defaults[prop];
       }
     }
