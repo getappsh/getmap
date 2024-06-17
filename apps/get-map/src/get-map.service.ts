@@ -210,12 +210,6 @@ export class GetMapService implements OnApplicationBootstrap {
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
-    for (const prop in defaults) {
-      if (defaults.hasOwnProperty(prop) && !defaultsToSave[prop]) {
-        defaultsToSave[prop] = defaults[prop];
-      }
-    }
-
     try {
       this.logger.log(`sets defaults configuration for maps`)
       await this.repo.setMapConfig(defaultsToSave)
