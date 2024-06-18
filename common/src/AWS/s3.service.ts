@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { createReadStream, existsSync } from 'fs';
 import stream from 'stream';
 import { Observable } from 'rxjs';
+import { HashAlgorithmEnum, HashDto } from '../dto/delivery/dto/delivery-item.dto';
 
 @Injectable()
 export class S3Service {
@@ -68,11 +69,29 @@ export class S3Service {
     return this.s3.putObject(params);
   }
 
-  uploadFileFromStream(stream: stream.Readable, objectKey: string): Observable<number> {
+  uploadFileFromStream(stream: stream.Readable, objectKey: string, hash?: HashDto): Observable<number> {
+    const hexToBase64 = (hex: string): string => {
+      return Buffer.from(hex, 'hex').toString('base64');
+    }
+
+    const getChecksum = (hash: HashDto) => {
+      if (hash) {
+        switch (hash.algorithm) {
+          case HashAlgorithmEnum.SHA256Hex:
+            return { ChecksumSHA256: hexToBase64(hash.hash) }
+          case HashAlgorithmEnum.SHA256Base64:
+            return { ChecksumSHA256: hash.hash }
+          default:
+            return {}
+        }
+      }
+    }
+
     const params: PutObjectRequest = {
       Bucket: this.bucketName,
       Key: objectKey,
       Body: stream,
+      ...getChecksum(hash)
     };
     const fileUpload = new Upload({
       client: this.s3,

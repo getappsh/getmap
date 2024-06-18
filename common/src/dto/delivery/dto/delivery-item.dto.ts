@@ -1,5 +1,21 @@
 import { DeliveryItemEntity } from "@app/common/database-tng/entities";
 import { ApiProperty } from "@nestjs/swagger";
+import { IsOptional } from "class-validator";
+
+export enum HashAlgorithmEnum {
+  SHA256Hex = "SHA256Hex",
+  SHA256Base64 = "SHA256Base64",
+}
+
+export class HashDto {
+  @ApiProperty()
+  @IsOptional()
+  algorithm: HashAlgorithmEnum;
+
+  @ApiProperty()
+  @IsOptional()
+  hash: string;
+}
 
 
 export class DeliveryItemDto {
@@ -17,6 +33,10 @@ export class DeliveryItemDto {
 
   @ApiProperty()
   size: number
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  hash: HashDto
 
   toString() {
     return JSON.stringify(this);
