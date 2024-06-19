@@ -15,15 +15,21 @@ export class S3Service {
 
   private s3: S3;
   private bucketName: string;
+  private endpoint: string
 
   constructor(private configService: ConfigService) {
+    this.endpoint = this.configService.get('S3_ENDPOINT_INTERNAL')
+
     this.s3 = new S3({
+      forcePathStyle: true,
+      endpoint: this.endpoint,
       region: this.configService.get('AWS_REGION'),
       credentials: {
         accessKeyId: this.configService.get('ACCESS_KEY_ID'),
         secretAccessKey: this.configService.get('SECRET_ACCESS_KEY'),
       },
     });
+
     this.bucketName = this.configService.get('BUCKET_NAME')
   }
 
@@ -45,16 +51,20 @@ export class S3Service {
     }
     const command = new GetObjectCommand({
       Bucket: this.bucketName,
-      Key: fileUrl
+      Key: fileUrl,
     })
 
-    if (fileUrl.includes("cache-public")) {
+    if (!this.endpoint && fileUrl.includes("cache-public")) {
       return `https://${this.bucketName}.s3.amazonaws.com/${fileUrl}`
     }
 
     const signedUrl = await getSignedUrl(this.s3, command, {
       expiresIn: this.configService.get('DOWNLOAD_URL_EXPIRE'),
     })
+
+    if(this.endpoint && this.configService.get('S3_ENDPOINT_EXTERNAL')) {
+      return signedUrl.replace(this.endpoint, this.configService.get('S3_ENDPOINT_EXTERNAL'));
+    }
 
     return signedUrl;
   }
@@ -78,6 +88,7 @@ export class S3Service {
       if (hash) {
         switch (hash.algorithm) {
           case HashAlgorithmEnum.SHA256Hex:
+            // return { ChecksumSHA256: hash.hash }
             return { ChecksumSHA256: hexToBase64(hash.hash) }
           case HashAlgorithmEnum.SHA256Base64:
             return { ChecksumSHA256: hash.hash }
@@ -91,7 +102,7 @@ export class S3Service {
       Bucket: this.bucketName,
       Key: objectKey,
       Body: stream,
-      ...getChecksum(hash)
+      // ...getChecksum(hash)
     };
     const fileUpload = new Upload({
       client: this.s3,
