@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { DeliveryEntity, UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity } from '../entities';
+import { DeliveryEntity, UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, BugReportEntity } from '../entities';
 import { join } from 'path';
 import { readFileSync } from 'fs'
 import { JobsEntity } from '../entities/map-updatesCronJob';
@@ -41,7 +41,8 @@ const ormConfig = new DataSource({
     DeviceMapStateEntity,
     DeliveryEntity,
     MapConfigEntity,
-    JobsEntity
+    JobsEntity,
+    BugReportEntity
   ],
   migrations: [join(__dirname, '../migration/*.{js,ts}')],
   logging: false,
@@ -56,6 +57,7 @@ function getDBAuthParams() {
     case "TNG":
       return {
         ssl: {
+          ca: [readFileSync(process.env.DB_PEM_PATH)],
           key: [readFileSync(process.env.DB_KEY_PATH)],
           cert: [readFileSync(process.env.DB_CERT_PATH)]
         }
