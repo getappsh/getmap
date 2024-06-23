@@ -14,6 +14,11 @@ export class DeliveryStatusDto {
   @IsString()
   @IsNotEmpty()
   catalogId: string;
+  
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  itemKey: string;
 
   
   @ApiProperty({required: false})  
