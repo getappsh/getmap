@@ -51,4 +51,23 @@ export class PrepareDeliveryResDto {
   toString() {
     return JSON.stringify(this);
   }
+
+  static fromPrepareDeliveryResDto(dDto: PrepareDeliveryResDto): PrepareDeliveryResDto {
+    const dlvResDto = new PrepareDeliveryResDto();
+    dlvResDto.catalogId = dDto.catalogId;
+    dlvResDto.status = dDto.status;
+    dlvResDto.progress = dDto.progress;
+    dlvResDto.size = dDto.size;
+    dlvResDto.url = dDto.url;
+
+    if (dDto.artifacts && Array.isArray(dDto.artifacts)) {
+      dlvResDto.Artifacts = dDto.artifacts.map((artifact: DeliveryItemDto) => DeliveryItemDto.fromDeliveryItemDto(artifact));
+    }
+
+    if (dDto.error) {
+      dlvResDto.error = ErrorDto.fromErrorDto(dDto.error);
+    }
+
+    return dlvResDto;
+  }
 }
