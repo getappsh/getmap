@@ -1,11 +1,7 @@
 import { DeliveryItemEntity } from "@app/common/database-tng/entities";
+import { HashAlgorithmEnum } from "@app/common/database/entities/enums.entity";
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
-
-export enum HashAlgorithmEnum {
-  SHA256Hex = "SHA256Hex",
-  SHA256Base64 = "SHA256Base64",
-}
 
 export class HashDto {
   @ApiProperty()
