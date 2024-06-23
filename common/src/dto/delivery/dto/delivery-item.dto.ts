@@ -51,4 +51,13 @@ export class DeliveryItemDto {
     dto.size = diE.size;
     return dto
   }
+  static fromDeliveryItemDto(diDto: DeliveryItemDto): DeliveryItemDto {
+    const dto = new DeliveryItemDto();
+    dto.catalogId = diDto.catalogId;
+    dto.itemKey = diDto.itemKey;
+    dto.metaData = diDto.metaData;
+    dto.url = diDto.url;
+    dto.size = diDto.size;
+    return dto
+  }
 }
