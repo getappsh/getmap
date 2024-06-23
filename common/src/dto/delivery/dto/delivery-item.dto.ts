@@ -11,10 +11,17 @@ export class HashDto {
   @ApiProperty()
   @IsOptional()
   algorithm: HashAlgorithmEnum;
-
+  
   @ApiProperty()
   @IsOptional()
   hash: string;
+  
+  static fromHashDto(hash: HashDto): HashDto {
+    const dto = new HashDto();
+    dto.algorithm = hash.algorithm;
+    dto.hash = hash.hash;
+    return dto
+  }
 }
 
 
@@ -58,6 +65,10 @@ export class DeliveryItemDto {
     dto.metaData = diDto.metaData;
     dto.url = diDto.url;
     dto.size = diDto.size;
+
+    if(diDto.hash){
+      dto.hash = HashDto.fromHashDto(diDto.hash)
+    }
     return dto
   }
 }
