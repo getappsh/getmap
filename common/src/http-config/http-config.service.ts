@@ -6,6 +6,7 @@ import { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from "a
 import * as fs from "fs";
 import * as https from 'https'
 import { TokensDto } from "../dto/login/dto/tokens.dto";
+import { url } from "inspector";
 
 
 @Injectable()
@@ -18,7 +19,7 @@ export class ProxyHttpConfigService {
   private baseUrl: string;
 
   private username: string;
-  private password: string; 
+  private password: string;
 
   private token: string;
   private tokenExpiredTime: Date;
@@ -80,7 +81,13 @@ export class ProxyHttpConfigService {
   setInspectors() {
     this.httpService.axiosRef.interceptors.request.use(
       async (config: InternalAxiosRequestConfig) => {
-        if (config.url != LOGIN) {
+        const endpointsNoAuto = [
+          LOGIN,
+          this.configService.get("S3_ENDPOINT_INTERNAL"),
+          this.configService.get("S3_ENDPOINT_EXTERNAL"),
+          `https://${this.configService.get("BUCKET_NAME")}`
+        ];
+        if (!endpointsNoAuto.some(endpoint => config.url.startsWith(endpoint))) {
           config.headers = { ...config.headers, ...(await this.getTokenHeader()).headers }
         }
         return config;
