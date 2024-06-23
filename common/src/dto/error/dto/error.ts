@@ -62,6 +62,13 @@ export class ErrorDto {
       return ErrorCode.APP_OTHER
     }
   }
+
+  static fromErrorDto(error: ErrorDto): ErrorDto {
+    const errorDto = new ErrorDto();
+    errorDto.errorCode = error.errorCode;
+    errorDto.message = error.message;
+    return errorDto
+  }
 }
 
 
