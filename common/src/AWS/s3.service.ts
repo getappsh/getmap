@@ -62,7 +62,7 @@ export class S3Service {
       expiresIn: this.configService.get('DOWNLOAD_URL_EXPIRE'),
     })
 
-    if(this.endpoint && this.configService.get('S3_ENDPOINT_EXTERNAL')) {
+    if (this.endpoint && this.configService.get('S3_ENDPOINT_EXTERNAL')) {
       return signedUrl.replace(this.endpoint, this.configService.get('S3_ENDPOINT_EXTERNAL'));
     }
 
