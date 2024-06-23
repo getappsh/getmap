@@ -56,5 +56,5 @@ export const STATUS = "/import/status/"
 export const DeliveryEndpoints = {
   updateDownloadStatus: 'delivery/updateDownloadStatus',
   preparedDelivery: 'delivery/prepareDelivery',
-  getPreparedByCatalogId: 'delivery/preparedDelivery/:catalogId',
+  getPreparedByCatalogId: 'delivery/preparedDelivery/',
 }
