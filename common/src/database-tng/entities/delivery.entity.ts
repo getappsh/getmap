@@ -3,6 +3,7 @@ import { PrepareDeliveryReqDto } from "@app/common/dto/delivery";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { DeliveryItemEntity } from "./delivery-item.entity";
 import { PrepareStatusEnum } from "../../database/entities/enums.entity";
+import { Deprecated } from "../../decorators";
 
 @Entity("delivery")
 export class DeliveryEntity {
@@ -26,6 +27,20 @@ export class DeliveryEntity {
     default: PrepareStatusEnum.START
   })
   status: PrepareStatusEnum;
+
+   /**
+   * @deprecated This field is deprecated and will be removed in the future.
+   */
+  @Column({name: "path", nullable: true})
+  @Deprecated()
+  path: string;
+
+   /**
+   * @deprecated This field is deprecated and will be removed in the future.
+   */
+  @Column({name: "progress", type: "int", default: 0})
+  @Deprecated()
+  progress: number
 
   @Column({ name: "err_code", nullable: true })
   errCode: string;

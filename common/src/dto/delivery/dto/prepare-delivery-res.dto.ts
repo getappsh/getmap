@@ -3,6 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { DeliveryItemDto } from "./delivery-item.dto";
 import { IsOptional } from "class-validator";
 import { ErrorDto } from "../../error";
+import { Deprecated } from "@app/common/decorators";
 
 
 export class PrepareDeliveryResDto {
@@ -18,11 +19,14 @@ export class PrepareDeliveryResDto {
   @ApiProperty({ required: false })
   size: number
 
-  // TODO it will be removed
-  @ApiProperty({required: false})
+  /**
+    * @deprecated This field is deprecated and will be removed in the future.
+    */
+  @ApiProperty({ required: false })
+  @Deprecated()
   url: string;
 
-  @ApiProperty({ required: false,  })
+  @ApiProperty({ required: false, })
   private artifacts: DeliveryItemDto[];
 
   get Artifacts(): DeliveryItemDto[] {
@@ -37,7 +41,7 @@ export class PrepareDeliveryResDto {
     }
   }
 
-  @ApiProperty({required:false})
+  @ApiProperty({ required: false })
   @IsOptional()
   error: ErrorDto
 
