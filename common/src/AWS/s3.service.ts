@@ -6,7 +6,8 @@ import { ConfigService } from '@nestjs/config';
 import { createReadStream, existsSync } from 'fs';
 import stream from 'stream';
 import { Observable } from 'rxjs';
-import { HashAlgorithmEnum, HashDto } from '../dto/delivery/dto/delivery-item.dto';
+import { HashDto } from '../dto/delivery/dto/delivery-item.dto';
+import { HashAlgorithmEnum } from '../database/entities/enums.entity';
 
 @Injectable()
 export class S3Service {
