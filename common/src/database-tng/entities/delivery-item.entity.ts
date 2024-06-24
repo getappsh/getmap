@@ -2,8 +2,7 @@
 import { BaseEntity } from "../../database/entities/base.entity";
 import { Column, Entity, ManyToOne, Unique } from "typeorm";
 import { DeliveryEntity } from "./delivery.entity";
-import { PrepareStatusEnum } from "../../database/entities/enums.entity";
-import { HashAlgorithmEnum } from "../../dto/delivery/dto/delivery-item.dto";
+import { HashAlgorithmEnum, PrepareStatusEnum } from "../../database/entities/enums.entity";
 
 @Entity("delivery_item")
 @Unique(['itemKey', 'delivery'])
@@ -41,9 +40,9 @@ export class DeliveryItemEntity extends BaseEntity {
   @Column({ name: "progress", type: "int", default: 0 })
   progress: number
 
-  @Column({name:"hash", nullable: true})
+  @Column({ name: "hash", nullable: true })
   hash: string
 
-  @Column({type: "enum", enum: HashAlgorithmEnum, name: "hash_algorithm", nullable: true})
+  @Column({ type: "enum", enum: HashAlgorithmEnum, name: "hash_algorithm", nullable: true })
   hashAlgorithm: HashAlgorithmEnum
 }
