@@ -23,7 +23,7 @@ export class S3Service {
     this.endpoint = this.configService.get('S3_ENDPOINT_INTERNAL')
 
     this.s3 = new S3({
-      forcePathStyle: true,
+      forcePathStyle: this.endpoint? true: false,
       endpoint: this.endpoint,
       region: this.configService.get('AWS_REGION'),
       credentials: {
