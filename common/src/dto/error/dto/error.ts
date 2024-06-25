@@ -10,6 +10,7 @@ export enum ErrorCode {
   // delivery
   DLV_OTHER = "DELIVERY.unknown",
   DLV_DOWNLOAD = "DELIVERY.download",
+  DLV_DOWNLOAD_NOT_AVAILABLE = "DELIVERY.downloadNotAvailable",
   DLV_C_INVALID_PACKAGE = "DELIVERY.invalidPackage",
   DLV_C_PACKAGE_TOO_LARGE = "DELIVERY.packageTooLarge",
   DLV_C_CLEAR_ISSUE = "DELIVERY.unableClearCache",
@@ -33,6 +34,7 @@ export class ErrorDto {
 
       "`DELIVERY.unknown`: Error code not listed in the enum <br /> " +
       "`DELIVERY.download`: Download of delivery item failed <br /> " +
+      "`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download <br /> " +
       "`DELIVERY.invalidPackage`: Package of given catalog id is invalid, maybe expired or some else <br /> " +
       "`DELIVERY.packageTooLarge`:  Package of given catalog id is too large, no space in cache<br /> " +
       "`DELIVERY.unableClearCache`:  Some issue occurs when trying to clear cache <br /> " +
