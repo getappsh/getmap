@@ -22,11 +22,11 @@ export class PrepareDeliveryResDto {
   /**
     * @deprecated This field is deprecated and will be removed in the future.
     */
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, deprecated: true })
   @Deprecated()
   url: string;
 
-  @ApiProperty({ required: false, })
+  @ApiProperty({ required: false, type: DeliveryItemDto })
   private artifacts: DeliveryItemDto[];
 
   get Artifacts(): DeliveryItemDto[] {
