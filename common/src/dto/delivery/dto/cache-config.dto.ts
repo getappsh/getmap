@@ -9,6 +9,10 @@ export class CacheConfigDto {
   @IsOptional()
   maxCapacityInGB: number;
 
+  @ApiProperty()
+  @IsOptional()
+  mes: string
+
   toString() {
     return JSON.stringify(this);
   }
@@ -17,8 +21,15 @@ export class CacheConfigDto {
     if(typeof entity.configs === "string"){
       entity.configs = JSON.parse(entity.configs)
     }
+
     const configDto = new CacheConfigDto();
     configDto.maxCapacityInGB = entity.configs["maxCapacityInGB"]
+    return configDto
+  }
+  
+  static fromMsg(msg: string) {
+    const configDto = new CacheConfigDto();
+    configDto.mes = msg
     return configDto
   }
 }
