@@ -1,4 +1,5 @@
 import { OS } from "@app/common/database/entities";
+import { Deprecated } from "@app/common/decorators";
 import { IsValidStringFor } from "@app/common/validators";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
@@ -116,7 +117,12 @@ export class PhysicalDiscoveryDto {
   @IsString()
   possibleBandwidth: string;
 
-  @ApiProperty({required: false})
+  
+  /**
+    * @deprecated This field is deprecated and will be removed in the future. use instead SituationalDiscoveryDto.availableStorage
+    */
+  @ApiProperty({ required: false, deprecated: true })
+  @Deprecated()
   @IsOptional()
   @IsString()
   availableStorage: string
