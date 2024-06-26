@@ -9,6 +9,7 @@ export enum ErrorCode {
 
   // delivery
   DLV_OTHER = "DELIVERY.unknown",
+  DLV_NOT_FOUND = 'DELIVERY.notFound',
   DLV_DOWNLOAD = "DELIVERY.download",
   DLV_DOWNLOAD_NOT_AVAILABLE = "DELIVERY.downloadNotAvailable",
   DLV_C_INVALID_PACKAGE = "DELIVERY.invalidPackage",
@@ -33,6 +34,7 @@ export class ErrorDto {
       "`APP.unknown`: General Error code not listed in the enum <br /> " +
 
       "`DELIVERY.unknown`: Error code not listed in the enum <br /> " +
+      "`DELIVERY.notFound`: No found the delivery with given catalog id <br /> " +
       "`DELIVERY.download`: Download of delivery item failed <br /> " +
       "`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download <br /> " +
       "`DELIVERY.invalidPackage`: Package of given catalog id is invalid, maybe expired or some else <br /> " +
