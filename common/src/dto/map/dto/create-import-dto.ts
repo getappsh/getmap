@@ -1,4 +1,5 @@
 import { IsValidStringFor } from "@app/common/validators";
+import { Pattern } from "@app/common/validators/regex.validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
@@ -29,7 +30,7 @@ export class MapProperties {
 
   @ApiProperty({ required: true })
   @IsString()
-  @IsValidStringFor("bbox")
+  @IsValidStringFor(Pattern.B_BOX)
   @IsNotEmpty()
   boundingBox: string;
 

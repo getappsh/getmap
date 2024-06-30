@@ -1,6 +1,8 @@
+import { IsValidStringFor } from "@app/common/validators";
 import { IsStringOrStringArr } from "@app/common/validators/is-str-or-str-arr.validator";
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsOptional, Validate } from "class-validator";
+import { Pattern } from "@app/common/validators/regex.validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsOptional, Validate } from "class-validator";
 
 export class DeleteFromCacheDto {
 
@@ -11,8 +13,8 @@ export class DeleteFromCacheDto {
 
   @ApiProperty({required:false})
   @IsOptional()
-  @IsDate()
-  date: Date
+  @IsValidStringFor(Pattern.Date)
+  date: string
 
   @ApiProperty({required:false})
   @IsOptional()
