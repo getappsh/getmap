@@ -19,6 +19,7 @@ export const DeliveryTopics = {
 
 export const DeliveryTopicsEmit = {
     UPDATE_DOWNLOAD_STATUS: `getapp-delivery.update-download-status${region}`,
+    DELETE_CACHE_ITEMS: `getapp-delivery.delete-cache-items${region}`,
 }
 
 export const OfferingTopics = {
