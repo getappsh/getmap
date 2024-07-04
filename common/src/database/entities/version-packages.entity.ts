@@ -3,7 +3,6 @@ import { BaseEntity } from "./base.entity";
 import { OS, Formation, PackageStatus } from "./enums.entity";
 import { IsValidStringFor } from './../../validators';
 import { IsUrl } from "class-validator";
-import { Pattern } from "@app/common/validators/regex.validator";
 
 @Entity("version_packages")
 // @Unique(["OS", "formation", "fromVersion", "toVersion"])
@@ -23,11 +22,9 @@ export class VersionPackagesEntity extends BaseEntity {
   formation: string
 
   @Column({name: "from_version"})
-  @IsValidStringFor(Pattern.VERSION)
   fromVersion: string
   
   @Column({name: "to_version"})
-  @IsValidStringFor(Pattern.VERSION)
   toVersion: string
 
   @Column({
