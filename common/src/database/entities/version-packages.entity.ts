@@ -23,11 +23,11 @@ export class VersionPackagesEntity extends BaseEntity {
   formation: string
 
   @Column({name: "from_version"})
-  @IsValidStringFor(Pattern.VERSION)
+  // @IsValidStringFor(Pattern.VERSION)
   fromVersion: string
   
   @Column({name: "to_version"})
-  @IsValidStringFor(Pattern.VERSION)
+  // @IsValidStringFor(Pattern.VERSION)
   toVersion: string
 
   @Column({
