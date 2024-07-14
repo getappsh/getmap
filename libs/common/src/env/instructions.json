@@ -9,7 +9,8 @@
     "general.env",
     "micro-service.env",
     "postgres-DB.env",
-    "apm.env"
+    "apm.env",
+    "smtp.env"
   ],
   "delivery": [
     "general.env",
