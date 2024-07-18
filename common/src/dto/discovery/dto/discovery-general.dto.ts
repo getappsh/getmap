@@ -1,5 +1,7 @@
 import { OS } from "@app/common/database/entities";
+import { Deprecated } from "@app/common/decorators";
 import { IsValidStringFor } from "@app/common/validators";
+import { Pattern } from "@app/common/validators/regex.validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
@@ -85,13 +87,13 @@ export class PhysicalDiscoveryDto {
   @ApiProperty({required: false})
   @IsOptional()
   @IsNotEmpty()
-  @IsValidStringFor("MAC")
+  @IsValidStringFor(Pattern.MAC)
   MAC: string;
 
   @ApiProperty({required: false})
   @IsOptional()
   @IsNotEmpty()
-  @IsValidStringFor("IP")
+  @IsValidStringFor(Pattern.IP)
   IP: string;
 
   @ApiProperty({required: false})
@@ -116,7 +118,12 @@ export class PhysicalDiscoveryDto {
   @IsString()
   possibleBandwidth: string;
 
-  @ApiProperty({required: false})
+  
+  /**
+    * @deprecated This field is deprecated and will be removed in the future. use instead SituationalDiscoveryDto.availableStorage
+    */
+  @ApiProperty({ required: false, deprecated: true })
+  @Deprecated()
   @IsOptional()
   @IsString()
   availableStorage: string
