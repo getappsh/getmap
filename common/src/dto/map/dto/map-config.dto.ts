@@ -109,6 +109,16 @@ export class MapConfigDto {
   @IsOptional()
   lastConfigUpdateDate: Date
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  ortophotoMapPath: string
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  controlMapPath: string
+
   static fromMapConfig(cE: MapConfigEntity) {
     const config = new MapConfigDto()
     config.deliveryTimeoutMins = cE.deliveryTimeoutMins
@@ -131,6 +141,8 @@ export class MapConfigDto {
     config.targetStoragePolicy = cE.targetStoragePolicy
     config.flashInventoryMaxSizeMB = cE.flashInventoryMaxSizeMB
     config.sdInventoryMaxSizeMB = cE.sdInventoryMaxSizeMB
+    config.ortophotoMapPath = cE.ortophotoMapPath
+    config.controlMapPath = cE.controlMapPath
 
     return config
   }
