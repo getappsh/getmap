@@ -1,13 +1,14 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { DeliveryEntity, UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, BugReportEntity } from '../entities';
+import { UploadVersionEntity, DevicesGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, BugReportEntity } from '../entities';
 import { join } from 'path';
 import { readFileSync } from 'fs'
 import { JobsEntity } from '../entities/map-updatesCronJob';
+import { DeliveryEntity, DeliveryItemEntity, CacheConfigEntity } from '../../database-tng/entities';
 
 const region = process.env.REGION ? `_${process.env.REGION}` : '';
 let migrationsRun: boolean = true
-if (process.env.MIGRATION_RUN){
+if (process.env.MIGRATION_RUN) {
   migrationsRun = process.env.MIGRATION_RUN === 'true'
 }
 
@@ -18,7 +19,7 @@ const ormConfig = new DataSource({
   database: `${process.env.POSTGRES_DB}${region}`,
   username: process.env.POSTGRES_USER,
   connectTimeoutMS: 5000,
-  
+
 
   ...getDBAuthParams(),
   entities: [
@@ -40,6 +41,8 @@ const ormConfig = new DataSource({
     ProductEntity,
     DeviceMapStateEntity,
     DeliveryEntity,
+    DeliveryItemEntity,
+    CacheConfigEntity,
     MapConfigEntity,
     JobsEntity,
     BugReportEntity
