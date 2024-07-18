@@ -204,6 +204,10 @@ export class GetMapService implements OnApplicationBootstrap {
     defaults.flashStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
     defaults.flashInventoryMaxSizeMB = 2000
     defaults.sdInventoryMaxSizeMB = 1000
+    defaults.ortophotoMapPath = "com.asio.gis/gis/maps/orthophoto/אורתופוטו.gpkg"
+    defaults.controlMapPath = "com.asio.gis/gis/maps/orthophoto/מפת שליטה.gpkg"
+
+
 
     const defaultsToSave = Object.assign({}, defaults, eCong)
 
