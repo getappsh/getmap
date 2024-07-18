@@ -68,6 +68,11 @@ export class MapConfigEntity extends BaseEntity {
   @Column({ name: "flash_inventory_max_size_mb", nullable: true })
   flashInventoryMaxSizeMB: number
 
+  @Column({ name: "ortophoto_map_path", nullable: true })
+  ortophotoMapPath: string
+
+  @Column({ name: "control_map_path", nullable: true })
+  controlMapPath: string
 
   toString() {
     return JSON.stringify(this)
