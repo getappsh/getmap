@@ -12,11 +12,14 @@ export const UploadTopics = {
 export const DeliveryTopics = {
     PREPARE_DELIVERY: `getapp-delivery.prepare${region}`,
     PREPARED_DELIVERY_STATUS: `getapp-delivery.prepared-status${region}`,
+    GET_CACHE_CONFIG: `getapp-delivery.get-cache-config${region}`,
+    SET_CACHE_CONFIG: `getapp-delivery.set-cache-config${region}`,
     CHECK_HEALTH: `getapp-delivery.check-health${region}`
 } as const
 
 export const DeliveryTopicsEmit = {
     UPDATE_DOWNLOAD_STATUS: `getapp-delivery.update-download-status${region}`,
+    DELETE_CACHE_ITEMS: `getapp-delivery.delete-cache-items${region}`,
 }
 
 export const OfferingTopics = {
