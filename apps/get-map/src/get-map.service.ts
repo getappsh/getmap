@@ -231,7 +231,7 @@ export class GetMapService implements OnApplicationBootstrap {
   // Utils
   fromEntityToDto(entity: MapEntity, dto: CreateImportResDto) {
     dto.importRequestId = entity.catalogId
-    // dto.product = entity.mapProduct
+    dto.product = MapProductResDto.fromProductEntity(entity.mapProduct)
     dto.status = entity.status
   }
 

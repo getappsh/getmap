@@ -37,7 +37,8 @@ export class RepoService {
           ingestionDate: importAttr.product.ingestionDate
         },
         boundingBox: importAttr.Points,
-      }
+      },
+      relations: {mapProduct: true}
     })
     if (existMap?.status != MapImportStatusEnum.IN_PROGRESS && existMap?.expiredDate <= new Date(new Date().getTime())) {
       existMap.status = MapImportStatusEnum.EXPIRED
