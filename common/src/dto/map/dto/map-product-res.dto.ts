@@ -89,7 +89,7 @@ export class MapProductResDto {
     product.productName = records["mc:productName"]
     product.productVersion = Number(records["mc:productVersion"])
     product.productType = records["mc:productType"]
-    product.productSubType = Number(records["mc:productSubType"]) || null;
+    product.productSubType = Number(records["mc:productSubType"]) || null ;
     product.description = records["mc:description"];
     product.imagingTimeBeginUTC = new Date(records["mc:imagingTimeBeginUTC"]);
     product.imagingTimeEndUTC = new Date(records["mc:imagingTimeEndUTC"]);
