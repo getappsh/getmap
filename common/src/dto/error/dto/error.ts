@@ -1,8 +1,22 @@
+import { Logger } from "@nestjs/common";
 import { ApiProperty, } from "@nestjs/swagger";
 import { IsEnum, IsString } from "class-validator";
 
 
 export enum ErrorCode {
+  // app
+  APP_OTHER = "APP.unknown",
+
+  // delivery
+  DLV_OTHER = "DELIVERY.unknown",
+  DLV_NOT_FOUND = 'DELIVERY.notFound',
+  DLV_DOWNLOAD = "DELIVERY.download",
+  DLV_DOWNLOAD_NOT_AVAILABLE = "DELIVERY.downloadNotAvailable",
+  DLV_C_INVALID_PACKAGE = "DELIVERY.invalidPackage",
+  DLV_C_PACKAGE_TOO_LARGE = "DELIVERY.packageTooLarge",
+  DLV_C_CLEAR_ISSUE = "DELIVERY.unableClearCache",
+
+  // map
   MAP_OTHER = 'MAP.unknown',
   MAP_NOT_FOUND = 'MAP.notFound',
   MAP_BBOX_INVALID = 'MAP.bBoxIsInvalid',
@@ -18,6 +32,16 @@ export class ErrorDto {
 
   @ApiProperty({
     enum: ErrorCode, description:
+      "`APP.unknown`: General Error code not listed in the enum <br /> " +
+
+      "`DELIVERY.unknown`: Error code not listed in the enum <br /> " +
+      "`DELIVERY.notFound`: No found the delivery with given catalog id <br /> " +
+      "`DELIVERY.download`: Download of delivery item failed <br /> " +
+      "`DELIVERY.downloadNotAvailable`: Delivery item not yet available for download <br /> " +
+      "`DELIVERY.invalidPackage`: Package of given catalog id is invalid, maybe expired or some else <br /> " +
+      "`DELIVERY.packageTooLarge`:  Package of given catalog id is too large, no space in cache<br /> " +
+      "`DELIVERY.unableClearCache`:  Some issue occurs when trying to clear cache <br /> " +
+
       "`MAP.unknown`: Error code not listed in the enum <br /> " +
       "`MAP.notFound`: No found the map with given id <br /> " +
       "`MAP.bBoxIsInvalid`: BBox is probably invalid <br /> " +
@@ -34,6 +58,22 @@ export class ErrorDto {
   @ApiProperty({ required: false })
   @IsString()
   message: string;
+
+  static parseErrorCodeStrToEnum(errCode: string): ErrorCode {
+    if (Object.values(ErrorCode).includes(errCode as ErrorCode)) {
+      return errCode as ErrorCode;
+    } else {
+      Logger.warn(`invalid error code: ${errCode}`, ErrorDto.name)
+      return ErrorCode.APP_OTHER
+    }
+  }
+
+  static fromErrorDto(error: ErrorDto): ErrorDto {
+    const errorDto = new ErrorDto();
+    errorDto.errorCode = error.errorCode;
+    errorDto.message = error.message;
+    return errorDto
+  }
 }
 
 
