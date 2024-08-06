@@ -93,6 +93,9 @@ export const DeviceTopics = {
     DEVICE_CONTENT: `getapp-device.content.installed${region}`,
     DISCOVERY_SOFTWARE: `getapp-device.discover.software.catalog${region}`,
     IM_PULL_DISCOVERY: `getapp-device.im.pull.discovery${region}`,
+     // Config
+     GET_DEVICE_CONFIG: `getapp-device.config.get${region}`,
+     SET_DEVICE_CONFIG: `getapp-device.config.set${region}`,
     CHECK_HEALTH: `getapp-device.check-health${region}`
 } as const
 
