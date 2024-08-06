@@ -26,7 +26,7 @@ export class PrepareDeliveryResDto {
   @Deprecated()
   url: string;
 
-  @ApiProperty({ required: false, type: DeliveryItemDto })
+  @ApiProperty({ required: false, type: [DeliveryItemDto] })
   private artifacts: DeliveryItemDto[];
 
   get Artifacts(): DeliveryItemDto[] {

@@ -34,7 +34,7 @@ export class DeliveryItemDto {
   @ApiProperty()
   url: string;
 
-  @ApiProperty()
+  @ApiProperty({required: false})
   size: number
 
   @ApiProperty({ required: false })
