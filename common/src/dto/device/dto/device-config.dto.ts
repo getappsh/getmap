@@ -48,6 +48,11 @@ export class WindowsConfigDto extends BaseConfigDto{
   periodicMatomoIntervalMins: number
 
 
+  @ApiProperty({ required: false })
+  @IsOptional()
+  lastCheckingMapUpdatesDate: Date
+
+
   static fromConfigEntity(eConfig: DeviceConfigEntity): WindowsConfigDto{
     let config = new WindowsConfigDto();
     config.group = eConfig.group;
