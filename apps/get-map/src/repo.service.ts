@@ -190,12 +190,13 @@ export class RepoService {
           }
           if (resData.artifacts[j].type === ArtifactsLibotEnum.METADATA) {
             try {
-              const mapActualPolygon = await this.libotClient.reqAndRetry(
+              const actualFootprint = await this.libotClient.reqAndRetry(
                 async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
                 "download map json file"
               )
-              existMap[i].footprint = mapActualPolygon.coordinates[0][0].join(',')
-              existMap[i].area = parseInt(area(mapActualPolygon).toFixed())
+              // existMap[i].footprint = actualFootprint.coordinates.join(',')
+              existMap[i].footprint = actualFootprint.coordinates[0][0].join(',')
+              existMap[i].area = parseInt(area(actualFootprint).toFixed())
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
               this.logger.error(mes)
