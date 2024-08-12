@@ -109,12 +109,11 @@ export class MapUpdatesService {
     if (recentProduct) {
       const discoveryAttrs = new DiscoveryAttributes()
       discoveryAttrs.ingestionDate = recentProduct.ingestionDate
-      const records = await this.libot.getRecords(discoveryAttrs)
+      const records = await this.libot.getRecords(discoveryAttrs, true)
 
       let products = []
       if (records && records.length > 0) {
-        this.logger.debug("Convert records to products")
-        products = records.map(record => MapProductResDto.fromRecordsRes(record)).filter(p => p.id != recentProduct.id)
+        products = records.filter(p => p.id != recentProduct.id)
       }
       return products
     } else {
@@ -127,12 +126,11 @@ export class MapUpdatesService {
     this.logger.log(`Get From libot all offered products`)
 
     const discoveryAttrs = new DiscoveryAttributes()
-    const records = await this.libot.reqAndRetry(async () => await this.libot.getRecords(discoveryAttrs), "Get records", true)
+    const records = await this.libot.reqAndRetry(async () => await this.libot.getRecords(discoveryAttrs, true), "Get records", true)
 
     let products = []
     if (records && records.length > 0) {
-      this.logger.debug("Convert records to products")
-      products = records.map(record => MapProductResDto.fromRecordsRes(record))
+      products = records
     }
     return products
 

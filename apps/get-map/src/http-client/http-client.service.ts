@@ -11,7 +11,8 @@ import { ImportResPayload } from "@app/common/dto/libot/dto/import-res-payload";
 import { MapError } from "@app/common/dto/map/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 import { ConfigService } from "@nestjs/config";
-import { Feature, Geometry, MultiPolygon } from "@turf/turf";
+import { Geometry } from "@turf/turf";
+import { MapProductResDto } from "@app/common/dto/map/dto/map-product-res.dto";
 
 
 @Injectable()
@@ -21,6 +22,9 @@ export class LibotHttpClientService {
   private RETRY_COUNT = Number(this.env.get("RETRY_COUNT") ?? 3)
   private WAIT_TIME = Number(this.env.get("WAIT_TIME") ?? 0.3)
   private EXPONENTIAL_TIMES = this.env.get<string>("EXPONENTIAL_TIMES")?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
+  private PRODUCTS_STALE_AFTER = Number(this.env.get<string>("PRODUCTS_STALE_AFTER") ?? 3) * 1000 * 60  // PRODUCTS_STALE_AFTER in minutes
+  private productsCache: MapProductResDto[];
+  private productsCacheTimeSet: number;
 
   constructor(
     private readonly env: ConfigService,
@@ -33,11 +37,16 @@ export class LibotHttpClientService {
   }
 
   // Http requests
-  async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
+  async getRecords(dAttrs: DiscoveryAttributes, noCache: boolean = false): Promise<MapProductResDto[]> {
+
+    if (this.productsCache?.length > 0 && !this.isProductCacheStale() && !noCache) {
+      this.logger.log(`Return ${this.productsCache.length} records from cache`)
+      return this.productsCache
+    }
 
     const url = this.env.get<string>("LIBOT_DISCOVERY_URL")
     let startPos = 1
-    let productsRes: MCRasterRecordDto[] = []
+    let productsRes: MapProductResDto[] = []
 
     while (startPos > 0) {
 
@@ -54,9 +63,9 @@ export class LibotHttpClientService {
           const records: MCRasterRecordDto | MCRasterRecordDto[] = results["csw:GetRecordsResponse"]["csw:SearchResults"]["mc:MCRasterRecord"] ?? []
 
           if (Array.isArray(records)) {
-            productsRes = [...productsRes, ...records]
+            productsRes = [...productsRes, ...records.map(r => MapProductResDto.fromRecordsRes(r))]
           } else {
-            productsRes.push(records)
+            productsRes.push(MapProductResDto.fromRecordsRes(records))
           }
           startPos = results["csw:GetRecordsResponse"]["csw:SearchResults"].nextRecord
         } else {
@@ -88,7 +97,10 @@ export class LibotHttpClientService {
     }
 
     this.logger.debug(`received ${productsRes.length} records from libot `)
-    return productsRes
+
+    this.productsCache = productsRes
+    this.productsCacheTimeSet = Date.now()
+    return this.productsCache
   }
 
   async exportStampMap(imAttrs: ImportAttributes) {
@@ -141,6 +153,10 @@ export class LibotHttpClientService {
   }
 
   // Http requests helpers
+  isProductCacheStale(): boolean {
+    const dateNow = Date.now()
+    return dateNow - this.productsCacheTimeSet > this.PRODUCTS_STALE_AFTER
+  }
 
   getHeaders(cType: "json" | "xml") {
     const headers = {
