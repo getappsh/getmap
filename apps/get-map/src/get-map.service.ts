@@ -43,7 +43,7 @@ export class GetMapService implements OnApplicationBootstrap {
       this.logger.debug("Processing records to response")
 
       mapRes.status = MapOfferingStatus.SUCCESS
-      mapRes.products = records.map(record => MapProductResDto.fromRecordsRes(record))
+      mapRes.products = records
     } catch (error) {
       mapRes.status = MapOfferingStatus.ERROR
       mapRes.error = this.throwErrorDto(ErrorCode.MAP_OTHER, error)

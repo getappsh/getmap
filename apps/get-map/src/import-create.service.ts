@@ -46,8 +46,8 @@ export class ImportCreateService {
 
     discoverAttrs.BoundingBox = importAttrs.BBox
 
-    const records = await this.libot.reqAndRetry<MCRasterRecordDto[]>(async () => await this.libot.getRecords(discoverAttrs), "Get records")
-    const availableProducts = records.map(record => MapProductResDto.fromRecordsRes(record))
+    const records = await this.libot.reqAndRetry<MapProductResDto[]>(async () => await this.libot.getRecords(discoverAttrs), "Get records")
+    const availableProducts = records
     this.logger.verbose(`Received products - ${JSON.stringify(availableProducts)}`)
 
     let selectedProduct: MapProductResDto;
