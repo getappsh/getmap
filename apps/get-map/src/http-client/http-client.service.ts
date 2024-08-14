@@ -23,6 +23,7 @@ export class LibotHttpClientService {
   private WAIT_TIME = Number(this.env.get("WAIT_TIME") ?? 0.3)
   private EXPONENTIAL_TIMES = this.env.get<string>("EXPONENTIAL_TIMES")?.split(',').map(Number).filter(num => !isNaN(num)) ?? [0.3, 5, 15]
   private PRODUCTS_STALE_AFTER = Number(this.env.get<string>("PRODUCTS_STALE_AFTER") ?? 3) * 1000 * 60  // PRODUCTS_STALE_AFTER in minutes
+  private USE_PRODUCTS_CACHE = this.env.get<string>("USE_PRODUCTS_CACHE") === "false" ? false : true // A flag if using cache for products
   private productsCache: MapProductResDto[];
   private productsCacheTimeSet: number;
 
@@ -39,7 +40,7 @@ export class LibotHttpClientService {
   // Http requests
   async getRecords(dAttrs: DiscoveryAttributes, noCache: boolean = false): Promise<MapProductResDto[]> {
 
-    if (this.productsCache?.length > 0 && !this.isProductCacheStale() && !noCache) {
+    if (this.USE_PRODUCTS_CACHE && this.productsCache?.length > 0 && !this.isProductCacheStale() && !noCache) {
       this.logger.log(`Return ${this.productsCache.length} records from cache`)
       return this.productsCache
     }
