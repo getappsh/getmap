@@ -65,6 +65,9 @@ export const GetMapTopics = {
     EXPORT_NOTIFICATION: `getapp-map.export.notify${region}`,
     // Inventory
     GET_INVENTORY_UPDATES: `getapp-map.inventory.updates${region}`,
+    // Config
+    GET_MAP_CONFIG: `getapp-map.config.get${region}`,
+    SET_MAP_CONFIG: `getapp-map.config.set${region}`,
     // admin
     MAP_PUT: `getapp-map.put${region}`,
     // Device
