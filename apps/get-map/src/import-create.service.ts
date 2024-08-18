@@ -8,7 +8,7 @@ import { Validators } from '@app/common/dto/map/utils/validators';
 import { ResolutionMapper } from '@app/common/dto/map/utils/resolutionMapper';
 import { RepoService } from './repo.service';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { MapEntity } from '@app/common/database/entities';
+import { MapEntity, MapImportStatusEnum } from '@app/common/database/entities';
 import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MCRasterRecordDto } from '@app/common/dto/libot/dto/recordsRes.dto';
 import { Feature, Polygon, MultiPolygon } from '@turf/turf';
@@ -19,6 +19,7 @@ import { L_HttpClientService } from './http-client/http-client.module';
 export class ImportCreateService {
 
   private readonly logger = new Logger(ImportCreateService.name);
+  private PERIODIC_GET_MAP_STATUS = Number(this.env.get("PERIODIC_GET_MAP_STATUS") ?? 3) * 1000
 
   constructor(
     private readonly env: ConfigService,
@@ -94,8 +95,8 @@ export class ImportCreateService {
         }
 
         const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
-        this.logger.verbose(`Checking map against product info - ${JSON.stringify({cSumInclusion, product: products[i]})}`)
-        
+        this.logger.verbose(`Checking map against product info - ${JSON.stringify({ cSumInclusion, product: products[i] })}`)
+
         if (cSumInclusion >= mapMinInclusionInPercentages) {
           selectedProduct = products[i]
           sumInclusion = cSumInclusion
@@ -129,13 +130,7 @@ export class ImportCreateService {
         this.logger.error(error.toString())
       }
 
-      setTimeout(async () => {
-        try {
-          await this.handleGetMapStatus(resData.id, map)
-        } catch (error) {
-          this.logger.error(error.toString())
-        }
-      }, 5000)
+      this.getMapStatusUntilDone(resData.id, map);
 
     } catch (error) {
       this.logger.error(error.toString())
@@ -160,11 +155,32 @@ export class ImportCreateService {
     importAttrs.targetResolution = ResolutionMapper.level2Resolution(importAttrs.zoomLevel)
   }
 
+  async getMapStatusUntilDone(jobId: number, map: MapEntity) {
+    this.logger.log(`Get status until done for map: ${map.catalogId}`)
+    while (map.status === MapImportStatusEnum.START ||
+      map.status === MapImportStatusEnum.PENDING ||
+      map.status === MapImportStatusEnum.IN_PROGRESS) {
+      map = await this.handleGetMapStatus(jobId, map)
+      await this.sleep(this.PERIODIC_GET_MAP_STATUS)
+    }
+  }
 
   async handleGetMapStatus(jobId: number, map: MapEntity): Promise<MapEntity> {
     const res = await this.libot.getMapStatus(jobId)
     const updatedMap = await this.handleSaveExportRes(res, map)
     return updatedMap
+  }
+
+  async isMapInUpdatingProcess(map: MapEntity): Promise<boolean> {
+    this.logger.debug(`Check if map: ${map.catalogId} is in updating process`)
+    const now = new Date()
+    if (now.getTime() - map.lastUpdatedDate.getTime() <= this.PERIODIC_GET_MAP_STATUS) {
+      return true
+    }
+    await this.sleep(this.PERIODIC_GET_MAP_STATUS)
+    this.logger.debug(`Check again if map: ${map.catalogId} is in updating process`)
+    map = await this.repo.getMapById(map.catalogId)
+    return now.getTime() - map.lastUpdatedDate.getTime() <= this.PERIODIC_GET_MAP_STATUS
   }
 
   async handleSaveExportRes(res: ImportResPayload, map?: MapEntity): Promise<MapEntity> {
@@ -174,6 +190,10 @@ export class ImportCreateService {
     } catch (error) {
       this.logger.error(error.toString())
     }
+  }
+
+  async sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
 }

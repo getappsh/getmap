@@ -120,12 +120,13 @@ export class GetMapService implements OnApplicationBootstrap {
         throw new MapError(ErrorCode.MAP_NOT_FOUND, mes)
       }
 
-      if (map.status === MapImportStatusEnum.START ||
-        map.status === MapImportStatusEnum.PENDING ||
-        map.status === MapImportStatusEnum.IN_PROGRESS) {
-
-        map = await this.create.handleGetMapStatus(map.jobId, map)
+      if ((map.status === MapImportStatusEnum.START
+        || map.status === MapImportStatusEnum.PENDING
+        || map.status === MapImportStatusEnum.IN_PROGRESS)
+        && !await this.create.isMapInUpdatingProcess(map)) {
+          this.create.getMapStatusUntilDone(map.jobId, map)
       }
+
       if (map) {
         importRes = ImportStatusResDto.fromMapEntity(map)
         this.logger.log(`Status for catalogId ${reqId} is - ${importRes.status}, progress is at ${importRes.metaData.progress} %`)
@@ -249,7 +250,5 @@ export class GetMapService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     this.setDefaultConfig()
   }
-
-
 
 }
