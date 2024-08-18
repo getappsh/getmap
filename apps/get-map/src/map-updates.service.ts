@@ -31,7 +31,7 @@ export class MapUpdatesService {
   })
   async checkMapsUpdates() {
 
-    this.logger.log(`Start cron gob to check if there updates for exists maps`)
+    this.logger.log(`Start cron gob to check if there are updates for exists maps`)
 
     let jE: JobsEntity
     try {
@@ -90,7 +90,7 @@ export class MapUpdatesService {
 
   async saveJobEndTime(jobE: JobsEntity) {
     if (jobE) {
-      this.logger.log(`save cron job end time`)
+      this.logger.log(`save maps update cron job end time`)
       try {
         jobE.endTime = new Date(Date.now())
         await this.mapUpdatesRepo.save(jobE)

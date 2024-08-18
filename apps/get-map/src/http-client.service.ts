@@ -12,6 +12,7 @@ import { MapError } from "@app/common/dto/map/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 import { ConfigService } from "@nestjs/config";
 import { MapProductResDto } from "@app/common/dto/map/dto/map-product-res.dto";
+import { LibotExportStatusEnum } from "@app/common/database/entities";
 
 
 @Injectable()
@@ -114,7 +115,7 @@ export class LibotHttpClientService {
     try {
       const res = await lastValueFrom(this.httpConfig.get(url, this.getHeaders("json")))
       const resPayload = ImportResPayload.fromImportRes(res.data)
-      this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status}`)
+      this.logger.debug(`Status for map with job id ${reqId} is - ${resPayload.status} ${resPayload.status == LibotExportStatusEnum.IN_PROGRESS ? ", progress: " + resPayload.progress : ""}`)
       return resPayload
     } catch (error) {
       const mas = error.toString()
