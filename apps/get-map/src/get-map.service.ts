@@ -119,6 +119,7 @@ export class GetMapService implements OnApplicationBootstrap {
         || map.status === MapImportStatusEnum.PENDING
         || map.status === MapImportStatusEnum.IN_PROGRESS)
         && !await this.create.isMapInUpdatingProcess(map)) {
+          map = await this.create.handleGetMapStatus(map.jobId, map)
           this.create.getMapStatusUntilDone(map.jobId, map)
       }
 
