@@ -66,9 +66,13 @@ export class MicroserviceClient {
     if (typeof data === 'string'){
       data = {stringValue: data}
     }
-    let hData = {headers: {"traceId": this.cls.getId()}, ...data}
+    let headers = {"traceId": this.cls.getId()};
+    let hData = {}
     if (this.isKafka()){
-      hData = JSON.stringify(hData)
+      hData = {headers, value: JSON.stringify(data)}
+    }else{
+      // TODO WARNING messages of list ar not working
+      hData = {headers, ...data}
     }
     return hData
   }
