@@ -1,5 +1,6 @@
 import { UploadVersionEntity } from "@app/common/database/entities";
 import { IsValidStringFor } from "@app/common/validators";
+import { Pattern } from "@app/common/validators/regex.validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
@@ -17,7 +18,7 @@ export class ComponentDto {
 
   @ApiProperty({required: false})
   @IsNotEmpty()
-  @IsValidStringFor("version")
+  @IsValidStringFor(Pattern.VERSION)
   versionNumber: string;
 
   @ApiProperty({required: false})
@@ -36,13 +37,13 @@ export class ComponentDto {
   category: string;
 
   @ApiProperty({required: false})
-  @IsValidStringFor("version")
+  @IsValidStringFor(Pattern.VERSION)
   @IsOptional()
   baseVersion: string;
 
   @ApiProperty({required: false})
   @IsOptional()
-  @IsValidStringFor("version")
+  @IsValidStringFor(Pattern.VERSION)
   prevVersion: string;
 
   @ApiProperty({required: false, type: [ComponentDto]})

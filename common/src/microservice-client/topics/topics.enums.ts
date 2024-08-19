@@ -12,11 +12,14 @@ export const UploadTopics = {
 export const DeliveryTopics = {
     PREPARE_DELIVERY: `getapp-delivery.prepare${region}`,
     PREPARED_DELIVERY_STATUS: `getapp-delivery.prepared-status${region}`,
+    GET_CACHE_CONFIG: `getapp-delivery.get-cache-config${region}`,
+    SET_CACHE_CONFIG: `getapp-delivery.set-cache-config${region}`,
     CHECK_HEALTH: `getapp-delivery.check-health${region}`
 } as const
 
 export const DeliveryTopicsEmit = {
     UPDATE_DOWNLOAD_STATUS: `getapp-delivery.update-download-status${region}`,
+    DELETE_CACHE_ITEMS: `getapp-delivery.delete-cache-items${region}`,
 }
 
 export const OfferingTopics = {
@@ -62,9 +65,6 @@ export const GetMapTopics = {
     EXPORT_NOTIFICATION: `getapp-map.export.notify${region}`,
     // Inventory
     GET_INVENTORY_UPDATES: `getapp-map.inventory.updates${region}`,
-    // Config
-    GET_MAP_CONFIG: `getapp-map.config.get${region}`,
-    SET_MAP_CONFIG: `getapp-map.config.set${region}`,
     // admin
     MAP_PUT: `getapp-map.put${region}`,
     // Device
@@ -90,6 +90,9 @@ export const DeviceTopics = {
     DEVICE_CONTENT: `getapp-device.content.installed${region}`,
     DISCOVERY_SOFTWARE: `getapp-device.discover.software.catalog${region}`,
     IM_PULL_DISCOVERY: `getapp-device.im.pull.discovery${region}`,
+     // Config
+     GET_DEVICE_CONFIG: `getapp-device.config.get${region}`,
+     SET_DEVICE_CONFIG: `getapp-device.config.set${region}`,
     CHECK_HEALTH: `getapp-device.check-health${region}`
 } as const
 
