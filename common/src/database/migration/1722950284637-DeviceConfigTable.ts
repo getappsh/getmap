@@ -108,12 +108,12 @@ export class DeviceConfigTable1722950284637 implements MigrationInterface {
                 data->>'matomo_site_id',
                 data->>'sd_storage_path',
                 data->>'flash_storage_path',
-                (data->>'target_storage_policy')::public.map_configs_target_storage_policy_enum,
+                COALESCE((data->>'target_storage_policy')::public.map_configs_target_storage_policy_enum, 'SDOnly'::public.map_configs_target_storage_policy_enum),
                 (data->>'sd_inventory_max_size_mb')::int4,
                 (data->>'flash_inventory_max_size_mb')::int4,
                 data->>'ortophoto_map_path',
                 data->>'control_map_path'
-            FROM "device_config"
+            FROM "device_config";
         `);
 
         // Drop the device_config table
