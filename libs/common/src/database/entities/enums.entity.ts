@@ -110,11 +110,9 @@ export enum DeviceMapStateEnum {
     UNINSTALLED = "uninstalled"
 }
 
-export enum TargetStoragePolicy {
-    SD_ONLY = "SDOnly",
-    FLASH_THEN_SD = "FlashThenSD",
-    SD_THEN_FLASH = "SDThenFlash",
-    FLASH_ONLY = "FlashOnly"
+export enum HashAlgorithmEnum {
+    SHA256Hex = "SHA256Hex",
+    SHA256Base64 = "SHA256Base64",
 }
 
 export enum HashAlgorithmEnum {
