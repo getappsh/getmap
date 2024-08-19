@@ -20,7 +20,6 @@ export class ImportCreateService {
 
   private readonly logger = new Logger(ImportCreateService.name);
   private PERIODIC_GET_MAP_STATUS = Number(this.env.get("PERIODIC_GET_MAP_STATUS") ?? 3) * 1000
-
   constructor(
     private readonly env: ConfigService,
     @Inject(L_HttpClientService) private readonly libot: LibotHttpClientService,
@@ -31,7 +30,8 @@ export class ImportCreateService {
   async isValidBbox(attrs: ImportAttributes) {
     this.logger.debug("checked if area size is valid")
 
-    const { MaxMapAreaSqKm } = await this.repo.getMapConfig()
+    const MaxMapAreaSqKm  = await this.repo.getMaxMapArea()
+    console.log(MaxMapAreaSqKm)
 
     if (!Validators.isPolygonAreaValid(attrs.Polygon, MaxMapAreaSqKm)) {
       const mes = "Area too large to distribute, reduce request and try again"
@@ -74,7 +74,7 @@ export class ImportCreateService {
     this.logger.log(`select product according inclusion size`)
     this.logger.verbose(`Check footprint ${attrs.Points}`)
 
-    const { mapMinInclusionInPercentages } = await this.repo.getMapConfig()
+    const { mapMinInclusionInPercentages } = await this.repo.getMaxMapArea()
     let selectedProduct: MapProductResDto;
     let recentAvailProduct: MapProductResDto;
     let sumInclusion: number = 0

@@ -9,7 +9,7 @@ import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/map/utils/map-error';
 import { RepoService } from './repo.service';
-import { MapEntity, MapImportStatusEnum, TargetStoragePolicy } from '@app/common/database/entities';
+import { MapEntity, MapImportStatusEnum, } from '@app/common/database/entities';
 import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
@@ -21,7 +21,7 @@ import { MapUpdatesService } from './map-updates.service';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 
 @Injectable()
-export class GetMapService implements OnApplicationBootstrap {
+export class GetMapService  {
 
   private readonly logger = new Logger(GetMapService.name);
 
@@ -171,59 +171,6 @@ export class GetMapService implements OnApplicationBootstrap {
     return res
   }
 
-  // Config
-  async getMapConfig() {
-    const configs = await this.repo.getMapConfig()
-    if (!configs) {
-      this.logger.warn(`There is not exist maps configuration`)
-    }
-    const configRes = MapConfigDto.fromMapConfig(configs)
-    configRes.lastCheckingMapUpdatesDate = await this.repo.getLastMapUpdatesChecking()
-    return configRes
-  }
-
-  async setMapConfig(config: MapConfigDto) {
-    try {
-      return await this.repo.setMapConfig(config)
-    } catch (error) {
-      this.logger.error(error)
-      return error
-    }
-  }
-
-  async setDefaultConfig() {
-    const eCong = await this.repo.getMapConfig()
-
-    const defaults = new MapConfigDto()
-    defaults.deliveryTimeoutMins = 30
-    defaults.downloadRetryTime = 3
-    defaults.downloadTimeoutMins = 30
-    defaults.MaxMapAreaSqKm = 100
-    defaults.maxMapSizeInMB = 500
-    defaults.maxParallelDownloads = 1
-    defaults.minAvailableSpaceMB = 1000
-    defaults.periodicInventoryIntervalMins = 1440
-    defaults.periodicConfIntervalMins = 1440
-    defaults.periodicMatomoIntervalMins = 1440
-    defaults.mapMinInclusionInPercentages = 60
-    defaults.targetStoragePolicy = TargetStoragePolicy.SD_ONLY
-    defaults.sdStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
-    defaults.flashStoragePath = "com.asio.gis/gis/maps/raster/מיפוי ענן"
-    defaults.ortophotoMapPath = "com.asio.gis/gis/maps/orthophoto/אורתופוטו.gpkg"
-    defaults.controlMapPath = "com.asio.gis/gis/maps/orthophoto/מפת שליטה.gpkg"
-
-
-
-    const defaultsToSave = Object.assign({}, defaults, eCong)
-
-    try {
-      this.logger.log(`sets defaults configuration for maps`)
-      await this.repo.setMapConfig(defaultsToSave)
-    } catch (error) {
-      this.logger.error(error)
-    }
-  }
-
   startMapUpdatedCronJob() {
     this.mapUpdates.checkMapsUpdates()
   }
@@ -247,9 +194,4 @@ export class GetMapService implements OnApplicationBootstrap {
     error.message = mes.toString()
     return error
   }
-
-  onApplicationBootstrap() {
-    this.setDefaultConfig()
-  }
-
 }

@@ -7,7 +7,7 @@ import { ImportCreateService } from './import-create.service';
 import { RepoService } from './repo.service';
 import { DatabaseModule } from '@app/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity, MapConfigEntity } from '@app/common/database/entities';
+import { DeviceEntity, DeviceMapStateEntity, MapEntity, ProductEntity } from '@app/common/database/entities';
 import { MapUpdatesService } from './map-updates.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MicroserviceModule, MicroserviceName, MicroserviceType } from '@app/common/microservice-client';
@@ -15,6 +15,7 @@ import { JobsEntity } from '@app/common/database/entities/map-updatesCronJob';
 import { LoggerModule } from '@app/common/logger/logger.module';
 import { HttpClientModule } from './http-client/http-client.module';
 import { ApmModule } from '@app/common/apm/apm.module';
+import { DeviceConfigEntity } from '@app/common/database/entities/device-config.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { ApmModule } from '@app/common/apm/apm.module';
     ApmModule,
     HttpModule,
     DatabaseModule,
-    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, MapConfigEntity, JobsEntity]),
+    TypeOrmModule.forFeature([MapEntity, DeviceEntity, DeviceMapStateEntity, ProductEntity, JobsEntity, DeviceConfigEntity]),
     ScheduleModule.forRoot(),
     MicroserviceModule.register({
       name: MicroserviceName.DISCOVERY_SERVICE,

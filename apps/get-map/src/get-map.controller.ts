@@ -49,19 +49,6 @@ export class GetMapController {
     return this.getMapService.getInventoryUpdates(inventoryDto)
   }
 
-  // Config
-  @MessagePattern(GetMapTopics.GET_MAP_CONFIG)
-  getMapConfig() {
-    this.logger.log(`Get maps config`)
-    return this.getMapService.getMapConfig()
-  }
-
-  @MessagePattern(GetMapTopics.SET_MAP_CONFIG)
-  async setMapConfig(@Payload() config: MapConfigDto) {
-    this.logger.log(`Set maps config`)
-    return await this.getMapService.setMapConfig(config)
-  }
-
   @EventPattern(GetMapTopicsEmit.MAP_UPDATES_JOB_START)
   async startMapUpdatedCronJob() {
     this.logger.log(`Start 'map updates' job from api call`)
