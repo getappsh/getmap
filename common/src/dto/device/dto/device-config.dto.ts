@@ -1,7 +1,9 @@
 
 import { DeviceConfigEntity } from "@app/common/database/entities/device-config.entity";
+import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { plainToClass } from "class-transformer";
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, validate } from "class-validator";
 
 
 export enum TargetStoragePolicy {
@@ -210,4 +212,35 @@ export function fromConfigEntity(eConfig: DeviceConfigEntity): AndroidConfigDto 
     config[key] = eConfig.data[key];
   }
   return config;
+}
+
+
+@Injectable()
+export class DeviceConfigValidator implements PipeTransform {
+  async transform(value: any) {
+    console.log("in")
+    const base = plainToClass(BaseConfigDto, value);
+    const baseErrors = await validate(base);
+    if (baseErrors.length !== 0) {
+      throw new BadRequestException('Validation failed');
+    }
+
+
+    if (base.group === 'windows'){
+      const windows = plainToClass(WindowsConfigDto, value, { excludeExtraneousValues: true });
+      const errors = await validate(windows);
+      if (errors.length !== 0) {
+        throw new BadRequestException('Validation failed');
+      }
+      return windows
+    }else {
+      const android = plainToClass(AndroidConfigDto, value, { excludeExtraneousValues: true });
+
+      const errors = await validate(android);
+      if (errors.length !== 0) {
+        throw new BadRequestException('Validation failed');
+      }
+      return android
+    }
+  }
 }
