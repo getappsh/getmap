@@ -121,7 +121,7 @@ export class MapConfigDto {
   @IsString()
   controlMapPath: string
 
-  static fromMapConfig(cE: AndroidConfigDto) {
+  static fromDeviceConfigDto(cE: AndroidConfigDto) {
     const config = new MapConfigDto()
     config.deliveryTimeoutMins = cE.deliveryTimeoutMins
     config.downloadRetryTime = cE.downloadRetryTime
