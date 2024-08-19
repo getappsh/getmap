@@ -157,11 +157,16 @@ export class ImportCreateService {
 
   async getMapStatusUntilDone(jobId: number, map: MapEntity) {
     this.logger.log(`Get status until done for map: ${map.catalogId}`)
-    while (map.status === MapImportStatusEnum.START ||
-      map.status === MapImportStatusEnum.PENDING ||
-      map.status === MapImportStatusEnum.IN_PROGRESS) {
-      map = await this.handleGetMapStatus(jobId, map)
-      await this.sleep(this.PERIODIC_GET_MAP_STATUS)
+    try {
+      while (map.status === MapImportStatusEnum.START ||
+        map.status === MapImportStatusEnum.PENDING ||
+        map.status === MapImportStatusEnum.IN_PROGRESS) {
+        map = await this.handleGetMapStatus(jobId, map)
+        await this.sleep(this.PERIODIC_GET_MAP_STATUS)
+      } 
+    } catch (error) {
+      this.logger.error(error);
+      this.repo.setErrorStatus(map, error.toString())
     }
   }
 
