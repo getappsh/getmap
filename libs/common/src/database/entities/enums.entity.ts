@@ -115,8 +115,3 @@ export enum HashAlgorithmEnum {
     SHA256Base64 = "SHA256Base64",
 }
 
-export enum HashAlgorithmEnum {
-    SHA256Hex = "SHA256Hex",
-    SHA256Base64 = "SHA256Base64",
-}
-
