@@ -318,9 +318,8 @@ export class RepoService {
     return recentProduct
   }
 
-  async getMaxMapArea(){
+  async getConfigData() : Promise<Record<string, string | number>>{
     let config = await this.deviceConfigRepo.findOneBy({group: 'android'})
-    let MaxMapAreaSqKm = config.data['MaxMapAreaSqKm'] ?? 100
-    return MaxMapAreaSqKm
+    return config?.data as Record<string, string | number>
   }
 }

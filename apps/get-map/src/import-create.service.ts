@@ -30,10 +30,9 @@ export class ImportCreateService {
   async isValidBbox(attrs: ImportAttributes) {
     this.logger.debug("checked if area size is valid")
 
-    const MaxMapAreaSqKm  = await this.repo.getMaxMapArea()
-    console.log(MaxMapAreaSqKm)
+    const {MaxMapAreaSqKm} = await this.repo.getConfigData()
 
-    if (!Validators.isPolygonAreaValid(attrs.Polygon, MaxMapAreaSqKm)) {
+    if (!Validators.isPolygonAreaValid(attrs.Polygon, MaxMapAreaSqKm as number)) {
       const mes = "Area too large to distribute, reduce request and try again"
       this.logger.error(mes)
       throw new MapError(ErrorCode.MAP_AREA_TOO_LARGE, mes)
@@ -74,7 +73,7 @@ export class ImportCreateService {
     this.logger.log(`select product according inclusion size`)
     this.logger.verbose(`Check footprint ${attrs.Points}`)
 
-    const { mapMinInclusionInPercentages } = await this.repo.getMaxMapArea()
+    const {mapMinInclusionInPercentages} = await this.repo.getConfigData()
     let selectedProduct: MapProductResDto;
     let recentAvailProduct: MapProductResDto;
     let sumInclusion: number = 0
@@ -97,7 +96,7 @@ export class ImportCreateService {
         const cSumInclusion = Validators.getIntersectPercentage(attrs.Polygon, availPoly)
         this.logger.verbose(`Checking map against product info - ${JSON.stringify({ cSumInclusion, product: products[i] })}`)
 
-        if (cSumInclusion >= mapMinInclusionInPercentages) {
+        if (cSumInclusion >= (mapMinInclusionInPercentages as number)) {
           selectedProduct = products[i]
           sumInclusion = cSumInclusion
           break
