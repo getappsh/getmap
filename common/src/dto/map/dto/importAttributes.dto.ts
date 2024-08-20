@@ -1,6 +1,6 @@
 import { CreateImportDto } from "@app/common/dto/map"
 import { Validators } from "../utils/validators"
-import { Feature, MultiPolygon, Polygon, area, bbox, bboxPolygon, polygon } from "@turf/turf"
+import { Feature, Polygon, area, bbox, bboxPolygon, polygon } from "@turf/turf"
 import { MapEntity } from "@app/common/database/entities"
 import { MapProductResDto } from "./map-product-res.dto"
 
@@ -8,7 +8,7 @@ export class ImportAttributes {
   product: MapProductResDto
   pattern: "bbox" | "polygon"
   private _bBox: [number, number, number, number];
-  private _polygon: Feature<Polygon | MultiPolygon>;
+  private _polygon: Feature<Polygon>;
   private _area: number
   private _pointsString: string
   zoomLevel: number

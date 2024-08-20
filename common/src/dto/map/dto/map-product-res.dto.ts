@@ -109,7 +109,7 @@ export class MapProductResDto {
     product.productName = pE.productName
     product.productVersion = pE.productVersion
     product.productType = pE.productType
-    // product.productSubType = pE.productSubType    
+    product.productSubType = pE.productSubType
     product.description = pE.description
     product.imagingTimeBeginUTC = new Date(pE.imagingTimeBeginUTC);
     product.imagingTimeEndUTC = new Date(pE.imagingTimeEndUTC);
