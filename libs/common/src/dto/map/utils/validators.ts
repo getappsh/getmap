@@ -37,11 +37,11 @@ export class Validators {
     return booleanWithin(bBox, footprint)
   }
 
-  static isBBoxIntersectFootprint(bBox: Feature<Polygon | MultiPolygon>, footprint: Feature<Polygon | MultiPolygon>): Feature<Polygon | MultiPolygon> | null {
+  static isBBoxIntersectFootprint(bBox: Feature<Polygon>, footprint: Feature<Polygon | MultiPolygon>): Feature<Polygon | MultiPolygon> | null {
     return intersect(bBox, footprint)
   }
 
-  static getIntersectPercentage(poly: Feature<Polygon | MultiPolygon>, availablePoly: Feature<Polygon | MultiPolygon>) {
+  static getIntersectPercentage(poly: Feature<Polygon>, availablePoly: Feature<Polygon | MultiPolygon>) {
     let polyArea = area(poly)
     let availPolyArea = area(availablePoly)
 
@@ -80,5 +80,5 @@ export class Validators {
     const maxArea = maxSize ?? 100
     return polyArea < 0 || polyArea <= maxArea
   }
-
+  
 }

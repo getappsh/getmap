@@ -1,8 +1,12 @@
+const mockRetry = (f) => {
+  console.log("mock retry")
+  return f();
+}
 export const mockHttpClient = () => {
   return {
     // http client members
     getActualFootPrint: jest.fn(),
-    reqAndRetry: jest.fn(f => f()),
+    reqAndRetry: jest.fn(mockRetry),
 
     // http client implementations
     getActualFootPrintResolved: jest.fn().mockResolvedValue(geometry),

@@ -1,6 +1,6 @@
 import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LibotExportStatusEnum, MapConfigEntity, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
+import { LibotExportStatusEnum, MapEntity, MapImportStatusEnum, ProductEntity } from '@app/common/database/entities';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { ImportAttributes } from '@app/common/dto/map/dto/importAttributes.dto';
 import { MapProductResDto } from '@app/common/dto/map/dto/map-product-res.dto';
@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 import { area } from '@turf/turf';
 import { L_HttpClientService } from './http-client/http-client.module';
+import { DeviceConfigEntity } from '@app/common/database/entities/device-config.entity';
 
 @Injectable()
 export class RepoService {
@@ -21,8 +22,8 @@ export class RepoService {
   constructor(
     @InjectRepository(MapEntity) private readonly mapRepo: Repository<MapEntity>,
     @InjectRepository(ProductEntity) private readonly productRepo: Repository<ProductEntity>,
-    @InjectRepository(MapConfigEntity) private readonly configRepo: Repository<MapConfigEntity>,
     @InjectRepository(JobsEntity) private readonly mapUpdatesRepo: Repository<JobsEntity>,
+    @InjectRepository(DeviceConfigEntity) private readonly deviceConfigRepo: Repository<DeviceConfigEntity>,
     @Inject(L_HttpClientService) private readonly libotClient: LibotHttpClientService,
     private readonly env: ConfigService,
   ) { }
@@ -317,27 +318,8 @@ export class RepoService {
     return recentProduct
   }
 
-  // Config
-  async getMapConfig() {
-    const configs = await this.configRepo.find({ order: { lastUpdatedDate: "DESC" } })
-    return configs.length > 0 ? configs[0] : null
-  }
-
-  async setMapConfig(config: MapConfigDto) {
-    // eConfig === exits config
-    this.logger.debug(`Find exits config and update it or create it`)
-    let eConfig = await this.getMapConfig()
-    if (!eConfig) {
-      eConfig = this.configRepo.create()
-    }
-    for (const key in config) {
-      eConfig[key] = config[key]
-    }
-    return await this.configRepo.save(eConfig)
-  }
-
-  async getLastMapUpdatesChecking(): Promise<Date> {
-    const jobTime = await this.mapUpdatesRepo.findOne({ where: { name: "mapUpdates", endTime: Not(IsNull()) }, order: { startTime: "DESC" } })
-    return jobTime ? new Date(jobTime.endTime) : null
+  async getConfigData() : Promise<Record<string, string | number>>{
+    let config = await this.deviceConfigRepo.findOneBy({group: 'android'})
+    return config?.data as Record<string, string | number>
   }
 }
