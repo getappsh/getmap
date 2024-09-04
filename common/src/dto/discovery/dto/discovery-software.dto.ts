@@ -100,7 +100,7 @@ export class PlatformDto {
 
 export class DiscoverySoftwareDto {
   @ApiProperty({required: false})
-  @IsNotEmpty()
+  @IsOptional()
   formation: string
 
   @ApiProperty({required: false, type: PlatformDto})

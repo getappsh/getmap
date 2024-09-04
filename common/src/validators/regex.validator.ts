@@ -44,6 +44,9 @@ export class RegexValidation implements ValidatorConstraintInterface {
   }
 
   validate(text: string, args: ValidationArguments) {
+    if (text === ""){
+      return true
+    }
     if (typeof args.value !== "string") {
       return false
     }
