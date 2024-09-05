@@ -1,7 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { UploadVersionEntity } from "./upload-version.entity";
-import { DevicesGroupEntity } from "./devices-group.entity";
 import { DeviceMapStateEntity } from "./device-map-state.entity";
+import { OrgUID } from "./org-uid.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -9,16 +9,16 @@ export class DeviceEntity {
   @PrimaryColumn({ name: 'ID' })
   ID: string;
 
-  @CreateDateColumn({name: 'create_date', type: "timestamptz"})
+  @CreateDateColumn({ name: 'create_date', type: "timestamptz" })
   createdDate: Date;
 
-  @UpdateDateColumn({name: 'last_update_date', type: "timestamptz"})
+  @UpdateDateColumn({ name: 'last_update_date', type: "timestamptz" })
   lastUpdatedDate: Date;
-  
-  @Column({name: 'last_connection_date', type: "timestamptz", nullable: true})
+
+  @Column({ name: 'last_connection_date', type: "timestamptz", nullable: true })
   lastConnectionDate: Date;
-  
-  @Column({nullable: true})
+
+  @Column({ nullable: true })
   name: string
 
   @Column({ name: 'MAC', nullable: true })
@@ -59,8 +59,7 @@ export class DeviceEntity {
   @OneToMany(() => DeviceMapStateEntity, deviceMapState => deviceMapState.device, { cascade: true })
   maps: DeviceMapStateEntity[];
 
-
-  @ManyToOne(type => DevicesGroupEntity, { nullable: true })
-  groups: DevicesGroupEntity
+  @OneToOne(type => OrgUID, { nullable: true })
+  orgUID: OrgUID
 
 }
