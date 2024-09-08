@@ -74,7 +74,7 @@ export class DeviceDto {
     device.operativeState = discoveryE?.situationalDevice.operativeState;
 
     device.uid = deviceE?.orgUID?.UID;
-    device.groupId = deviceE?.orgUID?.id;
+    device.groupId = deviceE?.orgUID?.group?.id;
     device.groupName = deviceE?.orgUID?.group?.name;
 
     return device
