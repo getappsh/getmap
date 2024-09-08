@@ -59,7 +59,7 @@ export class DeviceEntity {
   @OneToMany(() => DeviceMapStateEntity, deviceMapState => deviceMapState.device, { cascade: true })
   maps: DeviceMapStateEntity[];
 
-  @OneToOne(type => OrgUIDEntity, { nullable: true })
+  @OneToOne(type => OrgUIDEntity, org => org.device, { nullable: true })
   orgUID: OrgUIDEntity
 
 }
