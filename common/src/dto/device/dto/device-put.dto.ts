@@ -11,7 +11,7 @@ export class DevicePutDto {
   @IsString()
   name: string
   
-  @ApiProperty({ required: false, description: "Set the unique given id or null to remove the exists uidג" })
+  @ApiProperty({ required: false, description: "Set the unique given id or null to remove the exists uid." })
   @IsOptional()
   @IsNumber()
   orgUID: number | null
