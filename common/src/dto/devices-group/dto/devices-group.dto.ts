@@ -20,12 +20,12 @@ export class ChildGroupDto {
   @IsOptional()
   description: string
 
-  @ApiProperty({ required: false, type: DeviceMapDto, isArray: true })
+  @ApiProperty({ required: false, })
   @IsArray()
   @IsString({ each: true })
   devices: string[];
 
-  @ApiProperty({ required: false, type: ChildGroupDto, isArray: true })
+  @ApiProperty({ required: false })
   @IsArray()
   @IsNumber({ allowNaN: false }, { each: true })
   groups: number[];
@@ -42,7 +42,7 @@ export class ChildGroupDto {
     return devicesGroupDto
   }
 
-  static fromChildGroupRawDto(cgr: ChildGroupRawDto): ChildGroupDto {
+  static fromChildGroupRawDto(cgr: ChildGroupRawDto): ChildGroupDto  {
     let devicesGroupDto = new ChildGroupDto();
     devicesGroupDto.id = cgr.group_id;
     devicesGroupDto.name = cgr.group_name;
