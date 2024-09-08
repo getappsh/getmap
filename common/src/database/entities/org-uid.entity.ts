@@ -6,7 +6,7 @@ import { OrgGroupEntity } from "./org-group.entity";
 
 @Entity("org_uid")
 // @Index("IDX_DEVICE", ["device"]) // Create an index on the device field
-export class OrgUID extends BaseEntity {
+export class OrgUIDEntity extends BaseEntity {
 
     // @BeforeInsert()
     // generateUID() {

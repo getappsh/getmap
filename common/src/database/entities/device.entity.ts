@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { UploadVersionEntity } from "./upload-version.entity";
 import { DeviceMapStateEntity } from "./device-map-state.entity";
-import { OrgUID } from "./org-uid.entity";
+import { OrgUIDEntity } from "./org-uid.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -59,7 +59,7 @@ export class DeviceEntity {
   @OneToMany(() => DeviceMapStateEntity, deviceMapState => deviceMapState.device, { cascade: true })
   maps: DeviceMapStateEntity[];
 
-  @OneToOne(type => OrgUID, { nullable: true })
-  orgUID: OrgUID
+  @OneToOne(type => OrgUIDEntity, { nullable: true })
+  orgUID: OrgUIDEntity
 
 }

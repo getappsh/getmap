@@ -11,10 +11,10 @@ export class DevicePutDto {
   @IsString()
   name: string
   
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: "Set the unique given id or null to remove the exists uidג" })
   @IsOptional()
   @IsNumber()
-  orgUID: number
+  orgUID: number | null
 
   toString() {
     return JSON.stringify(this);

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
-import { UploadVersionEntity, OrgGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, BugReportEntity, OrgUID } from '../entities';
+import { UploadVersionEntity, OrgGroupEntity, ProjectEntity, MemberProjectEntity, MemberEntity, VersionPackagesEntity, DiscoveryMessageEntity, DeployStatusEntity, PlatformEntity, FormationEntity, CategoryEntity, OperationSystemEntity, DeviceEntity, DeliveryStatusEntity, MapEntity, DeviceMapStateEntity, ProductEntity, BugReportEntity, OrgUIDEntity } from '../entities';
 import { join } from 'path';
 import { readFileSync } from 'fs'
 import { JobsEntity } from '../entities/map-updatesCronJob';
@@ -38,7 +38,7 @@ const ormConfig = new DataSource({
     OperationSystemEntity,
     DeviceEntity,
     OrgGroupEntity,
-    OrgUID,
+    OrgUIDEntity,
     MapEntity,
     ProductEntity,
     DeviceMapStateEntity,
