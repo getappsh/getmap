@@ -17,7 +17,7 @@ export class DevicesStatisticInfo {
  
   @ApiProperty()
   @IsNumber()
-  UpdateError: number
+  updateError: number
 
   toString() {
     return JSON.stringify(this);
