@@ -28,8 +28,8 @@ export class SoftwareStateDto {
   @IsDate()
   deployDate: Date;
 
-  @ApiProperty({ isArray: true, type: SoftwareStateDto })
-  offering: SoftwareStateDto[];
+  @ApiProperty({ isArray: true, type: ComponentDto })
+  offering: ComponentDto[];
 
   static fromDeviceComponentEntity(componentState: DeviceComponentEntity) {
 
@@ -54,8 +54,16 @@ export class DeviceSoftwareDto extends DeviceDto {
 
   static fromDeviceComponentsEntity(deviceComponents: DeviceComponentEntity[], device: DeviceDto): DeviceSoftwareDto {
     let deviceSoftware  = device as DeviceSoftwareDto;
-    deviceSoftware.softwares = deviceComponents.map(c => SoftwareStateDto.fromDeviceComponentEntity(c));
+    deviceSoftware.softwares = deviceComponents.filter(c => c.state != DeviceComponentStateEnum.OFFERING).map(c => SoftwareStateDto.fromDeviceComponentEntity(c));
 
+    let offering = deviceComponents.filter(c => c.state == DeviceComponentStateEnum.OFFERING)
+    for (let dto of deviceSoftware.softwares){
+      let offer = offering.filter(off => off.component.component == dto.software.name)
+      if (offer){
+        dto.offering = offer.map(off => ComponentDto.fromUploadVersionEntity(off.component));
+      }
+
+    }
     return deviceSoftware
   }
 
