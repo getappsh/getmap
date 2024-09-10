@@ -82,6 +82,7 @@ export const GetMapTopicsEmit = {
 
 export const DeviceTopics = {
     All_DEVICES: `getapp-device.all${region}`,
+    DEVICE_SOFTWARES: `getapp-device.device.softwares${region}`,
     DEVICES_PUT: `getapp-device.put${region}`,
     DEVICE_MAPS: `getapp-device.device.maps${region}`,
     All_MAPS: `getapp-map.maps${region}`,
