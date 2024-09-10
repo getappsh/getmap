@@ -17,3 +17,5 @@ export * from './bug-report.entity'
 export * from './device-config.entity'
 export * from './org-group.entity'
 export * from './org-uid.entity'
+export * from './device-component-state.entity'
+

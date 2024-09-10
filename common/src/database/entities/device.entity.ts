@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, One
 import { UploadVersionEntity } from "./upload-version.entity";
 import { DeviceMapStateEntity } from "./device-map-state.entity";
 import { OrgUIDEntity } from "./org-uid.entity";
+import { DeviceComponentEntity } from "./device-component-state.entity";
 
 @Entity("device")
 export class DeviceEntity {
@@ -42,19 +43,9 @@ export class DeviceEntity {
   @ManyToMany(() => UploadVersionEntity, uploadVersionEntity => uploadVersionEntity.devices, {
     cascade: true
   })
-  @JoinTable({
-    name: "device_component",
-    joinColumn: {
-      name: 'device_ID',
-      referencedColumnName: 'ID'
-    },
-    inverseJoinColumn: {
-      name: "component_catalog_id",
-      referencedColumnName: "catalogId"
-    },
 
-  })
-  components: UploadVersionEntity[];
+  @OneToMany(() => DeviceComponentEntity, deviceComp => deviceComp.device, { cascade: true })
+  components: DeviceComponentEntity[];
 
   @OneToMany(() => DeviceMapStateEntity, deviceMapState => deviceMapState.device, { cascade: true })
   maps: DeviceMapStateEntity[];
