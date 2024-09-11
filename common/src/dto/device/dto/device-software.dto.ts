@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsOptional } from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { DeviceDto } from "./device.dto";
 import { ApiProperty } from "@nestjs/swagger";
 import { ComponentDto } from "../../discovery";
@@ -68,6 +68,27 @@ export class DeviceSoftwareDto extends DeviceDto {
   }
 
   toString() {
+    return JSON.stringify(this);
+  }
+}
+
+export class DeviceSoftwareStateDto{
+  
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  deviceId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  catalogId: string;
+
+  @ApiProperty({enum: DeviceComponentStateEnum })
+  @IsEnum(DeviceComponentStateEnum)
+  state: DeviceComponentStateEnum;
+
+  toString(){
     return JSON.stringify(this);
   }
 }
