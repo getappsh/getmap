@@ -18,4 +18,5 @@ export * from './device-config.entity'
 export * from './org-group.entity'
 export * from './org-uid.entity'
 export * from './device-component-state.entity'
-
+export * from './device-config.entity'
+export * from './component-offering.entity'

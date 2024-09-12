@@ -28,6 +28,9 @@ export const OfferingTopics = {
     CHECK_HEALTH: `getapp-offering.check-health${region}`
 } as const
 
+export const OfferingTopicsEmit = {
+    OFFERING_PUSH: `getapp-offering.push${region}`
+}
 export const DeployTopics = {
     CHECK_HEALTH: `getapp-deploy.check-health${region}`
 } as const

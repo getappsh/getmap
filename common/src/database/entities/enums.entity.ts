@@ -118,6 +118,11 @@ export enum DeviceComponentStateEnum{
     INSTALLED = "installed",
     UNINSTALLED = "uninstalled",
 }
+
+export enum OfferingAction{
+    OFFERING = "offering",
+    PUSH = "push"
+}
 export enum HashAlgorithmEnum {
     SHA256Hex = "SHA256Hex",
     SHA256Base64 = "SHA256Base64",
