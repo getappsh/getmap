@@ -1,11 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, Unique } from "typeorm";
 import { DeviceEntity } from "./device.entity";
 import { UploadVersionEntity } from "./upload-version.entity";
-import { OfferingAction } from "./enums.entity";
+import { OfferingActionEnum } from "./enums.entity";
 import { BaseEntity } from "./base.entity";
 
 
 @Entity("component_offering")
+@Unique('component_offering_unique_constraint', ['device', 'component'])
 export class ComponentOfferingEntity extends BaseEntity{
 
 
@@ -17,6 +18,6 @@ export class ComponentOfferingEntity extends BaseEntity{
   @JoinColumn({ name: "component_catalog_id" })
   component: UploadVersionEntity;
 
-  @Column({ name: "action", type: "enum", enum: OfferingAction, default: OfferingAction.OFFERING })
-  action: OfferingAction
+  @Column({ name: "action", type: "enum", enum: OfferingActionEnum, default: OfferingActionEnum.OFFERING })
+  action: OfferingActionEnum
 }

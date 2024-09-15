@@ -119,7 +119,7 @@ export enum DeviceComponentStateEnum{
     UNINSTALLED = "uninstalled",
 }
 
-export enum OfferingAction{
+export enum OfferingActionEnum{
     OFFERING = "offering",
     PUSH = "push"
 }
