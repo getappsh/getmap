@@ -103,6 +103,7 @@ export const DeviceTopics = {
 
 export const DeviceTopicsEmit = {
     UPDATE_DEVICE_SOFTWARE_STATE: `getapp-device.device.update-software-state${region}`,
+    UPDATE_DEVICE_MAP_STATE: `getapp-device.device.update-map-state${region}`,
     REGISTER_MAP_TO_DEVICE: `getapp-device.map.register-to-device${region}`,
     REGISTER_MAP_INVENTORY: `getapp-device.map.register-inventory${region}`,
     MAP_UPDATES_JOB_START: `getapp-device.map.job.updates.start${region}`,

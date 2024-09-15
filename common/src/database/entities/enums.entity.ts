@@ -104,6 +104,8 @@ export enum LibotExportStatusEnum {
 }
 
 export enum DeviceMapStateEnum {
+    OFFERING = "offering",
+    PUSH = "push",
     IMPORT = "import",
     DELIVERY = "delivery",
     INSTALLED = "installed",
