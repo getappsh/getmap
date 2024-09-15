@@ -24,6 +24,7 @@ export const DeliveryTopicsEmit = {
 
 export const OfferingTopics = {
     CHECK_UPDATES: `getapp-offering.check-updates${region}`,
+    DEVICE_COMPONENT_OFFERING: `getapp-offering.device-components`,
     GET_OFFER_OF_COMP: `getapp-offering.get-offering-of-comp${region}`,
     CHECK_HEALTH: `getapp-offering.check-health${region}`
 } as const
