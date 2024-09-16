@@ -4,14 +4,14 @@ import { IsArray, ValidateNested } from "class-validator";
 import { ComponentDto } from "../../discovery";
 
 export class DeviceComponentsOfferingDto {
-  @ApiProperty({required: false, type: [ComponentDto]})
+  @ApiProperty({type: () => [ComponentDto]})
   @IsArray()
   @ValidateNested({each:true})
   @Type(() => ComponentDto)
   offer: ComponentDto[]
 
 
-  @ApiProperty({required: false, type: [ComponentDto]})
+  @ApiProperty({type: () => [ComponentDto]})
   @IsArray()
   @ValidateNested({each:true})
   @Type(() => ComponentDto)
