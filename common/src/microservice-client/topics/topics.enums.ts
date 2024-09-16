@@ -31,7 +31,8 @@ export const OfferingTopics = {
 } as const
 
 export const OfferingTopicsEmit = {
-    OFFERING_PUSH: `getapp-offering.push${region}`
+    COMPONENT_UPLOAD_EVENT: `getapp-offering.component-upload-event${region}`,
+    OFFERING_PUSH: `getapp-offering.push${region}`,
 }
 export const DeployTopics = {
     CHECK_HEALTH: `getapp-deploy.check-health${region}`
