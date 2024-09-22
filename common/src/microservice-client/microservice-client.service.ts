@@ -27,6 +27,7 @@ export class MicroserviceClient {
 
   
   emit<TResult = any, TInput = any>(pattern: any, data: TInput): Observable<TResult>{
+    console.log("here")
     return this.client.emit(pattern, this.formatData(data));
   }
 
@@ -66,7 +67,7 @@ export class MicroserviceClient {
     if (typeof data === 'string'){
       data = {stringValue: data}
     }
-    let headers = {"traceId": this.cls.getId()};
+    let headers = {"traceId": this.cls.getId() || ""};
     let hData = {}
     if (this.isKafka()){
       hData = {headers, value: JSON.stringify(data)}
