@@ -3,7 +3,7 @@ import { MapDto } from "../../map"
 import { ApiProperty } from "@nestjs/swagger"
 import { Type } from "class-transformer"
 
-export class DeviceMapOfferingDto {
+export class OfferingMapPushResDto {
 
   @ApiProperty({required: false, type: [MapDto]})
   @IsArray()
