@@ -27,6 +27,7 @@ export class MicroserviceClient {
 
   
   emit<TResult = any, TInput = any>(pattern: any, data: TInput): Observable<TResult>{
+    console.log("here")
     return this.client.emit(pattern, this.formatData(data));
   }
 
