@@ -45,3 +45,4 @@ docker-compose-local.yaml
 kc-data
 ignore-data
 data/records/records.json
+nginx/*

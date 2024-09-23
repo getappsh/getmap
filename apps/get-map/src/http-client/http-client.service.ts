@@ -87,10 +87,10 @@ export class LibotHttpClientService {
         } else {
           const mes = `Get record req failed! HTTP StatusCode: ${error?.response?.status ?? error.code}, mes: ${error.toString()}`
           let extMes = mes;
-          if (this.isThereErrorMes(error.response.data)) {
+          if (error.response?.data && this.isThereErrorMes(error.response.data)) {
             extMes = `${extMes} -  ${this.errorFromRes(error.response.data)}`
           } else {
-            extMes = `${extMes} - ${error?.response.data?.message ?? error?.response.data?.message}`
+            extMes = `${extMes} - ${error?.response?.data?.message}`
           }
           this.logger.error(extMes)
           throw new MapError(ErrorCode.MAP_EXPORT_FAILED, mes)
