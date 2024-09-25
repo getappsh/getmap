@@ -57,7 +57,7 @@ export class MapDto {
     map.fileName = mapEntity.fileName;
     map.packageUrl = mapEntity.packageUrl;
     map.isUpdate = mapEntity.isUpdated
-    map.product = mapEntity.mapProduct
+    map.product = MapProductResDto.fromProductEntity(mapEntity.mapProduct)
 
     return map
   }

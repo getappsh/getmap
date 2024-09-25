@@ -86,18 +86,15 @@ export class PhysicalDiscoveryDto {
 
   @ApiProperty({required: false})
   @IsOptional()
-  @IsNotEmpty()
   @IsValidStringFor(Pattern.MAC)
   MAC: string;
 
   @ApiProperty({required: false})
   @IsOptional()
-  @IsNotEmpty()
   @IsValidStringFor(Pattern.IP)
   IP: string;
 
-  @ApiProperty({required: false})
-  @IsOptional()
+  @ApiProperty({required: true})
   @IsNotEmpty()
   @IsString()
   ID: string;
