@@ -70,6 +70,9 @@ export class WindowsConfigDto extends BaseConfigDto{
     return config
   }
 
+  toString() {
+    return JSON.stringify(this)
+  }
 
 }
 

@@ -66,7 +66,7 @@ export class MicroserviceClient {
     if (typeof data === 'string'){
       data = {stringValue: data}
     }
-    let headers = {"traceId": this.cls.getId()};
+    let headers = {"traceId": this.cls.getId() || ""};
     let hData = {}
     if (this.isKafka()){
       hData = {headers, value: JSON.stringify(data)}

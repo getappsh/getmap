@@ -24,10 +24,18 @@ export const DeliveryTopicsEmit = {
 
 export const OfferingTopics = {
     CHECK_UPDATES: `getapp-offering.check-updates${region}`,
+    DEVICE_COMPONENT_OFFERING: `getapp-offering.device-components${region}`,
+    DEVICE_MAP_OFFERING: `getapp-offering.device-map${region}`,
     GET_OFFER_OF_COMP: `getapp-offering.get-offering-of-comp${region}`,
     CHECK_HEALTH: `getapp-offering.check-health${region}`
 } as const
 
+export const OfferingTopicsEmit = {
+    COMPONENT_UPLOAD_EVENT: `getapp-offering.component-upload-event${region}`,
+    OFFERING_PUSH: `getapp-offering.push${region}`,
+    DEVICE_SOFTWARE_EVENT: `getapp-offering.device.software-event${region}`,
+    DEVICE_MAP_EVENT: `getapp-offering.device.map-event${region}`,
+}
 export const DeployTopics = {
     CHECK_HEALTH: `getapp-deploy.check-health${region}`
 } as const
@@ -82,6 +90,8 @@ export const GetMapTopicsEmit = {
 
 export const DeviceTopics = {
     All_DEVICES: `getapp-device.all${region}`,
+    DEVICE_SOFTWARES: `getapp-device.device.softwares${region}`,
+    DEVICES_STATISTIC_INFO: `getapp-device.device.statistic.info${region}`,
     DEVICES_PUT: `getapp-device.put${region}`,
     DEVICE_MAPS: `getapp-device.device.maps${region}`,
     All_MAPS: `getapp-map.maps${region}`,
@@ -97,11 +107,15 @@ export const DeviceTopics = {
 } as const
 
 export const DeviceTopicsEmit = {
+    DISCOVER_DEVICE_CONTEXT: `getapp-device.discover.device-context${region}`,
+    UPDATE_DEVICE_SOFTWARE_STATE: `getapp-device.device.update-software-state${region}`,
+    UPDATE_DEVICE_MAP_STATE: `getapp-device.device.update-map-state${region}`,
     REGISTER_MAP_TO_DEVICE: `getapp-device.map.register-to-device${region}`,
     REGISTER_MAP_INVENTORY: `getapp-device.map.register-inventory${region}`,
     MAP_UPDATES_JOB_START: `getapp-device.map.job.updates.start${region}`,
     UPDATE_TLS_STATUS: `getapp-device.update.tls.status${region}`,
     IM_PUSH_DISCOVERY: `getapp-device.im.push.discovery${region}`,
+    COMPONENT_EVENT: `getapp-device.component.event`,
 } as const
 
 
