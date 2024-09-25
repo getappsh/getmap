@@ -9,7 +9,7 @@ import { ImportCreateService } from './import-create.service';
 import { ErrorCode, ErrorDto } from '@app/common/dto/error';
 import { MapError } from '@app/common/dto/map/utils/map-error';
 import { RepoService } from './repo.service';
-import { MapEntity, MapImportStatusEnum, } from '@app/common/database/entities';
+import { DeviceMapStateEnum, MapEntity, MapImportStatusEnum, } from '@app/common/database/entities';
 import { Inject, Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapConfigDto } from '@app/common/dto/map/dto/map-config.dto';
@@ -19,6 +19,7 @@ import { RegisterMapDto } from '@app/common/dto/device/dto/register-map.dto';
 import { InventoryDeviceUpdatesDto } from '@app/common/dto/map/dto/inventory-device-updates-dto';
 import { MapUpdatesService } from './map-updates.service';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
+import { DeviceMapStateDto } from '@app/common/dto/device';
 
 @Injectable()
 export class GetMapService  {
@@ -89,10 +90,13 @@ export class GetMapService  {
         existsMap = await this.repo.updateMapAsUpdate(existsMap)
       }
 
-      const registerDto = new RegisterMapDto()
-      registerDto.deviceId = importDto.deviceId
-      registerDto.map = existsMap
-      this.deviceClient.emit(DeviceTopicsEmit.REGISTER_MAP_TO_DEVICE, registerDto)
+      this.logger.log("Send device map state")
+      const dms = new DeviceMapStateDto()
+      dms.deviceId = importDto.deviceId;
+      dms.catalogId = existsMap.catalogId;
+      dms.state = DeviceMapStateEnum.IMPORT;
+      this.deviceClient.emit(DeviceTopicsEmit.UPDATE_DEVICE_MAP_STATE, dms)
+
       this.fromEntityToDto(existsMap, importRes)
 
 
