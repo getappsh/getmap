@@ -104,12 +104,27 @@ export enum LibotExportStatusEnum {
 }
 
 export enum DeviceMapStateEnum {
+    OFFERING = "offering",
+    PUSH = "push",
     IMPORT = "import",
     DELIVERY = "delivery",
     INSTALLED = "installed",
     UNINSTALLED = "uninstalled"
 }
 
+export enum DeviceComponentStateEnum{
+    OFFERING = "offering",
+    PUSH = "push",
+    DELIVERY = "delivery",
+    DEPLOY = "deploy",
+    INSTALLED = "installed",
+    UNINSTALLED = "uninstalled",
+}
+
+export enum OfferingActionEnum{
+    OFFERING = "offering",
+    PUSH = "push"
+}
 export enum HashAlgorithmEnum {
     SHA256Hex = "SHA256Hex",
     SHA256Base64 = "SHA256Base64",
