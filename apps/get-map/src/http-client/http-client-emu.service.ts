@@ -12,6 +12,7 @@ import { MapError } from "@app/common/dto/map/utils/map-error";
 import { ErrorCode } from "@app/common/dto/error";
 import { ConfigService } from "@nestjs/config";
 import { Feature, Geometry, MultiPolygon } from "@turf/turf";
+import { MapProductResDto } from "@app/common/dto/map/dto/map-product-res.dto";
 
 
 @Injectable()
@@ -28,10 +29,10 @@ export class LibotEmuHttpClientService {
   ) { }
 
   // Http requests
-  async getRecords(dAttrs: DiscoveryAttributes): Promise<MCRasterRecordDto[]> {
+  async getRecords(dAttrs: DiscoveryAttributes): Promise<MapProductResDto[]> {
 
     const url = this.env.get<string>("LIBOT_DISCOVERY_URL")
-    let productsRes: MCRasterRecordDto[] = []
+    let productsRes: MapProductResDto[] = []
 
 
     this.logger.log(`Get records from libot Emulator`)
@@ -45,9 +46,9 @@ export class LibotEmuHttpClientService {
       const records: MCRasterRecordDto | MCRasterRecordDto[] = res.data ?? []
 
       if (Array.isArray(records)) {
-        productsRes = [...productsRes, ...records]
+        productsRes = [...productsRes, ...records.map(r => MapProductResDto.fromRecordsRes(r))]
       } else {
-        productsRes.push(records)
+        productsRes.push(MapProductResDto.fromRecordsRes(records))
       }
 
     } catch (error) {
