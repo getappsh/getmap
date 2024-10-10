@@ -23,8 +23,7 @@ export class DeliveryStatusDto {
   @IsString()
   @IsOptional()
   // @IsNotEmpty() // Uncomment this in the future when this field becomes mandatory
-  itemKey: string;
-
+  itemKey: string = 'gpkg';
 
   @ApiProperty({ required: false })
   @IsOptional()
