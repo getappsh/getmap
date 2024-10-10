@@ -195,8 +195,7 @@ export class RepoService {
                 async () => await this.libotClient.getActualFootPrint(this.getCorrectPackageUrl(resData.artifacts[j].url)),
                 "download map json file"
               )
-              // existMap[i].footprint = actualFootprint.coordinates.join(',')
-              existMap[i].footprint = actualFootprint.coordinates[0][0].join(',')
+              existMap[i].footprint = actualFootprint.coordinates.join(',')
               existMap[i].area = parseInt(area(actualFootprint).toFixed())
             } catch (error) {
               const mes = `download map json file failed - ${error.toString()}`
