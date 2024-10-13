@@ -90,6 +90,7 @@ jobs:
           tags: ${{ secrets.REGISTRY_URL }}/getapp-dev/getmap-node:${{ needs.calculate_new_tag.outputs.tag }}
           # build on feature branches, push only on main branch
           push: true
+          build-args: IMG_TAG=${{ needs.calculate_new_tag.outputs.tag }}
   # triger_deploy:
   #   runs-on: ubuntu-latest
   #   needs: build_and_push_image

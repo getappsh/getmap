@@ -6,6 +6,7 @@ import { CreateImportDto, CreateImportResDto, InventoryUpdatesReqDto } from '@ap
 import { ImportResPayload } from '@app/common/dto/libot/dto/import-res-payload';
 import { MapPutDto } from '@app/common/dto/map/dto/map-put.dto';
 import { RpcPayload } from '@app/common/microservice-client';
+import * as fs from 'fs';
 
 
 @Controller()
@@ -63,8 +64,19 @@ export class GetMapController {
   // Utils
   @MessagePattern(GetMapTopics.CHECK_HEALTH)
   healthCheckSuccess() {
-    return "Get map service is success"
+    const version = this.readImageVersion()
+    this.logger.log(`Get-Map service - Health checking, Version: ${version}`)
+    return "Get-Map  service is running successfully. Version: " + version
   }
 
+  private readImageVersion(){
+    let version = 'unknown'
+    try{
+      version = fs.readFileSync('NEW_TAG.txt','utf8');
+    }catch(error){
+      this.logger.error(`Unable to read image version - error: ${error}`)
+    }
+    return version
+  }
 
 }
